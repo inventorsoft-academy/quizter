@@ -23,7 +23,7 @@ public class Credentials implements UserDetails {
     public Credentials(User user) {
         this.username = user.getEmail();
         this.password = user.getPassword();
-        this.roles = user.getRoles();
+        this.roles.add( user.getRole());
     }
 
     @Override

@@ -53,11 +53,9 @@ public class User {
     String photoUrl;
 
     @Column(name = "is_active")
-    private Boolean active;
+    Boolean active;
 
-    @CollectionTable(name = "user_role", joinColumns = {@JoinColumn(name = "user_id")})
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING)
-    Set<Role> roles = new HashSet<>();
+    @Column
+    Role role;
 
 }

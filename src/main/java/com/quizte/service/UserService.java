@@ -19,10 +19,12 @@ public class UserService {
 
     UserRepository userRepository;
 
+    UserMapper userMapper;
+
     PasswordEncoder passwordEncoder;
 
     public void registerUser(RegistrationUserDto registrationUserDto) {
-        User user = UserMapper.toUser(registrationUserDto);
+        User user = userMapper.toUser(registrationUserDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
