@@ -17,5 +17,11 @@ public class RegistrationUserDto {
 
     String password;
 
+    String confirmPassword;
+
     Set<Role> roles;
+
+    public Boolean isConfirmed() {
+        return this.confirmPassword.equals(this.password);
+    }
 }

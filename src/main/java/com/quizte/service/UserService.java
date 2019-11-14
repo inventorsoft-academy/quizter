@@ -2,6 +2,7 @@ package com.quizte.service;
 
 import com.quizte.dto.RegistrationUserDto;
 import com.quizte.entity.User;
+import com.quizte.exception.PasswordConfirmException;
 import com.quizte.mapper.UserMapper;
 import com.quizte.repository.UserRepository;
 import lombok.AccessLevel;
@@ -24,8 +25,10 @@ public class UserService {
     PasswordEncoder passwordEncoder;
 
     public void registerUser(RegistrationUserDto registrationUserDto) {
-        User user = userMapper.toUser(registrationUserDto);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        if (registrationUserDto.isConfirmed()) {
+            User user = userMapper.toUser(registrationUserDto);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userRepository.save(user);
+        } else throw new PasswordConfirmException("Password wasn't confirmed");
     }
 }
