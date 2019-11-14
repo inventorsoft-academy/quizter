@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="title" content="Create User">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/fontawesome/fontawesome-all.min.css}" rel="stylesheet">
+    <link th:href="@{/css/main.css}" rel="stylesheet" type="text/css">
+    <title>Create User</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4 sign-up--form order-first order-lg-last">
+                    <div class="row">
+                        <form accept-charset="UTF-8" method="post" th:href="@{~/registration}" th:object="${user}">
+                            <div class="form-group">
+                                <label for="email">Mail</label>
+                                <label th:if="${#fields.hasErrors('email')}"
+                                       th:errors="*{email}" class="validation-message"></label>
+                                <input id="email" type="text" class="form-control" th:field="*{email}"
+                                       autocomplete="off" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <label th:if="${#fields.hasErrors('password')}"
+                                       th:errors="*{password}" class="validation-message"></label>
+                                <input id="password" type="text" class="form-control" th:field="*{password}"
+                                       autocomplete="off" required>
+                            </div>
+<!--                            <div class="form-group">-->
+<!--                                <label for="confirmPassword">Confirm password</label>-->
+<!--                                <label th:if="${#fields.hasErrors('confirmPassword')}"-->
+<!--                                       th:errors="*{confirmPassword}" class="validation-message"></label>-->
+<!--                                <input id="confirmPassword" type="text" class="form-control"-->
+<!--                                       th:field="*{confirmPassword}" autocomplete="off" required>-->
+<!--                            </div>-->
+                            <div class="container text-center py-4">
+                                <button type="submit" class="button btn-lg"
+                                        data-loading-text="Create employee...">SUBMIT
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
