@@ -2,11 +2,9 @@ package com.quizte.controller;
 
 import com.quizte.dto.RegistrationUserDto;
 import com.quizte.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController(value = "registration")
 public class RegistrationController {
@@ -18,7 +16,9 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public ResponseEntity<String> registerUser(@RequestBody @ModelAttribute RegistrationUserDto registrationDto) {
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public ResponseEntity<String> registerUser(@RequestBody RegistrationUserDto registrationDto) {
+        
         userService.registerUser(registrationDto);
         return ResponseEntity.ok("You've  been registered");
     }

@@ -2,13 +2,15 @@ package com.quizte.mapper;
 
 import com.quizte.dto.RegistrationUserDto;
 import com.quizte.entity.User;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class UserMapper {
-    private ModelMapper mapper = new ModelMapper();
 
+    private final ModelMapper mapper;
 
     public User toUser(RegistrationUserDto registrationUserDto) {
         return mapper.map(registrationUserDto, User.class);
