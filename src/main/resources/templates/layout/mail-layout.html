@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title>Verification registration</title>
+        <link rel='stylesheet' href="/static/css/mail-style.css" type="text/css"/>
+    </head>
+
+    <body>
+        <div th:replace="fragments/fragment-mail-header :: mail-header"></div>
+
+        <div th:utext="${content}"></div>
+
+        <div th:replace="fragments/fragment-mail-footer :: mail-footer"></div>
+    </body>
+
+</html>
+
+
