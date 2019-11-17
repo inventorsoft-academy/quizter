@@ -5,4 +5,5 @@
 3. Type in terminal
 `docker build ./ -t quizter_app` to create app image
 4. Type in terminal `docker-compose up` to start app
-5. Press `ctrl + c` to stop execution
+5. Link for Windows 7 http://192.168.99.100:8080/
+6. Press `ctrl + c` to stop execution
