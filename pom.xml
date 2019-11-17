@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.quizter</groupId>
-    <artifactId>quizte</artifactId>
+    <artifactId>quizter</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>quizte</name>
+    <name>quizter</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -101,7 +101,6 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
         <!-- /dependencies for mail support -->
-
         <!-- thymeleaf -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -113,7 +112,6 @@
             <artifactId>thymeleaf-layout-dialect</artifactId>
         </dependency>
         <!-- /thymeleaf -->
-
         <!--Webjars-->
         <dependency>
             <groupId>org.webjars</groupId>
@@ -156,12 +154,25 @@
 
     </dependencies>
 
-
     <build>
+        <finalName>quizter</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>spring-boot</classifier>
+                            <mainClass>
+                                com.quizter.QuizterApplication
+                            </mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
