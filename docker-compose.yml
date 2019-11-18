@@ -16,13 +16,15 @@ services:
     restart: unless-stopped
 # APP*****************************************
   quizter_app:
-    image: quizter_app:latest
+    build: .
     network_mode: bridge
     container_name: quizter_app
     expose:
       - 8080
     ports:
       - 8080:8080
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/quizter
     restart: unless-stopped
     depends_on:
       - postgres
