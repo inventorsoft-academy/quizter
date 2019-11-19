@@ -12,7 +12,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class ThymeleafUtil {
+public class ThymeleafProcessHtml {
 
     TemplateEngine templateEngine;
 

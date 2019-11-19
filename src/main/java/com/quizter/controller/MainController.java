@@ -1,8 +1,10 @@
 package com.quizter.controller;
 
 import com.quizter.entity.User;
+import com.quizter.service.MailWebService;
 import com.quizter.service.UserService;
 import com.quizter.service.mailsender.MailSender;
+import com.quizter.util.EmailConstants;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,21 +18,17 @@ import java.util.UUID;
 public class MainController {
 
     private UserService userService;
-    private MailSender mailSender;
-
-
+    private MailWebService mailWebService;
 
     @PostMapping("/resetPassword")
-    public void resetPassword(@RequestBody String email){
+    public void resetPassword(@RequestBody String email) {
         User user = userService.findUserByEmail(email);
-        if (user == null){
+        if (user == null) {
             throw new UsernameNotFoundException("There is no user with email : " + email);
         }
         String token = UUID.randomUUID().toString();
         userService.createPasswordResetTokenForUser(user, token);
-//        mailSender.sendPasswordResetToken(user);
-////        return new GenericResponse(
-////                messages.getMessage("message.resetPasswordEmail", null,
-////                        request.getLocale()));
+        mailWebService.mailSend(user.getEmail(), EmailConstants.MAIL_CONTENT,
+                EmailConstants.RESTORE_PASSWORD_SUBJECT, EmailConstants.MAIL_CONTENT_RESTORE_PASSWORD_URL);
     }
 }
