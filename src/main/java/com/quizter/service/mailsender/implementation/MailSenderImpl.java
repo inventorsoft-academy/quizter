@@ -1,5 +1,7 @@
 package com.quizter.service.mailsender.implementation;
 
+import com.quizter.entity.User;
+import com.quizter.repository.PasswordRepository;
 import com.quizter.service.mailsender.MailSender;
 import com.quizter.util.EmailConstants;
 import com.quizter.service.mailsender.ThymeleafUtil;
@@ -7,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,8 @@ import java.util.Map;
 public class MailSenderImpl implements MailSender {
 
     JavaMailSender javaMailSender;
+
+    PasswordRepository passwordRepository;
 
     ThymeleafUtil thymeleafUtil;
 
@@ -55,5 +60,14 @@ public class MailSenderImpl implements MailSender {
 
         javaMailSender.send(message);
     }
+
+//    @Override
+//    public void sendPasswordResetToken(User user) {
+//        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+//        simpleMailMessage.setTo(user.getEmail());
+//        simpleMailMessage.setSubject("Quizter reset password");
+//        String token = passwordRepository.findTokenById(user.getId());
+//        simpleMailMessage.setText(token);
+//    }
 
 }

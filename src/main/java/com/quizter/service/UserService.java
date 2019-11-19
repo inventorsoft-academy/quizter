@@ -1,9 +1,11 @@
 package com.quizter.service;
 
 import com.quizter.dto.RegistrationUserDto;
+import com.quizter.entity.PasswordResetToken;
 import com.quizter.entity.User;
 import com.quizter.exception.PasswordConfirmException;
 import com.quizter.mapper.UserMapper;
+import com.quizter.repository.PasswordRepository;
 import com.quizter.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -24,11 +26,25 @@ public class UserService {
 
     PasswordEncoder passwordEncoder;
 
+    PasswordRepository passwordRepository;
+
     public void registerUser(RegistrationUserDto registrationUserDto) {
         if (registrationUserDto.isConfirmed()) {
             User user = userMapper.toUser(registrationUserDto);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
         } else throw new PasswordConfirmException("Password wasn't confirmed");
+    }
+
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email).get();
+    }
+
+    public void createPasswordResetTokenForUser(User user, String token) {
+        PasswordResetToken passwordResetToken = PasswordResetToken.builder()
+                .user(user)
+                .token(token)
+                .build();
+        passwordRepository.save(passwordResetToken);
     }
 }
