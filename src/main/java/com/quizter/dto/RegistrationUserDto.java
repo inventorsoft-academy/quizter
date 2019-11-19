@@ -1,5 +1,6 @@
 package com.quizter.dto;
 
+import com.quizter.annotation.PasswordMatches;
 import com.quizter.dictionary.Role;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -14,21 +16,19 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @ToString
+@PasswordMatches
 public class RegistrationUserDto {
 
     @NotNull
+    @Email
     String email;
 
     @NotNull
     String password;
 
-    @NotBlank
+    @NotNull
     String confirmPassword;
 
-    @NotBlank
+    @NotNull
     Role role;
-
-    public Boolean isConfirmed() {
-        return this.confirmPassword.equals(this.password);
-    }
 }

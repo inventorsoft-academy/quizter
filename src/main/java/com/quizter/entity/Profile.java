@@ -1,6 +1,5 @@
 package com.quizter.entity;
 
-import com.quizter.dictionary.Role;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,9 +8,6 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "Users")
@@ -19,27 +15,26 @@ import java.util.Set;
 @Setter
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class User {
+public class Profile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
-    @Column(name="user_id")
+    @Column(name = "profile_id")
     Long id;
 
-    @Column
-    String email;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    Profile profile;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "profile")
+    User user;
 
     @Column
-    String password;
+    String firstName;
 
-    @Column(name = "is_active")
-    Boolean active;
+    @Column
+    String lastName;
 
-    @Enumerated(EnumType.STRING)
-    Role role;
+    @Column
+    String photoUrl;
 
+    @Column
+    String sphere;
 }

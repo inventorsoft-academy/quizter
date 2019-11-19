@@ -1,14 +1,11 @@
 package com.quizter.controller;
 
-import com.quizter.dto.MessageResponse;
+import com.quizter.dictionary.Role;
 import com.quizter.dto.RegistrationUserDto;
 import com.quizter.service.UserService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 @Controller
 @RequestMapping(value = "/registration")
@@ -23,13 +20,13 @@ public class RegistrationController {
     @GetMapping
     public String registrationForm(Model model) {
         model.addAttribute("user", new RegistrationUserDto());
-        return "registration";
+        return "registration-page";
     }
 
-    @PostMapping
-    public String registration(@ModelAttribute RegistrationUserDto user) {
-        System.out.println(user);
+    @PostMapping(value = "/{role}")
+    public String registration(@ModelAttribute RegistrationUserDto user, @PathVariable(name = "role") Role role) {
+        user.setRole(role);
         userService.registerUser(user);
-        return "redirect/";
+        return "redirect/login";
     }
 }

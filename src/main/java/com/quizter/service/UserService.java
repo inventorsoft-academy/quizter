@@ -1,8 +1,8 @@
 package com.quizter.service;
 
+import com.quizter.dictionary.Role;
 import com.quizter.dto.RegistrationUserDto;
 import com.quizter.entity.User;
-import com.quizter.exception.PasswordConfirmException;
 import com.quizter.mapper.UserMapper;
 import com.quizter.repository.UserRepository;
 import lombok.AccessLevel;
@@ -20,15 +20,17 @@ public class UserService {
 
     UserRepository userRepository;
 
+    MailWebService mailWebService;
+
     UserMapper userMapper;
 
     PasswordEncoder passwordEncoder;
 
     public void registerUser(RegistrationUserDto registrationUserDto) {
-        if (registrationUserDto.isConfirmed()) {
-            User user = userMapper.toUser(registrationUserDto);
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepository.save(user);
-        } else throw new PasswordConfirmException("Password wasn't confirmed");
+        User user = userMapper.toUser(registrationUserDto);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setActive(false);
+        mailWebService.registrationMailSend(user.getEmail());
+        userRepository.save(user);
     }
 }

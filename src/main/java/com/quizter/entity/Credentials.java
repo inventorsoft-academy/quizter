@@ -1,8 +1,10 @@
 package com.quizter.entity;
 
 import com.quizter.dictionary.Role;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,19 +14,22 @@ import java.util.Set;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Credentials implements UserDetails {
 
-    private String username;
+    String username;
 
-    private String password;
+    String password;
 
+    Set<Role> roles;
 
-    private Set<Role> roles;
+    Boolean isActive;
 
     public Credentials(User user) {
         this.username = user.getEmail();
         this.password = user.getPassword();
         this.roles = Collections.singleton(user.getRole());
+        this.isActive = user.getActive();
     }
 
     @Override
@@ -59,6 +64,6 @@ public class Credentials implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isActive;
     }
 }
