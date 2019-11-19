@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8"/>
+    <title>Quizter restore</title>
+    <link th:href="@{/css/login.css}" rel="stylesheet">
+</head>
+
+<body>
+<div class="input_box">
+    <form id="sign_in" th:action="@{/restore}" method="post">>
+        <label for="password">Password</label>
+        <input type="text" name="password" id="password" placeholder="Enter password">
+        <label for="password">Password</label>
+        <input type="text" name="password"  placeholder="Confirm password">
+        <input type="submit" value="Save new password">
+    </form>
+</div>
+</body>
+</html>
