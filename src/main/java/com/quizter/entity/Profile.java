@@ -10,7 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "profiles")
 @Getter
 @Setter
 @ToString
@@ -18,12 +18,10 @@ import javax.persistence.*;
 public class Profile {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-    @GenericGenerator(name = "native", strategy = "native")
-    @Column(name = "profile_id")
     Long id;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "profile")
+    @OneToOne
+    @JoinColumn(name = "user_id")
     User user;
 
     @Column

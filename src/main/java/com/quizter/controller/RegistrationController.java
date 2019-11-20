@@ -5,10 +5,14 @@ import com.quizter.dto.RegistrationUserDto;
 import com.quizter.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(value = "/registration")
+@RequestMapping(value = "/registration/{role}")
 public class RegistrationController {
 
     private UserService userService;
@@ -23,10 +27,9 @@ public class RegistrationController {
         return "registration-page";
     }
 
-    @PostMapping(value = "/{role}")
-    public String registration(@ModelAttribute RegistrationUserDto user, @PathVariable(name = "role") Role role) {
-        user.setRole(role);
+    @PostMapping
+    public String registration(@ModelAttribute RegistrationUserDto user, @PathVariable("role") Role role) {
         userService.registerUser(user);
-        return "redirect/login";
+        return "redirect:/login";
     }
 }

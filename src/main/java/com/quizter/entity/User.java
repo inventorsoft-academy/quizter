@@ -22,16 +22,14 @@ import java.util.Set;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-    @GenericGenerator(name = "native", strategy = "native")
-    @Column(name="user_id")
+    @GeneratedValue
     Long id;
 
     @Column
     String email;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    Profile profile;
+    @OneToOne(mappedBy = "user")
+    private Profile profile;
 
     @Column
     String password;
