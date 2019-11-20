@@ -1,8 +1,9 @@
 package com.quizter.service.mailsender.implementation;
 
+import com.quizter.repository.PasswordRepository;
 import com.quizter.service.mailsender.MailSender;
 import com.quizter.util.EmailConstants;
-import com.quizter.service.mailsender.ThymeleafUtil;
+import com.quizter.service.mailsender.ThymeleafProcessHtml;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -23,7 +24,9 @@ public class MailSenderImpl implements MailSender {
 
     JavaMailSender javaMailSender;
 
-    ThymeleafUtil thymeleafUtil;
+    PasswordRepository passwordRepository;
+
+    ThymeleafProcessHtml thymeleafProcessHtml;
 
     @Override
     public void sendMessageWithTemplate(List<String> recipientEmails, String subject, Map<String, Object> model) {
@@ -43,11 +46,11 @@ public class MailSenderImpl implements MailSender {
         helper.setTo(recipient);
 
         String contentUrl = (String) model.get(EmailConstants.MAIL_CONTENT);
-        String processedHtml = thymeleafUtil.getProcessedHtml(Collections.EMPTY_MAP, contentUrl);
+        String processedHtml = thymeleafProcessHtml.getProcessedHtml(Collections.EMPTY_MAP, contentUrl);
 
         model.put(EmailConstants.MAIL_CONTENT, processedHtml);
 
-        String html = thymeleafUtil.getProcessedHtml(model, EmailConstants.MAIL_LAYOUT);
+        String html = thymeleafProcessHtml.getProcessedHtml(model, EmailConstants.MAIL_LAYOUT);
 
         helper.setText(html, true);
         helper.setSubject(subject);
@@ -55,5 +58,14 @@ public class MailSenderImpl implements MailSender {
 
         javaMailSender.send(message);
     }
+
+//    @Override
+//    public void sendPasswordResetToken(User user) {
+//        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+//        simpleMailMessage.setTo(user.getEmail());
+//        simpleMailMessage.setSubject("Quizter reset password");
+//        String token = passwordRepository.findTokenById(user.getId());
+//        simpleMailMessage.setText(token);
+//    }
 
 }
