@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 @AllArgsConstructor
@@ -36,8 +38,8 @@ public class UserService {
         } else throw new PasswordConfirmException("Password wasn't confirmed");
     }
 
-    public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email).get();
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     public void createPasswordResetTokenForUser(User user, String token) {

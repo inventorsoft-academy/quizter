@@ -1,6 +1,7 @@
 package com.quizter.service;
 
 import com.quizter.service.mailsender.MailSender;
+import com.quizter.util.EmailConstants;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,11 +17,11 @@ public class MailWebService {
 
     MailSender mailSender;
 
-    public void mailSend(String recipient, String content, String subject, String mailUrl) {
+    public void mailSend(String recipient, String subject, String mailUrl) {
 
         Map<String, Object> model = new HashMap<>();
 
-        model.put(content, mailUrl);
+        model.put(EmailConstants.MAIL_CONTENT, mailUrl);
 
         mailSender.sendMessageWithTemplate(recipient, subject, model);
     }
