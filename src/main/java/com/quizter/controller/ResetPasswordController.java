@@ -41,9 +41,8 @@ public class ResetPasswordController {
         User user = userOptional.get();
         String token = UUID.randomUUID().toString();
         userService.createPasswordResetTokenForUser(user, token);
-//        String appUrl = "http://localhost:8080/login";
-        String appUrl = "http://localhost:8080/newPassword?id=" +
-                user.getId() + "&token=" + token;
+        String appUrl = "http://localhost:8080/newPassword?id=" + user.getId() + "&token=" + token;
+
         mailWebService.mailSend(user.getEmail(), "Restore password", "reset-password-content", appUrl);
         model.addAttribute("checkMessage", "Check Your email");
         model.addAttribute("hidden", "true");

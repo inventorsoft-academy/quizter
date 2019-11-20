@@ -22,8 +22,6 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PasswordResetToken {
 
-    static final int EXPIRATION = 60 * 24;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;

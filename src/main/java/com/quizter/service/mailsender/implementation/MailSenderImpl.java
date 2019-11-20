@@ -25,8 +25,6 @@ public class MailSenderImpl implements MailSender {
 
     JavaMailSender javaMailSender;
 
-    PasswordRepository passwordRepository;
-
     ThymeleafProcessHtml thymeleafProcessHtml;
 
     @Override
@@ -58,15 +56,6 @@ public class MailSenderImpl implements MailSender {
         helper.setFrom(EmailConstants.EMAIL_FROM);
 
         javaMailSender.send(message);
-    }
-
-    @Override
-    public void sendMessageWithTemplate(String recipient, String subject, String model) {
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo(recipient);
-        simpleMailMessage.setSubject(subject);
-        simpleMailMessage.setText(model);
-        javaMailSender.send(simpleMailMessage);
     }
 
 }
