@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -59,13 +60,13 @@ public class MailSenderImpl implements MailSender {
         javaMailSender.send(message);
     }
 
-//    @Override
-//    public void sendPasswordResetToken(User user) {
-//        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-//        simpleMailMessage.setTo(user.getEmail());
-//        simpleMailMessage.setSubject("Quizter reset password");
-//        String token = passwordRepository.findTokenById(user.getId());
-//        simpleMailMessage.setText(token);
-//    }
+    @Override
+    public void sendMessageWithTemplate(String recipient, String subject, String model) {
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(recipient);
+        simpleMailMessage.setSubject(subject);
+        simpleMailMessage.setText(model);
+        javaMailSender.send(simpleMailMessage);
+    }
 
 }

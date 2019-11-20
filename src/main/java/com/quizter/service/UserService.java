@@ -13,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sun.security.util.Password;
 
 import java.util.Optional;
 
@@ -43,10 +44,14 @@ public class UserService {
     }
 
     public void createPasswordResetTokenForUser(User user, String token) {
-        PasswordResetToken passwordResetToken = PasswordResetToken.builder()
-                .user(user)
-                .token(token)
-                .build();
+        PasswordResetToken passwordResetToken = new PasswordResetToken();
+        passwordResetToken.setUser(user);
+        passwordResetToken.setToken(token);
         passwordRepository.save(passwordResetToken);
+    }
+
+    public void saveNewPassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
     }
 }

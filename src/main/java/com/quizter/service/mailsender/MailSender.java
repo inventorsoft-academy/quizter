@@ -11,6 +11,6 @@ public interface MailSender {
 
     void sendMessageWithTemplate(String recipient, String subject, Map<String, Object> model);
 
-//    void sendPasswordResetToken(User user);
+    void sendMessageWithTemplate(String recipient, String subject, String model);
 
 }

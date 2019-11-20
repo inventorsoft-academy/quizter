@@ -17,11 +17,14 @@ public class MailWebService {
 
     MailSender mailSender;
 
-    public void mailSend(String recipient, String subject, String mailUrl) {
+    public void mailSend(String recipient, String subject, String mailUrl, String appUrl) {
 
-        Map<String, Object> model = new HashMap<>();
+//        Map<String, Object> model = new HashMap<>();
+//
+//        model.put(EmailConstants.MAIL_CONTENT, mailUrl);
+//        model.put("token", appUrl);
 
-        model.put(EmailConstants.MAIL_CONTENT, mailUrl);
+        String model = appUrl;
 
         mailSender.sendMessageWithTemplate(recipient, subject, model);
     }
