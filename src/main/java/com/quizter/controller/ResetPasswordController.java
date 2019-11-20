@@ -24,6 +24,7 @@ public class ResetPasswordController {
     static final Logger LOG = Logger.getLogger(ResetPasswordController.class.getName());
 
     UserService userService;
+
     MailWebService mailWebService;
 
     @GetMapping("/resetPassword")

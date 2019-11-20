@@ -3,10 +3,10 @@ package com.quizter.service;
 import com.quizter.dto.RegistrationUserDto;
 import com.quizter.entity.PasswordResetToken;
 import com.quizter.entity.User;
-import com.quizter.exception.PasswordConfirmException;
 import com.quizter.mapper.UserMapper;
 import com.quizter.repository.PasswordRepository;
 import com.quizter.repository.UserRepository;
+import com.quizter.util.EmailConstants;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,10 +19,12 @@ import java.util.Optional;
 @Service
 @Transactional
 @AllArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserService {
 
     UserRepository userRepository;
+
+    MailWebService mailWebService;
 
     UserMapper userMapper;
 
@@ -31,11 +33,11 @@ public class UserService {
     PasswordRepository passwordRepository;
 
     public void registerUser(RegistrationUserDto registrationUserDto) {
-        if (registrationUserDto.isConfirmed()) {
-            User user = userMapper.toUser(registrationUserDto);
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepository.save(user);
-        } else throw new PasswordConfirmException("Password wasn't confirmed");
+        User user = userMapper.toUser(registrationUserDto);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setActive(false);
+        mailWebService.mailSend(user.getEmail(), EmailConstants.REGISTRATION_SUBJECT, EmailConstants.MAIL_CONTENT_URL);
+        userRepository.save(user);
     }
 
     public Optional<User> findUserByEmail(String email) {

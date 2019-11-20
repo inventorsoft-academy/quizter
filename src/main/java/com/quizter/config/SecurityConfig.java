@@ -19,7 +19,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     UserDetailsServiceImpl userDetailsService;
 
-    private static final String LOGIN_PAGE = "/login";
+    static final String LOGIN_PAGE = "/login";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
