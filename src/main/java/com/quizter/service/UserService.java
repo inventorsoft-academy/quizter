@@ -19,7 +19,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @AllArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserService {
 
     UserRepository userRepository;
