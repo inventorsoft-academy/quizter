@@ -1,8 +1,6 @@
 package com.quizter.service;
 
-import com.quizter.dictionary.Role;
 import com.quizter.dto.RegistrationUserDto;
-import com.quizter.entity.Profile;
 import com.quizter.entity.User;
 import com.quizter.mapper.UserMapper;
 import com.quizter.repository.UserRepository;
