@@ -11,11 +11,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.logging.Logger;
 
+@Transactional
 @AllArgsConstructor
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -31,8 +33,7 @@ public class SecurityService {
             return "invalidToken";
         }
 
-        Calendar calendar = Calendar.getInstance();
-        if ((passwordResetToken.getExpiryDate().getTime() - calendar.getTime().getTime() < 0)) {
+        if ((passwordResetToken.getExpiryDate().getEpochSecond() - Instant.now().getEpochSecond() < 0)) {
             return "expired";
         }
 
@@ -40,6 +41,6 @@ public class SecurityService {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 user, null, Arrays.asList(new SimpleGrantedAuthority("CHANGE_PASSWORD_PRIVILEGE")));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return null;
+        return "success";
     }
 }

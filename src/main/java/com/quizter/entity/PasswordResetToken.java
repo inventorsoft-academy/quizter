@@ -13,7 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import java.util.Date;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -32,5 +32,5 @@ public class PasswordResetToken {
     @JoinColumn(nullable = false, name = "user_id")
     User user;
 
-    Date expiryDate;
+    Instant expiryDate;
 }

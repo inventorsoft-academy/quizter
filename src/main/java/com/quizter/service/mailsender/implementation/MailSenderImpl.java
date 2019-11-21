@@ -1,17 +1,16 @@
 package com.quizter.service.mailsender.implementation;
 
-import com.quizter.repository.PasswordRepository;
 import com.quizter.service.mailsender.MailSender;
-import com.quizter.util.EmailConstants;
 import com.quizter.service.mailsender.ThymeleafProcessHtml;
+import com.quizter.util.EmailConstants;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
 import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;

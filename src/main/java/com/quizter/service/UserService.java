@@ -13,10 +13,8 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.security.util.Password;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.Instant;
 import java.util.Optional;
 
 @Service
@@ -49,14 +47,13 @@ public class UserService {
         PasswordResetToken passwordResetToken = new PasswordResetToken();
         passwordResetToken.setUser(user);
         passwordResetToken.setToken(token);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis() + 3600000);
-        passwordResetToken.setExpiryDate(calendar.getTime());
+        passwordResetToken.setExpiryDate(Instant.ofEpochSecond(Instant.now().getEpochSecond() + 3600));
         passwordRepository.save(passwordResetToken);
     }
 
     public void saveNewPassword(User user, String password) {
         user.setPassword(passwordEncoder.encode(password));
+        passwordRepository.deleteByUserId(user.getId());
         userRepository.save(user);
     }
 }
