@@ -37,7 +37,7 @@ public class UserService {
         User user = userMapper.toUser(registrationUserDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActive(false);
-        mailWebService.mailSend(user.getEmail(), EmailConstants.REGISTRATION_SUBJECT, EmailConstants.MAIL_CONTENT_URL);
+        mailWebService.mailSend(user.getEmail(), EmailConstants.REGISTRATION_SUBJECT, EmailConstants.MAIL_CONTENT_URL, "http://localhost:8080/");
         userRepository.save(user);
     }
 
