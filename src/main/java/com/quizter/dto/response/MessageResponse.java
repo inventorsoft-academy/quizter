@@ -1,4 +1,4 @@
-package com.quizter.dto;
+package com.quizter.dto.response;
 
 import lombok.Value;
 
@@ -7,5 +7,7 @@ import lombok.Value;
  */
 @Value
 public class MessageResponse {
+
     private final String message;
+
 }
