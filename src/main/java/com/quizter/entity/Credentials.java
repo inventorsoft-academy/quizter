@@ -23,10 +23,13 @@ public class Credentials implements UserDetails {
 
     Set<Role> roles;
 
+    Boolean isActive;
+
     public Credentials(User user) {
         this.username = user.getEmail();
         this.password = user.getPassword();
         this.roles = Collections.singleton(user.getRole());
+        this.isActive = user.getActive();
     }
 
     @Override
@@ -61,6 +64,6 @@ public class Credentials implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isActive;
     }
 }
