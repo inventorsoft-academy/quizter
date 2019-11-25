@@ -31,7 +31,7 @@ public class User {
     @SequenceGenerator(name = "hibernate_sequence", sequenceName = "id_sequence", allocationSize = 1)
     Long id;
 
-    @Column
+    @Column(unique = true)
     String email;
 
     @OneToOne(mappedBy = "user")

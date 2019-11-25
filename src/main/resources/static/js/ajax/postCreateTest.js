@@ -10,7 +10,8 @@ function ajaxPost(){
         url: '/testWizard/createTest',
         type: 'POST',
         enctype: 'multipart/form-data',
-        data: JSON.stringify({name : $('#name').val(),
+        data: JSON.stringify({
+            name : $('#name').val(),
             subject : $('#subject').val(),
             description : $('#description').val(),
             questions : [
