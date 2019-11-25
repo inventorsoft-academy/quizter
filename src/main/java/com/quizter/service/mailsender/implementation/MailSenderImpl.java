@@ -1,8 +1,8 @@
 package com.quizter.service.mailsender.implementation;
 
 import com.quizter.service.mailsender.MailSender;
+import com.quizter.service.mailsender.ThymeleafProcessHtml;
 import com.quizter.util.EmailConstants;
-import com.quizter.service.mailsender.ThymeleafUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
 import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -23,7 +24,7 @@ public class MailSenderImpl implements MailSender {
 
     JavaMailSender javaMailSender;
 
-    ThymeleafUtil thymeleafUtil;
+    ThymeleafProcessHtml thymeleafProcessHtml;
 
     @Override
     public void sendMessageWithTemplate(List<String> recipientEmails, String subject, Map<String, Object> model) {
@@ -43,11 +44,11 @@ public class MailSenderImpl implements MailSender {
         helper.setTo(recipient);
 
         String contentUrl = (String) model.get(EmailConstants.MAIL_CONTENT);
-        String processedHtml = thymeleafUtil.getProcessedHtml(Collections.EMPTY_MAP, contentUrl);
+        String processedHtml = thymeleafProcessHtml.getProcessedHtml(Collections.EMPTY_MAP, contentUrl);
 
         model.put(EmailConstants.MAIL_CONTENT, processedHtml);
 
-        String html = thymeleafUtil.getProcessedHtml(model, EmailConstants.MAIL_LAYOUT);
+        String html = thymeleafProcessHtml.getProcessedHtml(model, EmailConstants.MAIL_LAYOUT);
 
         helper.setText(html, true);
         helper.setSubject(subject);

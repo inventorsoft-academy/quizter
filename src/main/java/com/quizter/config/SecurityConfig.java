@@ -1,6 +1,9 @@
 package com.quizter.config;
 
 import com.quizter.service.UserDetailsServiceImpl;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -8,17 +11,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.ForwardAuthenticationSuccessHandler;
 
+@AllArgsConstructor
 @Configuration
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-
-    private UserDetailsServiceImpl userDetailsService;
-
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
+    UserDetailsServiceImpl userDetailsService;
 
     private static final String LOGIN_PAGE = "/login";
 
@@ -27,16 +26,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/**").permitAll()
+                .antMatchers("/newPassword").hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
 
                 .and()
                 .formLogin()
                 .loginPage(LOGIN_PAGE)
                 .loginProcessingUrl(LOGIN_PAGE)
-                .successForwardUrl("/")
+                .defaultSuccessUrl("/")
 
                 .and()
                 .logout()
                 .logoutUrl("/logout")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+                .logoutSuccessUrl("/login")
 
                 .and()
                 .csrf().disable();

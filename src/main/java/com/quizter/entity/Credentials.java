@@ -1,8 +1,10 @@
 package com.quizter.entity;
 
 import com.quizter.dictionary.Role;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,14 +14,14 @@ import java.util.Set;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Credentials implements UserDetails {
 
-    private String username;
+    String username;
 
-    private String password;
+    String password;
 
-
-    private Set<Role> roles;
+    Set<Role> roles;
 
     public Credentials(User user) {
         this.username = user.getEmail();
