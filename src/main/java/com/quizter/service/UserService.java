@@ -30,6 +30,8 @@ public class UserService {
 
     MailWebService mailWebService;
 
+    TokenService tokenService;
+
     UserMapper userMapper;
 
     PasswordEncoder passwordEncoder;
@@ -42,7 +44,7 @@ public class UserService {
         user.setActive(false);
         userRepository.save(user);
         mailWebService.mailSend(user.getEmail(), EmailConstants.REGISTRATION_SUBJECT, EmailConstants.MAIL_CONTENT_URL,
-                "http://localhost:8080/active-account?id=" + user.getId() + "&token=" + TokenUtil.generateToken(user.getEmail(), CacheType.ACTIVATION));
+                "http://localhost:8080/active-account?id=" + user.getId() + "&token=" + tokenService.generateToken(user.getEmail(), CacheType.ACTIVATION).getToken());
     }
 
     public Optional<User> findUserByEmail(String email) {
@@ -68,7 +70,7 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);
 
         if (user.isPresent()) {
-            String trueToken = TokenUtil.getToken(user.get().getEmail(), CacheType.ACTIVATION);
+            String trueToken = tokenService.getToken(user.get().getEmail(), CacheType.ACTIVATION).getToken();
 
             if (trueToken == null) {
                 userRepository.deleteById(id);
@@ -79,7 +81,7 @@ public class UserService {
                 throw new TokenException("Token is wrong");
             }
 
-            TokenUtil.removeToken(user.get().getEmail(), CacheType.ACTIVATION);
+            tokenService.removeToken(user.get().getEmail(), CacheType.ACTIVATION);
 
             user.get().setActive(true);
             userRepository.save(user.get());

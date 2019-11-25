@@ -9,9 +9,6 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
-/**
- * @author anatolii vakaliuk
- */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     @Override

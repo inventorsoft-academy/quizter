@@ -1,5 +1,6 @@
 function resetPassword(){
    var data = {"userEmail":$("input").val()}
+   console.log("button pressed");
    $.ajax({
        contentType:"application/json; charset=utf-8",
        type: "POST",
@@ -16,7 +17,7 @@ function resetPassword(){
 }
 
 function saveNewPassword(){
-   var data = {"userPassword":$("#password").val(), "confirmPassword":$("#confirmPassword").val()}
+   var data = {"password":$("#password").val(), "confirmPassword":$("#confirmPassword").val()}
    console.log("button pressed");
    $.ajax({
        contentType:"application/json; charset=utf-8",
