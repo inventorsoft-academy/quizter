@@ -26,20 +26,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/**").permitAll()
-                .antMatchers("/newPassword").hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
 
                 .and()
                 .formLogin()
                 .loginPage(LOGIN_PAGE)
                 .loginProcessingUrl(LOGIN_PAGE)
                 .defaultSuccessUrl("/")
+                .failureUrl("/login?error=true")
 
                 .and()
                 .logout()
                 .logoutUrl("/logout")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
-                .logoutSuccessUrl("/login")
+                .logoutSuccessUrl(LOGIN_PAGE)
 
                 .and()
                 .csrf().disable();

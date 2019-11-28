@@ -1,6 +1,7 @@
 package com.quizter.service;
 
 import com.quizter.dto.RegistrationUserDto;
+import com.quizter.dto.UserEmailDto;
 import com.quizter.entity.PasswordResetToken;
 import com.quizter.entity.User;
 import com.quizter.exception.PasswordConfirmException;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -30,6 +32,8 @@ public class UserService {
     PasswordEncoder passwordEncoder;
 
     PasswordRepository passwordRepository;
+
+    MailWebService mailWebService;
 
     public void registerUser(RegistrationUserDto registrationUserDto) {
         if (registrationUserDto.isConfirmed()) {
@@ -51,9 +55,25 @@ public class UserService {
         passwordRepository.save(passwordResetToken);
     }
 
-    public void saveNewPassword(User user, String password) {
+    public void saveNewPassword(Long id, String password) {
+        User user = userRepository.findById(id).get();
         user.setPassword(passwordEncoder.encode(password));
         passwordRepository.deleteByUserId(user.getId());
         userRepository.save(user);
+    }
+
+    public void resetPassword(UserEmailDto userEmailDto) {
+        String email = userEmailDto.getUserEmail();
+        Optional<User> userOptional = findUserByEmail(email);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            String token = UUID.randomUUID().toString();
+            createPasswordResetTokenForUser(user, token);
+            //TODO http://localhost:8080 move in app prop
+            String appUrl = "http://localhost:8080/newPassword?id=" + user.getId() + "&token=" + token;
+            // TODO async
+            mailWebService.mailSend(user.getEmail(), "Restore password",
+                    "reset-password-content", appUrl);
+        }
     }
 }
