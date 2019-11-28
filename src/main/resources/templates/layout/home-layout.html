@@ -1,64 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title data-layout-title-pattern="$LAYOUT_TITLE | $CONTENT_TITLE">Quizter</title>
+        <title data-layout-title-pattern="$LAYOUT_TITLE | $CONTENT_TITLE">Quizter</title>
 
-    <!-- Bootstrap -->
-    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="/webjars/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
 
-    <!-- Custom Theme Style -->
-    <link href="/css/custom.min.css" rel="stylesheet">
-</head>
+        <!-- Bootstrap -->
+        <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link href="/webjars/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+        <!-- NProgress -->
+        <link href="/webjars/nprogress/nprogress.css" rel="stylesheet">
 
-<body class="nav-md">
-<div class="container body">
-    <div class="main_container">
-        <div class="col-md-3 left_col">
-            <div class="left_col scroll-view">
-                <div class="navbar nav_title" style="border: 0;">
-                    <a href="#" class="site_title"><i class="fa fa-space-shuttle"></i> <span>Quizter</span></a>
+        <link href="/css/custom.min.css" rel="stylesheet">
+    </head>
+
+    <body class="nav-md">
+        <div class="container body">
+            <div class="main_container">
+                <div class="col-md-3 left_col">
+                    <div class="left_col scroll-view">
+                        <div class="navbar nav_title" style="border: 0;">
+                            <a data-th-href="@{/}" class="site_title"><i class="fa fa-space-shuttle"></i> <span>Quizter</span></a>
+                        </div>
+
+                        <div class="clearfix"></div>
+
+                        <!-- menu profile quick info -->
+                        <div data-th-replace="fragments/fragment-menu-profile-quick-info :: menu-profile-quick-info"></div>
+                        <!-- /menu profile quick info -->
+
+                        <br/>
+
+                        <!-- sidebar menu -->
+                        <div data-th-replace="fragments/fragment-sidebar-menu :: sidebar-menu"></div>
+                        <!-- /sidebar menu -->
+
+                    </div>
                 </div>
 
-                <!-- menu profile quick info -->
-                <div data-th-replace="fragments/fragment-menu-profile-quick-info :: menu-profile-quick-info"></div>
+                <!-- top navigation -->
+                <div data-th-replace="fragments/fragment-top-navigation :: top-navigation"></div>
+                <!-- /top navigation -->
 
-                <br/>
+                <!-- page content -->
+                <div data-layout-fragment="content"></div>
+                <!-- /page content -->
 
-                <!-- sidebar menu -->
-                <div data-th-replace="fragments/fragment-sidebar-menu :: sidebar-menu"></div>
-
+                <!-- footer content -->
+                <div data-th-replace="fragments/fragment-footer :: footer-content"></div>
+                <!-- /footer content -->
             </div>
         </div>
 
-        <!-- top navigation -->
-        <div data-th-replace="fragments/fragment-top-navigation :: top-navigation"></div>
+        <!-- jQuery -->
+        <script src="/webjars/jquery/jquery.min.js"></script>
+        <!-- Bootstrap -->
+        <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+        <!-- FastClick -->
+        <script src="/webjars/fastclick/fastclick.js"></script>
+        <!-- NProgress -->
+        <script src="/webjars/nprogress/nprogress.js"></script>
 
-        <!-- page content -->
-        <div data-layout-fragment="content"></div>
+        <!-- Validator   -->
+        <script src="/webjars/validate.js/validate.js"></script>
 
-        <!-- footer content -->
-        <div data-th-replace="fragments/fragment-footer :: footer"></div>
-
-    </div>
-</div>
-
-<!-- jQuery -->
-<script src="/webjars/jquery/jquery.min.js"></script>
-<!-- Bootstrap -->
-<script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
-<!-- FastClick -->
-<script src="/webjars/fastclick/fastclick.js"></script>
-
-<!-- Custom Theme Scripts -->
-<script src="/js/custom.min.js"></script>
-
-</body>
+        <!-- Custom Theme Scripts -->
+        <script src="/js/custom.min.js"></script>
+    </body>
 </html>

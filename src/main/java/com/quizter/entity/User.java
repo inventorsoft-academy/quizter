@@ -14,8 +14,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
 
 @Entity
 @Table(name = "Users")
@@ -26,24 +27,18 @@ import javax.validation.constraints.Email;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "hibernate_sequence", sequenceName = "id_sequence", allocationSize = 1)
     Long id;
 
-    @Email
-    @Column
+    @Column(unique = true)
     String email;
+
+    @OneToOne(mappedBy = "user")
+    private Profile profile;
 
     @Column
     String password;
-
-    @Column
-    String firstName;
-
-    @Column
-    String lastName;
-
-    @Column
-    String photoUrl;
 
     @Column(name = "is_active")
     Boolean active;

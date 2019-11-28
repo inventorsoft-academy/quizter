@@ -1,25 +1,39 @@
 package com.quizter.controller;
 
-import com.quizter.dto.MessageResponse;
+import com.quizter.dictionary.Role;
 import com.quizter.dto.RegistrationUserDto;
+import com.quizter.dto.response.MessageResponse;
 import com.quizter.service.UserService;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-@RequestMapping(value = "/registration")
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class RegistrationController {
 
-    private UserService userService;
+    UserService userService;
 
-    @PostMapping
-    public ResponseEntity<MessageResponse> registerUser(@RequestBody RegistrationUserDto registrationDto) {
-        userService.registerUser(registrationDto);
-        return ResponseEntity.ok(new MessageResponse("You've  been registered"));
+    @GetMapping(value = "/registration/{role}")
+    public ModelAndView registrationForm(@PathVariable("role") Role role) {
+        ModelAndView modelAndView = new ModelAndView("registration-page");
+        modelAndView.addObject("role", role);
+        return modelAndView;
+    }
+
+    @PostMapping(value = "/registration/{role}")
+    public ResponseEntity<MessageResponse> registration(@RequestBody RegistrationUserDto user, @PathVariable("role") Role role) {
+        userService.registerUser(user);
+        return ResponseEntity.ok(new MessageResponse("registered"));
+    }
+
+    @GetMapping(value = "/active-account")
+    public ResponseEntity<String> activateAccount(@RequestParam Long id, @RequestParam String token) {
+        userService.activeUser(id, token);
+        return ResponseEntity.ok("Account activated");
     }
 }
