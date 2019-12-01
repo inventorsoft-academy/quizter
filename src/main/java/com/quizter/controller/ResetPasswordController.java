@@ -1,6 +1,7 @@
 package com.quizter.controller;
 
 import com.quizter.dto.UserEmailDto;
+import com.quizter.dto.response.MessageResponse;
 import com.quizter.service.UserService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -25,8 +26,8 @@ public class ResetPasswordController {
     }
 
     @PostMapping(value = "/resetPassword")
-    public ResponseEntity<String> resetPassword(@RequestBody UserEmailDto userEmailDto) {
+    public ResponseEntity<MessageResponse> resetPassword(@RequestBody UserEmailDto userEmailDto) {
         userService.resetPassword(userEmailDto);
-        return ResponseEntity.ok("ok");
+        return ResponseEntity.ok(new MessageResponse("ok"));
     }
 }

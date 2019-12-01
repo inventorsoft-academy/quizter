@@ -5,10 +5,12 @@ import com.quizter.util.EmailConstants;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @RequiredArgsConstructor
 @Service
@@ -17,7 +19,13 @@ public class MailWebService {
 
     MailSender mailSender;
 
+    static Logger LOG = Logger.getLogger(MailWebService.class.getName());
+
+    @Async
     public void mailSend(String recipient, String subject, String mailContent, String appUrl) {
+
+        LOG.info("Mail sender thread = " + Thread.currentThread().getName());
+        LOG.info("All the threads = " + Thread.getAllStackTraces().keySet().toString());
 
         Map<String, Object> model = new HashMap<>();
 

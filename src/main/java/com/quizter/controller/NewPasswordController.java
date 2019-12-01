@@ -1,6 +1,7 @@
 package com.quizter.controller;
 
 import com.quizter.dto.PasswordDto;
+import com.quizter.dto.response.MessageResponse;
 import com.quizter.service.SecurityService;
 import com.quizter.service.UserService;
 import lombok.AccessLevel;
@@ -28,17 +29,16 @@ public class NewPasswordController {
     }
 
     @PostMapping("/newPassword")
-    public ResponseEntity<String> saveNewPassword(@RequestParam(required = false) Long id,
-                                                  @RequestParam(required = false) String token,
-                                                  @RequestBody PasswordDto passwordDto) {
+    public ResponseEntity<MessageResponse> saveNewPassword(@RequestParam(required = false) Long id,
+                                                           @RequestParam(required = false) String token,
+                                                           @RequestBody PasswordDto passwordDto) {
         if (!securityService.validateResetToken(id, token)) {
-            // TODO use message response
-            return ResponseEntity.ok("messageWrong");
+            return ResponseEntity.ok(new MessageResponse("messageWrong"));
         }
         if (!passwordDto.getPassword().equals(passwordDto.getConfirmPassword())) {
-            return ResponseEntity.ok("passwordsMismatch");
+            return ResponseEntity.ok(new MessageResponse("passwordsMismatch"));
         }
         userService.saveNewPassword(id, passwordDto.getPassword());
-        return ResponseEntity.ok("newPasswordSaved");
+        return ResponseEntity.ok(new MessageResponse("newPasswordSaved"));
     }
 }

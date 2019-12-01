@@ -12,8 +12,9 @@ import com.quizter.repository.TokenRepository;
 import com.quizter.repository.UserRepository;
 import com.quizter.util.EmailConstants;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,24 +22,30 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 @Service
 @Transactional
-@AllArgsConstructor
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserService {
 
-    UserRepository userRepository;
+    final UserRepository userRepository;
 
-    MailWebService mailWebService;
+    final MailWebService mailWebService;
 
-    TokenService tokenService;
+    final TokenService tokenService;
 
-    UserMapper userMapper;
+    final UserMapper userMapper;
 
-    PasswordEncoder passwordEncoder;
+    final PasswordEncoder passwordEncoder;
 
-    TokenRepository tokenRepository;
+    final TokenRepository tokenRepository;
+
+    @Value("${host}")
+    String domain;
+
+    static final Logger LOG = Logger.getLogger(UserService.class.getName());
 
     public void registerUser(RegistrationUserDto registrationUserDto) {
         User user = userMapper.toUser(registrationUserDto);
@@ -46,7 +53,7 @@ public class UserService {
         user.setActive(false);
         userRepository.save(user);
         mailWebService.mailSend(user.getEmail(), EmailConstants.REGISTRATION_SUBJECT, EmailConstants.MAIL_CONTENT_URL,
-                "http://localhost:8080/active-account?id=" + user.getId() + "&token="
+                domain + "/active-account?id=" + user.getId() + "&token="
                         + tokenService.generateToken(user.getEmail(), CacheType.ACTIVATION).getToken());
     }
 
@@ -101,9 +108,9 @@ public class UserService {
             User user = userOptional.get();
             String token = UUID.randomUUID().toString();
             createPasswordResetTokenForUser(user, token);
-            //TODO http://localhost:8080 move in app prop
-            String appUrl = "http://localhost:8080/newPassword?id=" + user.getId() + "&token=" + token;
-            // TODO async
+            String appUrl = domain + "/newPassword?id=" + user.getId() + "&token=" + token;
+            LOG.info(appUrl);
+            LOG.info("main thread = " + Thread.currentThread().getName());
             mailWebService.mailSend(user.getEmail(), "Restore password",
                     "reset-password-content", appUrl);
         }
