@@ -34,17 +34,21 @@ public class UserService {
 
     UserMapper userMapper;
 
+    ValidationService validationService;
+
     PasswordEncoder passwordEncoder;
 
     TokenRepository tokenRepository;
 
     public void registerUser(RegistrationUserDto registrationUserDto) {
+        validationService.registrationValidation(registrationUserDto);
         User user = userMapper.toUser(registrationUserDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActive(false);
         userRepository.save(user);
         mailWebService.mailSend(user.getEmail(), EmailConstants.REGISTRATION_SUBJECT, EmailConstants.MAIL_CONTENT_URL,
-                "http://localhost:8080/active-account?id=" + user.getId() + "&token=" + tokenService.generateToken(user.getEmail(), CacheType.ACTIVATION).getToken());
+                "http://localhost:8080/active-account?id=" + user.getId() + "&token=" +
+                        tokenService.generateToken(user.getEmail(), CacheType.ACTIVATION).getToken());
     }
 
     public Optional<User> findUserByEmail(String email) {
@@ -65,7 +69,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void activeUser(Long id, String token) {
+    public void activateUser(Long id, String token) {
 
         Optional<User> user = userRepository.findById(id);
 

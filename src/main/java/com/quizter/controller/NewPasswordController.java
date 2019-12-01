@@ -4,6 +4,7 @@ import com.quizter.dto.PasswordDto;
 import com.quizter.entity.User;
 import com.quizter.service.SecurityService;
 import com.quizter.service.UserService;
+import com.quizter.service.ValidationService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,6 +26,7 @@ public class NewPasswordController {
 
     SecurityService securityService;
     UserService userService;
+    ValidationService validation;
 
     static final Logger LOG = Logger.getLogger(NewPasswordController.class.getName());
 
@@ -48,9 +50,7 @@ public class NewPasswordController {
 
     @PostMapping("/newPassword")
     public ResponseEntity<String> saveNewPassword(@RequestBody PasswordDto newPasswordDto) {
-        if (!newPasswordDto.getPassword().equals(newPasswordDto.getConfirmPassword())) {
-            return ResponseEntity.ok("passwordsMismatch");
-        }
+        validation.passwordValidation(newPasswordDto);
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         userService.saveNewPassword(user, newPasswordDto.getPassword());
         return ResponseEntity.ok("newPasswordSaved");

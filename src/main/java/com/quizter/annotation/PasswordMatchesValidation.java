@@ -9,6 +9,9 @@ public class PasswordMatchesValidation implements ConstraintValidator<PasswordMa
 
     @Override
     public boolean isValid(PasswordDto user, ConstraintValidatorContext constraintValidatorContext) {
-        return user.getConfirmPassword().equals(user.getPassword());
+        if (!user.getPassword().matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!^&+=])(?=\\S+$).{8,}$")) {
+            return false;
+        } else
+            return user.getPassword().equals(user.getConfirmPassword());
     }
 }
