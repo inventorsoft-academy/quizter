@@ -8,11 +8,12 @@ function saveNewPassword(){
        url: myUrl,
        data: JSON.stringify(data),
        success: function (result) {
-          if(result === "newPasswordSaved"){
+       console.log(result);
+          if(result.message === "newPasswordSaved"){
           $('#newPasswordForm').text(" ");
           $('#messageSuccess').text("New password successfully saved");
           $('#messageLogin').text("Login");
-          } else if (result === "passwordsMismatch"){
+          } else if (result.message === "passwordsMismatch"){
              $('#mismatchMessage').text("Passwords mismatch");
           } else {
           $('#newPasswordForm').text(" ");
