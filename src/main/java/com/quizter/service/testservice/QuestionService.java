@@ -8,7 +8,9 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -19,9 +21,9 @@ public class QuestionService {
     QuestionRepository questionRepository;
 
     @Transactional
-    public Set<Question> createQuestions(Set<Question> questions)
+    public List<Question> createQuestions(List<Question> questions)
     {
-        Set<Question> savedQuestions = new HashSet<>();
+        List<Question> savedQuestions = new ArrayList<>();
 
         for (Question e: questions) {
             Question question = new Question();
@@ -35,7 +37,5 @@ public class QuestionService {
 
         return savedQuestions;
     }
-
-
 
 }

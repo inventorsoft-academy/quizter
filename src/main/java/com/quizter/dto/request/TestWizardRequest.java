@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -17,7 +17,7 @@ public class TestWizardRequest {
 
     String description;
 
-    Set<Question> questions;
+    List<Question> questions;
 
 }
 
