@@ -65,6 +65,9 @@ public class ValidationService {
         }
     }
 
+    public void loginValidation(){
+
+    }
     @Bean
     public Validator validator() {
         return Validation.buildDefaultValidatorFactory().getValidator();

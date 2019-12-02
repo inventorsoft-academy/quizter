@@ -1,4 +1,4 @@
-import {ErrorResponse} from '/js/model/error-response';
+// import {ErrorResponse} from "../model/error-response";
 
 $(document).ready(function () {
 
@@ -31,16 +31,20 @@ function registration() {
         dataType: 'json',
         cache: false,
         success: function (data) {
-            location.href = "/active-account-page"
+            location.href = "/active-account-page";
+            $("#email-error").attr("hidden", true);
+            $("#password-error").attr("hidden", true);
         },
         error: function (xhr, status, errorThrown) {
-            const response = new ErrorResponse();
-            // if (response.message.has("emailError")){
-            //     alert(response.message.get("emailError"));
-            // }
-            $("#email-error").removeAttr('hidden');
-            alert(JSON.parse(JSON.parse(xhr.responseText).message).emailError);
-            $("#email-error").text();
+
+            if (JSON.parse(JSON.parse(xhr.responseText).message).emailError !== undefined) {
+                $("#email-error").removeAttr('hidden');
+                $("#email-error").text(JSON.parse(JSON.parse(xhr.responseText).message).emailError);
+            }
+            if (JSON.parse(JSON.parse(xhr.responseText).message).passwordError !== undefined) {
+                $("#password-error").removeAttr('hidden');
+                $("#password-error").text(JSON.parse(JSON.parse(xhr.responseText).message).passwordError);
+            }
         }
     });
 }
