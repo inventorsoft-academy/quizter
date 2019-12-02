@@ -9,14 +9,12 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @Setter
 @ToString
-@PasswordMatches
 public class RegistrationUserDto {
 
     @NotNull
@@ -24,7 +22,8 @@ public class RegistrationUserDto {
     String email;
 
     @NotNull
-    String password;
+    @PasswordMatches
+    PasswordDto password;
 
     @NotNull
     String confirmPassword;

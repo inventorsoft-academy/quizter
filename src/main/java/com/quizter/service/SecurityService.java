@@ -1,8 +1,8 @@
 package com.quizter.service;
 
-import com.quizter.entity.PasswordResetToken;
+import com.quizter.entity.Token;
 import com.quizter.entity.User;
-import com.quizter.repository.PasswordRepository;
+import com.quizter.repository.TokenRepository;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,10 +25,10 @@ public class SecurityService {
 
     static final Logger LOG = Logger.getLogger(SecurityService.class.getName());
 
-    PasswordRepository passwordRepository;
+    TokenRepository tokenRepository;
 
     public String validateResetToken(Long id, String token) {
-        PasswordResetToken passwordResetToken = passwordRepository.findByToken(token);
+        Token passwordResetToken = tokenRepository.findByToken(token);
         if (passwordResetToken == null || passwordResetToken.getUser().getId() != id) {
             return "invalidToken";
         }

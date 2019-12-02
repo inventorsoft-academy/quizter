@@ -1,6 +1,6 @@
 package com.quizter.controller;
 
-import com.quizter.dto.NewPasswordDto;
+import com.quizter.dto.PasswordDto;
 import com.quizter.entity.User;
 import com.quizter.service.SecurityService;
 import com.quizter.service.UserService;
@@ -47,12 +47,12 @@ public class NewPasswordController {
     }
 
     @PostMapping("/newPassword")
-    public ResponseEntity<String> saveNewPassword(@RequestBody NewPasswordDto newPasswordDto) {
-        if (!newPasswordDto.getUserPassword().equals(newPasswordDto.getConfirmPassword())) {
+    public ResponseEntity<String> saveNewPassword(@RequestBody PasswordDto newPasswordDto) {
+        if (!newPasswordDto.getPassword().equals(newPasswordDto.getConfirmPassword())) {
             return ResponseEntity.ok("passwordsMismatch");
         }
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        userService.saveNewPassword(user, newPasswordDto.getUserPassword());
+        userService.saveNewPassword(user, newPasswordDto.getPassword());
         return ResponseEntity.ok("newPasswordSaved");
     }
 }

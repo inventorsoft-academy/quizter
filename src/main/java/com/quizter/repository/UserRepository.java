@@ -13,5 +13,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
 
+    void deleteById(Long id);
+
     List<User> findUserByRole(Role role);
 }
