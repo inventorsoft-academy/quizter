@@ -13,13 +13,14 @@ import com.quizter.util.EmailConstants;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.logging.Logger;
 
+@Slf4j
 @Service
 @Transactional
 @AllArgsConstructor
@@ -40,8 +41,6 @@ public class UserService {
 
     AppConstants appConstants;
 
-    static final Logger LOG = Logger.getLogger(UserService.class.getName());
-
     public void registerUser(RegistrationUserDto registrationUserDto) {
         validationService.registrationValidation(registrationUserDto);
         User user = userMapper.toUser(registrationUserDto);
@@ -49,7 +48,7 @@ public class UserService {
         user.setActive(false);
         userRepository.save(user);
         mailWebService.mailSend(user.getEmail(), EmailConstants.REGISTRATION_SUBJECT, EmailConstants.MAIL_CONTENT_URL,
-                appConstants.getDomain() + "/active-account?id=" + user.getId() + "&token="
+                appConstants.getHost() + "/active-account?id=" + user.getId() + "&token="
                         + tokenService.generateToken(user.getEmail(), CacheType.ACTIVATION).getToken());
     }
 
@@ -95,8 +94,8 @@ public class UserService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             String token = tokenService.generateToken(email, CacheType.RECOVERY).getToken();
-            String appUrl = appConstants.getDomain() + "/newPassword?id=" + user.getId() + "&token=" + token;
-            LOG.info(appUrl);
+            String appUrl = appConstants.getHost() + "/newPassword?id=" + user.getId() + "&token=" + token;
+            log.info(appUrl);
             mailWebService.mailSend(user.getEmail(), "Restore password",
                     "reset-password-content", appUrl);
         }
