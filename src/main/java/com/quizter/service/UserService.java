@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @Service
 @Transactional
@@ -39,8 +38,6 @@ public class UserService {
     PasswordEncoder passwordEncoder;
 
     AppConstants appConstants;
-
-    static final Logger LOG = Logger.getLogger(UserService.class.getName());
 
     public void registerUser(RegistrationUserDto registrationUserDto) {
         validationService.registrationValidation(registrationUserDto);
@@ -96,7 +93,6 @@ public class UserService {
             User user = userOptional.get();
             String token = tokenService.generateToken(email, CacheType.RECOVERY).getToken();
             String appUrl = appConstants.getDomain() + "/newPassword?id=" + user.getId() + "&token=" + token;
-            LOG.info(appUrl);
             mailWebService.mailSend(user.getEmail(), "Restore password",
                     "reset-password-content", appUrl);
         }

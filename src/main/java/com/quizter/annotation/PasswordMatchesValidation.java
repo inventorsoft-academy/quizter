@@ -12,11 +12,12 @@ public class PasswordMatchesValidation implements ConstraintValidator<PasswordMa
 
         if (!user.getPassword().matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!^&+=])(?=\\S+$).{8,}$")) {
             constraintValidatorContext.disableDefaultConstraintViolation();
-            constraintValidatorContext.buildConstraintViolationWithTemplate("PasswordIsWeek").addPropertyNode("Password").addConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate(
+                    "Password is weak").addPropertyNode("Password").addConstraintViolation();
             return false;
         } else
-            constraintValidatorContext.buildConstraintViolationWithTemplate("PasswordMismatch").
-                    addPropertyNode("PasswordError").addConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("Password mismatch").
+                    addPropertyNode("Password").addConstraintViolation();
         ;
         return user.getPassword().equals(user.getConfirmPassword());
     }
