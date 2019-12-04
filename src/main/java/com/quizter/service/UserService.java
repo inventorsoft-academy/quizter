@@ -3,12 +3,10 @@ package com.quizter.service;
 import com.quizter.dictionary.CacheType;
 import com.quizter.dto.RegistrationUserDto;
 import com.quizter.dto.UserEmailDto;
-import com.quizter.entity.Token;
 import com.quizter.entity.User;
 import com.quizter.exception.NoUserWithThatIDException;
 import com.quizter.exception.TokenException;
 import com.quizter.mapper.UserMapper;
-import com.quizter.repository.TokenRepository;
 import com.quizter.repository.UserRepository;
 import com.quizter.util.AppConstants;
 import com.quizter.util.EmailConstants;
@@ -19,9 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 @Service
@@ -39,8 +35,6 @@ public class UserService {
     UserMapper userMapper;
 
     PasswordEncoder passwordEncoder;
-
-    TokenRepository tokenRepository;
 
     AppConstants appConstants;
 
@@ -60,18 +54,10 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public void createPasswordResetTokenForUser(User user, String token) {
-        Token passwordResetToken = new Token();
-        passwordResetToken.setUser(user);
-        passwordResetToken.setToken(token);
-        passwordResetToken.setExpiryDate(Instant.ofEpochSecond(Instant.now().getEpochSecond() + 3600));
-        tokenRepository.save(passwordResetToken);
-    }
-
     public void saveNewPassword(Long id, String password) {
         User user = userRepository.findById(id).get();
         user.setPassword(passwordEncoder.encode(password));
-        tokenRepository.deleteByUserId(user.getId());
+        tokenService.deleteToken(id);
         userRepository.save(user);
     }
 
@@ -105,8 +91,7 @@ public class UserService {
         Optional<User> userOptional = findUserByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            String token = UUID.randomUUID().toString();
-            createPasswordResetTokenForUser(user, token);
+            String token = tokenService.generateToken(email, CacheType.RECOVERY).getToken();
             String appUrl = appConstants.getDomain() + "/newPassword?id=" + user.getId() + "&token=" + token;
             LOG.info(appUrl);
             mailWebService.mailSend(user.getEmail(), "Restore password",

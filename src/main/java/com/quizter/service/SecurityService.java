@@ -1,7 +1,6 @@
 package com.quizter.service;
 
 import com.quizter.entity.Token;
-import com.quizter.entity.User;
 import com.quizter.repository.TokenRepository;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.logging.Logger;
+import java.util.Optional;
 
 @Transactional
 @AllArgsConstructor
@@ -18,14 +17,12 @@ import java.util.logging.Logger;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SecurityService {
 
-    static final Logger LOG = Logger.getLogger(SecurityService.class.getName());
-
     TokenRepository tokenRepository;
 
     public boolean validateResetToken(Long id, String token) {
-        Token passwordResetToken = tokenRepository.findByToken(token);
-        if (passwordResetToken == null || passwordResetToken.getUser().getId() != id ||
-                (passwordResetToken.getExpiryDate().getEpochSecond() - Instant.now().getEpochSecond() < 0)) {
+        Optional<Token> passwordResetToken = tokenRepository.findByToken(token);
+        if (passwordResetToken.isEmpty() || passwordResetToken.get().getUser().getId() != id ||
+                (passwordResetToken.get().getExpiryDate().getEpochSecond() - Instant.now().getEpochSecond() < 0)) {
             return false;
         }
         return true;

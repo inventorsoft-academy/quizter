@@ -43,7 +43,6 @@ public class TokenService {
         return tokenRepository.findByTypeAndAndUser(userRepository.findByEmail(email).orElseThrow(), type);
     }
 
-
     public void removeToken(String email, CacheType type) {
         tokenRepository.delete(getToken(email, type));
     }
@@ -51,5 +50,9 @@ public class TokenService {
     @Scheduled(cron = "0 0 * ? * *")
     public void removeExpiredTokens() {
         tokenRepository.deleteAll(tokenRepository.findTokenByExpiryDateAfter(Instant.now()));
+    }
+
+    public void deleteToken(Long id) {
+        tokenRepository.deleteByUserId(id);
     }
 }

@@ -6,13 +6,15 @@ import com.quizter.entity.User;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TokenRepository extends CrudRepository<Token, Long> {
 
-    Token findByToken(String token);
+    Optional<Token> findByToken(String token);
 
     Token findByTypeAndAndUser(User user, CacheType type);
 
