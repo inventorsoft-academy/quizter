@@ -1,5 +1,3 @@
-// import {ErrorResponse} from "../model/error-response";
-
 $(document).ready(function () {
 
     $("#registration-form").submit(function (event) {
@@ -30,20 +28,28 @@ function registration() {
         dataType: 'json',
         cache: false,
         success: function (data) {
-            alert("awdawd");
             location.href = "/active-account-page";
             $("#email-error").attr("hidden", true);
             $("#password-error").attr("hidden", true);
+            $("#confirm-password-error").attr("hidden", true);
+
         },
         error: function (xhr, status, errorThrown) {
+
             var response = new ErrorResponse(JSON.parse(xhr.responseText));
-            if (JSON.parse(JSON.parse(xhr.responseText).message).emailError !== undefined) {
+            if (response.fieldErrors.emailError !== undefined) {
                 $("#email-error").removeAttr('hidden');
-                $("#email-error").text(JSON.parse(JSON.parse(xhr.responseText).message).emailError);
+                $("#email-error").text(response.fieldErrors.emailError);
             }
-            if (JSON.parse(JSON.parse(xhr.responseText).message).passwordError !== undefined) {
+            if (response.fieldErrors.PasswordError ===  "Password is weak") {
+                alert(response.fieldErrors.PasswordError);
                 $("#password-error").removeAttr('hidden');
-                $("#password-error").text(JSON.parse(JSON.parse(xhr.responseText).message).passwordError);
+                $("#password-error").text(response.fieldErrors.PasswordError);
+            }
+            if (response.fieldErrors.PasswordError ===  "Password Mismatch") {
+                alert(response.fieldErrors.PasswordError);
+                $("#confirm-password-error").removeAttr('hidden');
+                $("#confirm-password-error").text(response.fieldErrors.PasswordError);
             }
         }
     });

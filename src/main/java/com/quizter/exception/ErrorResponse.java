@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.time.Instant;
+import java.util.Map;
 
 @XmlRootElement(name = "error")
 @AllArgsConstructor
@@ -18,5 +19,5 @@ public class ErrorResponse {
 
     Instant time;
     String message;
-    String details;
+    Map<String,String> fieldErrors;
 }
