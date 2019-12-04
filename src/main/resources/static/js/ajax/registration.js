@@ -14,7 +14,6 @@ $(document).ready(function () {
 
 function registration() {
     const role = $("#role").val();
-    alert(role);
     const url = "/registration/" + role;
     $.ajax({
         type: "POST",
@@ -31,12 +30,13 @@ function registration() {
         dataType: 'json',
         cache: false,
         success: function (data) {
+            alert("awdawd");
             location.href = "/active-account-page";
             $("#email-error").attr("hidden", true);
             $("#password-error").attr("hidden", true);
         },
         error: function (xhr, status, errorThrown) {
-
+            var response = new ErrorResponse(JSON.parse(xhr.responseText));
             if (JSON.parse(JSON.parse(xhr.responseText).message).emailError !== undefined) {
                 $("#email-error").removeAttr('hidden');
                 $("#email-error").text(JSON.parse(JSON.parse(xhr.responseText).message).emailError);
