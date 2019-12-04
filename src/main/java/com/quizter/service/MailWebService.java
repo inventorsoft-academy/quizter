@@ -5,6 +5,7 @@ import com.quizter.util.EmailConstants;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -17,6 +18,7 @@ public class MailWebService {
 
     MailSender mailSender;
 
+    @Async
     public void mailSend(String recipient, String subject, String mailContent, String appUrl) {
 
         Map<String, Object> model = new HashMap<>();

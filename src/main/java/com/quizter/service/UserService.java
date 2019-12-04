@@ -2,6 +2,7 @@ package com.quizter.service;
 
 import com.quizter.dictionary.CacheType;
 import com.quizter.dto.RegistrationUserDto;
+import com.quizter.dto.UserEmailDto;
 import com.quizter.entity.Token;
 import com.quizter.entity.User;
 import com.quizter.exception.NoUserWithThatIDException;
@@ -9,6 +10,7 @@ import com.quizter.exception.TokenException;
 import com.quizter.mapper.UserMapper;
 import com.quizter.repository.TokenRepository;
 import com.quizter.repository.UserRepository;
+import com.quizter.util.AppConstants;
 import com.quizter.util.EmailConstants;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -19,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 @Service
 @Transactional
@@ -38,13 +42,18 @@ public class UserService {
 
     TokenRepository tokenRepository;
 
+    AppConstants appConstants;
+
+    static final Logger LOG = Logger.getLogger(UserService.class.getName());
+
     public void registerUser(RegistrationUserDto registrationUserDto) {
         User user = userMapper.toUser(registrationUserDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActive(false);
         userRepository.save(user);
         mailWebService.mailSend(user.getEmail(), EmailConstants.REGISTRATION_SUBJECT, EmailConstants.MAIL_CONTENT_URL,
-                "http://localhost:8080/active-account?id=" + user.getId() + "&token=" + tokenService.generateToken(user.getEmail(), CacheType.ACTIVATION).getToken());
+                appConstants.getDomain() + "/active-account?id=" + user.getId() + "&token="
+                        + tokenService.generateToken(user.getEmail(), CacheType.ACTIVATION).getToken());
     }
 
     public Optional<User> findUserByEmail(String email) {
@@ -59,7 +68,8 @@ public class UserService {
         tokenRepository.save(passwordResetToken);
     }
 
-    public void saveNewPassword(User user, String password) {
+    public void saveNewPassword(Long id, String password) {
+        User user = userRepository.findById(id).get();
         user.setPassword(passwordEncoder.encode(password));
         tokenRepository.deleteByUserId(user.getId());
         userRepository.save(user);
@@ -87,6 +97,20 @@ public class UserService {
             userRepository.save(user.get());
         } else {
             throw new NoUserWithThatIDException("user", "id", id);
+        }
+    }
+
+    public void resetPassword(UserEmailDto userEmailDto) {
+        String email = userEmailDto.getUserEmail();
+        Optional<User> userOptional = findUserByEmail(email);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            String token = UUID.randomUUID().toString();
+            createPasswordResetTokenForUser(user, token);
+            String appUrl = appConstants.getDomain() + "/newPassword?id=" + user.getId() + "&token=" + token;
+            LOG.info(appUrl);
+            mailWebService.mailSend(user.getEmail(), "Restore password",
+                    "reset-password-content", appUrl);
         }
     }
 }
