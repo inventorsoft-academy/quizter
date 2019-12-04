@@ -37,9 +37,6 @@ public class NewPasswordController {
         if (!securityService.validateResetToken(id, token)) {
             return ResponseEntity.ok(new MessageResponse("messageWrong"));
         }
-//        if (!passwordDto.getPassword().equals(passwordDto.getConfirmPassword())) {
-//            return ResponseEntity.ok(new MessageResponse("passwordsMismatch"));
-//        }
         validation.passwordValidation(passwordDto);
         userService.saveNewPassword(id, passwordDto.getPassword());
         return ResponseEntity.ok(new MessageResponse("newPasswordSaved"));

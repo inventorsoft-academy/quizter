@@ -36,15 +36,15 @@ function registration() {
             $("#password-error").attr("hidden", true);
         },
         error: function (xhr, status, errorThrown) {
-
-            if (JSON.parse(JSON.parse(xhr.responseText).message).emailError !== undefined) {
-                $("#email-error").removeAttr('hidden');
-                $("#email-error").text(JSON.parse(JSON.parse(xhr.responseText).message).emailError);
-            }
-            if (JSON.parse(JSON.parse(xhr.responseText).message).passwordError !== undefined) {
-                $("#password-error").removeAttr('hidden');
-                $("#password-error").text(JSON.parse(JSON.parse(xhr.responseText).message).passwordError);
-            }
+            displayErrors(JSON.parse(xhr.responseText));
+//            if (JSON.parse(JSON.parse(xhr.responseText).message).emailError !== undefined) {
+//                $("#email-error").removeAttr('hidden');
+//                $("#email-error").text(JSON.parse(JSON.parse(xhr.responseText).message).emailError);
+//            }
+//            if (JSON.parse(JSON.parse(xhr.responseText).message).passwordError !== undefined) {
+//                $("#password-error").removeAttr('hidden');
+//                $("#password-error").text(JSON.parse(JSON.parse(xhr.responseText).message).passwordError);
+//            }
         }
     });
 }
