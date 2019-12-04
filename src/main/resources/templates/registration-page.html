@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
+<!--      data-layout-decorate="~{layout/scripts-layout}"-->
+
+
 
 <head>
     <meta charset="utf-8"/>
@@ -31,6 +34,8 @@
             <label for="confirmPassword">Confirm password</label>
             <input id="confirmPassword" type="password" class="form-control"
                    autocomplete="off" required>
+            <label id="confirm-password-error" hidden=true></label>
+
         </div>
         <input id="role" name="role" type="text" hidden="true" th:value="${role}">
         <div class="container text-center py-4">
@@ -39,6 +44,9 @@
             </button>
         </div>
     </form>
+</div>
+<div th:include="layout/scripts-layout">
+
 </div>
 </body>
 </html>

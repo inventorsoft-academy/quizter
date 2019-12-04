@@ -41,9 +41,8 @@ public class TokenService {
     }
 
     public Token getToken(String email, CacheType type) {
-        return tokenRepository.findByTypeAndAndUser(type, userRepository.findByEmail(email).orElseThrow());
+        return tokenRepository.findByTypeAndUser(type, userRepository.findByEmail(email).orElseThrow());
     }
-
 
     public void removeToken(String email, CacheType type) {
         tokenRepository.delete(getToken(email, type));
@@ -52,5 +51,9 @@ public class TokenService {
     @Scheduled(cron = "0 0 * ? * *")
     public void removeExpiredTokens() {
         tokenRepository.deleteAll(tokenRepository.findTokenByExpiryDateAfter(Instant.now()));
+    }
+
+    public void deleteToken(Long id) {
+        tokenRepository.deleteByUserId(id);
     }
 }

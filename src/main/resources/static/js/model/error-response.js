@@ -1,7 +1,7 @@
-export class ErrorResponse {
+class ErrorResponse {
     constructor(response) {
         this.time = response.time;
         this.message = response.message;
-        this.details = response.details;
+        this.fieldErrors = response.fieldErrors;
     }
 }

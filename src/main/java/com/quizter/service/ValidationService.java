@@ -48,6 +48,7 @@ public class ValidationService {
     public void registrationValidation(RegistrationUserDto registrationUserDto) {
 
         Map<String, String> validationResult = validate(registrationUserDto);
+        passwordValidation(registrationUserDto.getPassword());
         if (userRepository.findByEmail(registrationUserDto.getEmail()).isPresent()) {
             validationResult.put("EmailError", "User with such email already exists");
         }
