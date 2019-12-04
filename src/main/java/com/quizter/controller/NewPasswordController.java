@@ -29,8 +29,8 @@ public class NewPasswordController {
     }
 
     @PostMapping("/newPassword")
-    public ResponseEntity<MessageResponse> saveNewPassword(@RequestParam(required = false) Long id,
-                                                           @RequestParam(required = false) String token,
+    public ResponseEntity<MessageResponse> saveNewPassword(@RequestParam Long id,
+                                                           @RequestParam String token,
                                                            @RequestBody PasswordDto passwordDto) {
         if (!securityService.validateResetToken(id, token)) {
             return ResponseEntity.ok(new MessageResponse("messageWrong"));
