@@ -7,18 +7,18 @@ function saveNewPassword(){
        url: myUrl,
        data: JSON.stringify(data),
        success: function (response) {
-       console.log(response);
-          if(response.message === "newPasswordSaved"){
           $('#newPasswordForm').text(" ");
           $('#messageSuccess').text("New password successfully saved");
           $('#messageLogin').text("Login");
-          } else if (response.message === "messageWrong"){
-          $('#newPasswordForm').text(" ");
-          $('#messageWrong').text("something wrong, try again");
-          }
        },
-         error: function (errorResponse) {
-         $('#mismatchMessage').text(errorResponse.responseJSON.fieldErrors.PasswordError);
+       error: function (xhr, status, errorThrown) {
+       console.log(xhr.responseJSON.message);
+         if(xhr.responseJSON.message === "Validation error"){
+            $('#mismatchMessage').text(xhr.responseJSON.fieldErrors.PasswordError);
+         } else if(xhr.responseJSON.message === "Token not valid"){
+            $('#newPasswordForm').text(" ");
+            $('#messageWrong').text("something wrong, try again");
          }
+       }
    })
 }

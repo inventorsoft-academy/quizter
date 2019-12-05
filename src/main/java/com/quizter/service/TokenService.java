@@ -2,7 +2,6 @@ package com.quizter.service;
 
 import com.quizter.dictionary.CacheType;
 import com.quizter.entity.Token;
-import com.quizter.entity.User;
 import com.quizter.repository.TokenRepository;
 import com.quizter.repository.UserRepository;
 import lombok.AccessLevel;
@@ -53,7 +52,4 @@ public class TokenService {
         tokenRepository.deleteAll(tokenRepository.findTokenByExpiryDateAfter(Instant.now()));
     }
 
-    public void deleteToken(Long id) {
-        tokenRepository.deleteByUserId(id);
-    }
 }

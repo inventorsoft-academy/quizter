@@ -1,6 +1,7 @@
 package com.quizter.service;
 
 import com.quizter.dictionary.CacheType;
+import com.quizter.dto.PasswordDto;
 import com.quizter.dto.RegistrationUserDto;
 import com.quizter.dto.UserEmailDto;
 import com.quizter.entity.User;
@@ -39,6 +40,10 @@ public class UserService {
 
     AppConstants appConstants;
 
+    ValidationService validation;
+
+    SecurityService securityService;
+
     public void registerUser(RegistrationUserDto registrationUserDto) {
         validationService.registrationValidation(registrationUserDto);
         User user = userMapper.toUser(registrationUserDto);
@@ -52,13 +57,6 @@ public class UserService {
 
     public Optional<User> findUserByEmail(String email) {
         return userRepository.findByEmail(email);
-    }
-
-    public void saveNewPassword(Long id, String password) {
-        User user = userRepository.findById(id).get();
-        user.setPassword(passwordEncoder.encode(password));
-        tokenService.deleteToken(id);
-        userRepository.save(user);
     }
 
     public void activateUser(Long id, String token) {
@@ -97,4 +95,16 @@ public class UserService {
                     "reset-password-content", appUrl);
         }
     }
+
+    public void saveNewPassword(Long id, String token, PasswordDto passwordDto) {
+        if (!securityService.validateResetToken(id, token)) {
+            throw new TokenException("Token not valid");
+        }
+        validation.passwordValidation(passwordDto);
+        User user = userRepository.findById(id).orElseThrow();
+        user.setPassword(passwordEncoder.encode(passwordDto.getPassword()));
+        tokenService.removeToken(user.getEmail(), CacheType.RECOVERY);
+        userRepository.save(user);
+    }
+
 }

@@ -2,9 +2,7 @@ package com.quizter.controller;
 
 import com.quizter.dto.PasswordDto;
 import com.quizter.dto.response.MessageResponse;
-import com.quizter.service.SecurityService;
 import com.quizter.service.UserService;
-import com.quizter.service.ValidationService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,9 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NewPasswordController {
 
-    SecurityService securityService;
     UserService userService;
-    ValidationService validation;
 
     @GetMapping("/newPassword")
     public ModelAndView newPasswordPage() {
@@ -31,14 +27,10 @@ public class NewPasswordController {
     }
 
     @PostMapping("/newPassword")
-    public ResponseEntity<MessageResponse> saveNewPassword(@RequestParam(required = false) Long id,
-                                                           @RequestParam(required = false) String token,
+    public ResponseEntity<MessageResponse> saveNewPassword(@RequestParam Long id,
+                                                           @RequestParam String token,
                                                            @RequestBody PasswordDto passwordDto) {
-        if (!securityService.validateResetToken(id, token)) {
-            return ResponseEntity.ok(new MessageResponse("messageWrong"));
-        }
-        validation.passwordValidation(passwordDto);
-        userService.saveNewPassword(id, passwordDto.getPassword());
+        userService.saveNewPassword(id, token, passwordDto);
         return ResponseEntity.ok(new MessageResponse("newPasswordSaved"));
     }
 }
