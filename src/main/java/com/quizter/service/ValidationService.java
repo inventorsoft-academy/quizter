@@ -37,8 +37,8 @@ public class ValidationService {
 
         Set<ConstraintViolation<T>> constraintViolation = validator().validate(t);
 
-        if (constraintViolation != null && constraintViolation.size() > 0) {
-            constraintViolation.stream().forEach(x -> errors.put(x.getPropertyPath().toString() + "Error", x.getMessage()));
+        if (constraintViolation != null && !constraintViolation.isEmpty()) {
+            constraintViolation.forEach(x -> errors.put(x.getPropertyPath().toString() + "Error", x.getMessage()));
         }
 
         return errors;
@@ -66,9 +66,6 @@ public class ValidationService {
         }
     }
 
-    public void loginValidation(){
-
-    }
     @Bean
     public Validator validator() {
         return Validation.buildDefaultValidatorFactory().getValidator();

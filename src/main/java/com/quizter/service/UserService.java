@@ -1,6 +1,7 @@
 package com.quizter.service;
 
 import com.quizter.dictionary.CacheType;
+import com.quizter.dto.PasswordDto;
 import com.quizter.dto.RegistrationUserDto;
 import com.quizter.dto.UserEmailDto;
 import com.quizter.entity.User;
@@ -13,14 +14,12 @@ import com.quizter.util.EmailConstants;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@Slf4j
 @Service
 @Transactional
 @AllArgsConstructor
@@ -41,6 +40,8 @@ public class UserService {
 
     AppConstants appConstants;
 
+    SecurityService securityService;
+
     public void registerUser(RegistrationUserDto registrationUserDto) {
         validationService.registrationValidation(registrationUserDto);
         User user = userMapper.toUser(registrationUserDto);
@@ -54,13 +55,6 @@ public class UserService {
 
     public Optional<User> findUserByEmail(String email) {
         return userRepository.findByEmail(email);
-    }
-
-    public void saveNewPassword(Long id, String password) {
-        User user = userRepository.findById(id).get();
-        user.setPassword(passwordEncoder.encode(password));
-        tokenService.deleteToken(id);
-        userRepository.save(user);
     }
 
     public void activateUser(Long id, String token) {
@@ -95,9 +89,20 @@ public class UserService {
             User user = userOptional.get();
             String token = tokenService.generateToken(email, CacheType.RECOVERY).getToken();
             String appUrl = appConstants.getHost() + "/newPassword?id=" + user.getId() + "&token=" + token;
-            log.info(appUrl);
             mailWebService.mailSend(user.getEmail(), "Restore password",
                     "reset-password-content", appUrl);
         }
     }
+
+    public void saveNewPassword(Long id, String token, PasswordDto passwordDto) {
+        if (!securityService.validateResetToken(id, token)) {
+            throw new TokenException("Token not valid");
+        }
+        validationService.passwordValidation(passwordDto);
+        User user = userRepository.findById(id).orElseThrow();
+        user.setPassword(passwordEncoder.encode(passwordDto.getPassword()));
+        tokenService.removeToken(user.getEmail(), CacheType.RECOVERY);
+        userRepository.save(user);
+    }
+
 }

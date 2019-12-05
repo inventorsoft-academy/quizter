@@ -52,7 +52,4 @@ public class TokenService {
         tokenRepository.deleteAll(tokenRepository.findTokenByExpiryDateAfter(Instant.now()));
     }
 
-    public void deleteToken(Long id) {
-        tokenRepository.deleteByUserId(id);
-    }
 }

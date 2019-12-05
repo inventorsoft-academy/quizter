@@ -20,5 +20,4 @@ public interface TokenRepository extends CrudRepository<Token, Long> {
 
     List<Token> findTokenByExpiryDateAfter(Instant now);
 
-    void deleteByUserId(Long id);
 }

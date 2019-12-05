@@ -21,9 +21,8 @@ public class SecurityService {
 
     public boolean validateResetToken(Long id, String token) {
         Optional<Token> passwordResetToken = tokenRepository.findByToken(token);
-        return passwordResetToken.filter(
-                token1 -> !token1.getUser().getId().equals(id)
-                        && token1.getExpiryDate().isAfter(Instant.now()))
+        return passwordResetToken.filter(resetToken -> resetToken.getUser().getId().equals(id)
+                && resetToken.getExpiryDate().isAfter(Instant.now()))
                 .isPresent();
     }
 }

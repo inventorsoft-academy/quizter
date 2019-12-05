@@ -1,27 +1,24 @@
 function saveNewPassword(){
    var data = {"password":$("#password").val(), "confirmPassword":$("#confirmPassword").val()}
    var myUrl = document.URL;
-   console.log("button pressed");
    $.ajax({
        contentType:"application/json; charset=utf-8",
        type: "POST",
        url: myUrl,
        data: JSON.stringify(data),
-       success: function (result) {
-       console.log(result);
-          if(result.message === "newPasswordSaved"){
+       success: function (response) {
           $('#newPasswordForm').text(" ");
           $('#messageSuccess').text("New password successfully saved");
           $('#messageLogin').text("Login");
-          } else if (result.message === "passwordsMismatch"){
-             $('#mismatchMessage').text("Passwords mismatch");
-          } else {
-          $('#newPasswordForm').text(" ");
-          $('#messageWrong').text("something wrong, try again");
-          }
        },
-         error: function (xhr, status, errorThrown) {
-         alert(JSON.parse(JSON.parse(xhr.responseText).message));
+       error: function (xhr, status, errorThrown) {
+       console.log(xhr.responseJSON.message);
+         if(xhr.responseJSON.message === "Validation error"){
+            $('#mismatchMessage').text(xhr.responseJSON.fieldErrors.PasswordError);
+         } else if(xhr.responseJSON.message === "Token not valid"){
+            $('#newPasswordForm').text(" ");
+            $('#messageWrong').text("something wrong, try again");
          }
+       }
    })
 }
