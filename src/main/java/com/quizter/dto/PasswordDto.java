@@ -11,12 +11,12 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@PasswordMatches
 public class PasswordDto {
 
-    @NotNull
+    @NotNull(message = "Password can't be empty")
     String password;
 
-    @NotNull
-    @PasswordMatches
+    @NotNull(message = "Please, confirm password")
     String confirmPassword;
 }

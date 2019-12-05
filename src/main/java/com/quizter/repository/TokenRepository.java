@@ -16,7 +16,7 @@ public interface TokenRepository extends CrudRepository<Token, Long> {
 
     Optional<Token> findByToken(String token);
 
-    Token findByTypeAndAndUser(User user, CacheType type);
+    Token findByTypeAndUser(CacheType type, User user);
 
     List<Token> findTokenByExpiryDateAfter(Instant now);
 

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>You don't see that</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="/js/ajax/registration.js"></script>
+    <link th:href="@{/css/app.css}" rel="stylesheet">
+
+</head>
+<body>
+<div class="input_box">
+    <h1 id="error-activation-message"></h1>
+</div>
+<label id="id-user" th:text="${id}" hidden="true"></label>
+<label id="token" th:text="${token}" hidden="true"></label>
+
+<script>
+    $(document).ready(function () {
+        activeUser()
+    });
+
+    function activeUser() {
+        var url = "/active-account?id=" + $("#id-user").text() + "&token=" + $("#token").text();
+        $.ajax({
+            type: "POST",
+            url: url,
+            cache: false,
+            success: function (data) {
+                location.href = "/login";
+            },
+            error: function (xhr, status, errorThrown) {
+                $("#error-activation-message").text(JSON.parse(xhr.responseText).message);
+            }
+        });
+    }
+</script>
+</body>
+</html>

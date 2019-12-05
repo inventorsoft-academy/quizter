@@ -4,6 +4,7 @@ import com.quizter.dto.PasswordDto;
 import com.quizter.dto.response.MessageResponse;
 import com.quizter.service.SecurityService;
 import com.quizter.service.UserService;
+import com.quizter.service.ValidationService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,6 +23,7 @@ public class NewPasswordController {
 
     SecurityService securityService;
     UserService userService;
+    ValidationService validation;
 
     @GetMapping("/newPassword")
     public ModelAndView newPasswordPage() {
@@ -35,9 +37,7 @@ public class NewPasswordController {
         if (!securityService.validateResetToken(id, token)) {
             return ResponseEntity.ok(new MessageResponse("messageWrong"));
         }
-        if (!passwordDto.getPassword().equals(passwordDto.getConfirmPassword())) {
-            return ResponseEntity.ok(new MessageResponse("passwordsMismatch"));
-        }
+        validation.passwordValidation(passwordDto);
         userService.saveNewPassword(id, passwordDto.getPassword());
         return ResponseEntity.ok(new MessageResponse("newPasswordSaved"));
     }

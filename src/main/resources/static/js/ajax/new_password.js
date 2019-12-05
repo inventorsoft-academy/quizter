@@ -19,6 +19,9 @@ function saveNewPassword(){
           $('#newPasswordForm').text(" ");
           $('#messageWrong').text("something wrong, try again");
           }
-       }
+       },
+         error: function (xhr, status, errorThrown) {
+         alert(JSON.parse(JSON.parse(xhr.responseText).message));
+         }
    })
 }

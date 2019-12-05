@@ -34,6 +34,8 @@ public class UserService {
 
     UserMapper userMapper;
 
+    ValidationService validationService;
+
     PasswordEncoder passwordEncoder;
 
     AppConstants appConstants;
@@ -41,6 +43,7 @@ public class UserService {
     static final Logger LOG = Logger.getLogger(UserService.class.getName());
 
     public void registerUser(RegistrationUserDto registrationUserDto) {
+        validationService.registrationValidation(registrationUserDto);
         User user = userMapper.toUser(registrationUserDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActive(false);
@@ -61,7 +64,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void activeUser(Long id, String token) {
+    public void activateUser(Long id, String token) {
 
         Optional<User> user = userRepository.findById(id);
 
