@@ -35,7 +35,7 @@ public class Question {
     @CollectionTable(name = "question_answer_mapping",
             joinColumns = {@JoinColumn(name = "question_id", referencedColumnName = "id")})
     @MapKeyColumn(name = "question_name")
-    @Column(name = "answer")
+    @Column(name = "answer", nullable = false)
     Map<String, Boolean> answers;
 
 }
