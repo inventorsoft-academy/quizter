@@ -63,10 +63,10 @@ function viewTest(clickedElement) {
     $.ajax({
         contentType: "application/json; charset=utf-8",
         type: "GET",
-        url: '/viewTest',
+        url: '/test-view',
         data: JSON.stringify(dataId),
         success: function () {
-            location.href = "/viewTest/" + dataId
+            location.href = "/test-view/" + dataId
         }
     })
 }
@@ -76,10 +76,10 @@ function editTest(clickedElement) {
     $.ajax({
         contentType: "application/json; charset=utf-8",
         type: "GET",
-        url: '/editTest',
+        url: '/test-edit',
         data: JSON.stringify(dataId),
         success: function () {
-            location.href = "/editTest/" + dataId
+            location.href = "/test-edit/" + dataId
         }
     })
 }
