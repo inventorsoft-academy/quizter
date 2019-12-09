@@ -1,4 +1,4 @@
-package com.quizter.util;
+package com.quizter.entity.test.write_code_test;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

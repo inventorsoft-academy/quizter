@@ -1,6 +1,4 @@
-package com.quizter.util;
-
-import java.util.List;
+package com.quizter.entity.test.write_code_test;
 
 public class TestClass implements TestCase{
 
