@@ -19,6 +19,8 @@ public class SecurityService {
 
     TokenRepository tokenRepository;
 
+
+
     public boolean validateResetToken(Long id, String token) {
         Optional<Token> passwordResetToken = tokenRepository.findByToken(token);
         return passwordResetToken.filter(resetToken -> resetToken.getUser().getId().equals(id)

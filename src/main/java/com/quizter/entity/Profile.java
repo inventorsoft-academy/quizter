@@ -6,7 +6,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -28,15 +27,13 @@ public class Profile {
     @JoinColumn(name = "user_id")
     User user;
 
-    @Column
     String firstName;
 
-    @Column
     String lastName;
 
-    @Column
     String photoUrl;
 
-    @Column
     String sphere;
+
+    String phoneNumber;
 }
