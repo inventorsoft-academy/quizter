@@ -55,10 +55,12 @@ public class TestService {
         Test test = testRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Test", "id", id));
 
         questionRepository.deleteAll(test.getQuestions());
+        test.getQuestions().clear();
 
         test.setId(id);
         test.setName(testDto.getName());
         test.setSubject(testDto.getSubject());
+        test.setDescription(testDto.getDescription());
         test.setQuestions(createQuestions(testDto.getQuestions()));
 
         testRepository.save(test);

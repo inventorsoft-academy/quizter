@@ -1,7 +1,7 @@
 $(document).ready(function () {
-    newTestDescriptionClick()
-    getTestForEdit()
+    newTestDescriptionClick();
 
+    getAllTestsForEdit();
 });
 
 var name = '';
@@ -14,9 +14,8 @@ function newTestDescriptionClick() {
     description = $('#newDescription').val();
 }
 
-function getTestForEdit() {
+function getAllTestsForEdit() {
     var testId = $("#testEditPage").attr("dataEdit_id");
-
     $.getJSON("/tests/" + testId,
         function (data) {
             $("#newTestName").val(
@@ -25,167 +24,131 @@ function getTestForEdit() {
             $("#newSubject").val(
                 data.subject
             );
-            $("#newDescription").append(
+            $("#newDescription").val(
                 data.description
             );
 
-            var questionsFromBD = data.questions;
+            var templateEdit = $("#testEditionFormScript").html(),
+                $targetEdit = $(".testEditionForm"),
+                $btnAddEdit = $('#addOneMoreQuestionToEdit'),
+                editCount = 1,
+                inputRowEdit = [];
 
-            var i = 0;
+            var j = 1;
 
-            createQuestionFormForEdit();
+            $.each(data.questions, function (index, question) {
+                inputRowEdit = {
+                    editCount: editCount
+                };
 
-            if (i === 0) {
-                var keys = []
-                var values = []
-                $.each(questionsFromBD[0].answers, function (key, value) {
+                var htmlEdit = Mustache.to_html(templateEdit, inputRowEdit);
+                $targetEdit.append(htmlEdit);
+                editCount++;
+
+                $("#writeQuestionForEdit_" + j).append(
+                    question.name
+                );
+
+                var keys = [];
+                var values = [];
+                $.each(question.answers, function (key, value) {
                     keys.push(key);
                     values.push(value);
-                })
+                });
 
-                setInputs(questionsFromBD[0].name, keys, values)
-            }
+                $("#writeFirstAnswerForEdit_" + j).val(keys[0]);
+                $("#writeSecondAnswerForEdit_" + j).val(keys[1]);
+                $("#writeThirdAnswerForEdit_" + j).val(keys[2]);
+                $("#writeFourthAnswerForEdit_" + j).val(keys[3]);
 
-            var questions = []
+                values[0] ? $("#firstRadioEdit_" + j).prop('checked', true) : $("#firstRadioEdit_" + j).prop('checked', false);
+                values[1] ? $("#secondRadioEdit_" + j).prop("checked", true) : $("#secondRadioEdit_" + j).prop("checked", false);
+                values[2] ? $("#thirdRadioEdit_" + j).prop("checked", true) : $("#thirdRadioEdit_" + j).prop("checked", false);
+                values[3] ? $("#fourthRadioEdit_" + j).prop("checked", true) : $("#fourthRadioEdit_" + j).prop("checked", false);
 
+                j++;
+            });
+
+            // $('.testEditionDiv').on('click', '.deleteTestEdit', function () {
+            //$(this).parent().remove();
+
+            $('.deleteTestEdit').on('click', function () {
+                var div = $(this).attr('testEditionDivId');
+                $targetEdit.find(div).remove();
+
+                if (editCount <= 1) {
+                    editCount = 1;
+                } else {
+                    editCount--;
+                }
+            });
+
+            $btnAddEdit.click(function () {
+                inputRowEdit = {
+                    editCount: editCount
+                };
+                var html = Mustache.to_html(templateEdit, inputRowEdit);
+                $targetEdit.append(html);
+                editCount++;
+            });
+
+
+            var questions = [];
             $("#finishOfEdit").click(function () {
 
-                var question = {};
-                var writeQuestion = $('#writeQuestionEdit').val();
-                var writeFirstAnswer = $('#writeFirstAnswerEdit').val();
-                var writeSecondAnswer = $('#writeSecondAnswerEdit').val();
-                var writeThirdAnswer = $('#writeThirdAnswerEdit').val();
-                var writeFourthAnswer = $('#writeFourthAnswerEdit').val();
+                $('.testEditionDiv').each(function (i) {
+                    let index = i + 1;
 
-                var answers = {};
-                answers[writeFirstAnswer] = $('#firstRadioEdit').is(":checked") ? "true" : "false";
-                answers[writeSecondAnswer] = $('#secondRadioEdit').is(":checked") ? "true" : "false";
-                answers[writeThirdAnswer] = $('#thirdRadioEdit').is(":checked") ? "true" : "false";
-                answers[writeFourthAnswer] = $('#fourthRadioEdit').is(":checked") ? "true" : "false";
+                    var question = {};
+                    var writeQuestion = $("#writeQuestionForEdit_" + index).val();
+                    var writeFirstAnswer = $("#writeFirstAnswerForEdit_" + index).val();
+                    var writeSecondAnswer = $("#writeSecondAnswerForEdit_" + index).val();
+                    var writeThirdAnswer = $("#writeThirdAnswerForEdit_" + index).val();
+                    var writeFourthAnswer = $("#writeFourthAnswerForEdit_" + index).val();
 
-                question["name"] = writeQuestion;
-                question["answers"] = answers;
+                    var answers = {};
+                    answers[writeFirstAnswer] = $('#firstRadioEdit_' + index).is(":checked") ? "true" : "false";
+                    answers[writeSecondAnswer] = $('#secondRadioEdit_' + index).is(":checked") ? "true" : "false";
+                    answers[writeThirdAnswer] = $('#thirdRadioEdit_' + index).is(":checked") ? "true" : "false";
+                    answers[writeFourthAnswer] = $('#fourthRadioEdit_' + index).is(":checked") ? "true" : "false";
 
-                questions.push(question);
+                    question["name"] = writeQuestion;
+                    question["answers"] = answers;
 
-                if (i < questionsFromBD.length - 1) {
-                    i++;
-                    $("#indexOfQuestion").text(i + 1);
+                    questions.push(question);
+                });
 
-                    var keys = []
-                    var values = []
-
-                    $.each(questionsFromBD[i].answers, function (key, value) {
-                        keys.push(key);
-                        values.push(value);
-                    })
-
-                    setInputs(questionsFromBD[i].name, keys, values)
-                } else {
-                    editTest(testId, name, subject, description, questions);
-                }
-
-            })
-
-        })
-
-    function setInputs(name, keys, values) {
-        $('#writeQuestionEdit').val(name);
-
-        $('#writeFirstAnswerEdit').val(keys[0]);
-        $('#writeSecondAnswerEdit').val(keys[1]);
-        $('#writeThirdAnswerEdit').val(keys[2]);
-        $('#writeFourthAnswerEdit').val(keys[3]);
-
-        values[0] ? $('#firstRadioEdit').prop('checked', true) : $('#firstRadioEdit').prop('checked', false);
-        values[1] ? $('#secondRadioEdit').prop("checked", true) : $('#secondRadioEdit').prop("checked", false);
-        values[2] ? $('#thirdRadioEdit').prop("checked", true) : $('#thirdRadioEdit').prop("checked", false);
-        values[3] ? $('#fourthRadioEdit').prop("checked", true) : $('#fourthRadioEdit').prop("checked", false);
-    }
-
-    function createQuestionFormForEdit() {
-        $("#step-3Edit").append(
-            '<div class="col-xs-12">' +
-            '<div class="col-md-12">' +
-            '<h3> Step 3</h3>' +
-            '<small>Change questions</small>' +
-            '<div class="ln_solid"></div>' +
-            '<div><h2>Question # <span id="indexOfQuestion">1</span> </h2> <br/></div>' +
-
-            '<div class="form-group">' +
-            '<textarea maxlength="1000" minlength="3" rows="2" id="writeQuestionEdit" required="required" class="form-control" placeholder="Write some question"></textarea>' +
-            '</div>' +
-
-            '<div class="ln_solid"></div>' +
-
-            '<h2>Answers <h2 class="pull-right">Right</h2></h2><br/><br/><br/>' +
-
-            '<div class="form-group">' +
-
-            '<form  class="form-horizontal form-label-left">' +
-            '<div class="form-group row">' +
-            '<label class="control-label col-md-3" for="writeFirstAnswerEdit">First answer <span class="required">*</span></label>' +
-            '<div class="col-md-8">' +
-            '<textarea maxlength="300" minlength="1" rows="1" id="writeFirstAnswerEdit" required="required" class="form-control col-md-8" placeholder="Write option of answer"></textarea>' +
-            '</div> <div class="radio pull-right"> <label> <input id="firstRadioEdit" type="radio" class="flat" name="iEditCheck"> </label> </div>' +
-            '</div> ' +
-            '<div class="form-group row">' +
-            '<label class="control-label col-md-3 pull-left" for="writeSecondAnswerEdit">Second answer <span class="required">*</span> </label>' +
-            '<div class="col-md-8">' +
-            ' <textarea maxlength="300" minlength="3" rows="1" id="writeSecondAnswerEdit" required="required" class="form-control col-md-8" placeholder="Write option of answer"></textarea>' +
-            '</div>' +
-            '<div class="radio pull-right"> <label> <input id="secondRadioEdit" type="radio" class="flat" name="iEditCheck"> </label> </div>' +
-            '</div>' +
-            '<div class="form-group row">' +
-            '<label class="control-label col-md-3" for="writeThirdAnswerEdit">Third answer <span class="required">*</span> </label> <div class="col-md-8">' +
-            '<textarea maxlength="300" minlength="3" rows="1" id="writeThirdAnswerEdit" required="required" class="form-control col-md-8" placeholder="Write option of answer"></textarea>' +
-            '</div>' +
-            '<div class="radio pull-right"> <label> <input id="thirdRadioEdit" type="radio" class="flat" name="iEditCheck"> </label> </div>' +
-            '</div>' +
-            '<div class="form-group row">' +
-            '<label class="control-label col-md-3" for="writeFourthAnswerEdit">Fourth answer <span class="required">*</span> </label> <div class="col-md-8">' +
-            ' <textarea maxlength="300" minlength="3" rows="1" id="writeFourthAnswerEdit" required="required" class="form-control col-md-8" placeholder="Write option of answer"></textarea> </div>' +
-            ' <div class="radio pull-right"> <label>  <input id="fourthRadioEdit" type="radio" class="flat" name="iEditCheck"> </label> </div> ' +
-            '</div>' +
-
-            '<div class="ln_solid"></div>' +
-            ' <button id="finishOfEdit" class="btn btn-success btn-lg pull-right" value="Next"  type="button"><i class="fa fa-save"></i>  Next  </button>' +
-            ' </form>' +
-            '</div>' +
-            '</div>' +
-
-            '</div>'
-        )
-    }
-
-    function editTest(testId, name, subject, description, questions) {
-        if (window.confirm("Do you really want to change test?")) {
-            $.ajax({
-                url: '/tests/' + testId,
-                type: 'PUT',
-                enctype: 'multipart/form-data',
-                data: JSON.stringify({
-                    name: name,
-                    subject: subject,
-                    description: description,
-                    questions: questions
-                }),
-                success: function () {
-                    alert("Test has been successfully created!");
-                    location.href = "/tests"
-                },
-                processData: false,
-                contentType: 'application/json; charset=utf-8;',
-                dataType: 'json',
-                cache: false,
-                timeout: 1000000,
+                editTestFunc(data.id, name, subject, description, questions);
             });
-        } else {
-            location.reload();
         }
-    }
-
+    );
 }
+
+function editTestFunc(id, name, subject, description, questions) {
+    if (window.confirm("Do you really want to change test?")) {
+        $.ajax({
+            url: '/tests/' + id,
+            type: 'PUT',
+            enctype: 'multipart/form-data',
+            data: JSON.stringify({
+                name: name,
+                subject: subject,
+                description: description,
+                questions: questions
+            }),
+            success: function () {
+                alert("Test has been successfully changed!");
+                location.href = "/tests"
+            },
+            processData: false,
+            contentType: 'application/json; charset=utf-8;',
+            dataType: 'json',
+            cache: false,
+            timeout: 1000000,
+        });
+    }
+}
+
 
 
 

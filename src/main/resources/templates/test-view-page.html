@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" data-layout-decorate="~{layout/home-layout}" xmlns:th="http://www.thymeleaf.org">
+<html data-layout-decorate="~{layout/home-layout}" lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>View</title>
 </head>
 <body>
-<div class="right_col" role="main" data-layout-fragment="content">
+<div class="right_col" data-layout-fragment="content" role="main">
     <div class="">
         <div class="page-title">
             <div class="title_left">
@@ -14,12 +14,11 @@
         </div>
         <div class="clearfix"></div>
 
-
-        <div id="viewPage" th:attr="data_id=${testId}" class="viewPage row">
+        <div class="viewPage row" id="viewPage" th:attr="data_id=${testId}">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <div id="testName">
+                            <div><h2 id="testName">{{testName}}</h2>
                         </div>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -30,18 +29,56 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <a><p id="testSubject"></p></a>
+                        <a><p id="testSubject">{{testSubject}}</p></a>
                         <div class="byline">
                             <span>created</span> by <a id="testCreator">Jane Smith</a>
                         </div>
                         <br/>
-                        <p id="testDescription"></p>
+                        <p id="testDescription">{{testDescription}}</p>
                         <br/>
                     </div>
                     <div class="x_content">
                         <div class="dashboard-widget-content">
-                            <ul id="getQuestions" class="list-unstyled timeline widget">
-
+                            <ul class="list-unstyled timeline widget" id="getQuestions">
+                                <script id="getQuestionsScript" type="text/x-mustache-template">
+                                    <li>
+                                        <div class="block">
+                                            <div class="block_content">
+                                                <h2 class="title">
+                                                    <a>{{questionIndex}}</a> :
+                                                    <a>{{name}}</a>
+                                                </h2>
+                                                <p class="excerpt">
+                                                <div id="getAnswers" class="form-group row">
+                                                    <div class="checkbox"><label
+                                                            class="col-md-3 col-sm-3  control-label">
+                                                        {{firstAnswer}}
+                                                    </label>
+                                                    </div>
+                                                    <br>
+                                                    <div class="checkbox"><label
+                                                            class="col-md-3 col-sm-3  control-label">
+                                                        {{secondAnswer}}
+                                                    </label>
+                                                    </div>
+                                                    <br>
+                                                    <div class="checkbox"><label
+                                                            class="col-md-3 col-sm-3  control-label">
+                                                        {{thirdAnswer}}
+                                                    </label>
+                                                    </div>
+                                                    <br>
+                                                    <div class="checkbox"><label
+                                                            class="col-md-3 col-sm-3  control-label">
+                                                        {{fourthAnswer}}
+                                                    </label>
+                                                    </div>
+                                                    <br>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </script>
                             </ul>
                         </div>
                     </div>
