@@ -28,7 +28,7 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(unique = true)
+    @Column(nullable = false)
     String name;
 
     @ElementCollection

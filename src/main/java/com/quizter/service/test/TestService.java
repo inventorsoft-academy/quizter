@@ -56,10 +56,13 @@ public class TestService {
 
         questionRepository.deleteAll(test.getQuestions());
 
+        test.getQuestions().clear();
+
         test.setId(id);
         test.setName(testDto.getName());
         test.setSubject(testDto.getSubject());
         test.setQuestions(createQuestions(testDto.getQuestions()));
+        test.setDescription(testDto.getDescription());
 
         testRepository.save(test);
     }
