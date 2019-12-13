@@ -13,24 +13,24 @@ import org.springframework.web.servlet.ModelAndView;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class TestController {
 
-    @GetMapping("/viewTest")
+    @GetMapping("/test-view")
     public ModelAndView getTestViewPagePage() {
         return new ModelAndView("test-view-page");
     }
 
-    @GetMapping("/viewTest/{id}")
+    @GetMapping("/test-view/{id}")
     public ModelAndView getTestViewPagePageById(@PathVariable Long id) {
         ModelAndView modelAndView = new ModelAndView("test-view-page");
         modelAndView.addObject("testId", id);
         return modelAndView;
     }
 
-    @GetMapping("/editTest")
+    @GetMapping("/test-edit")
     public ModelAndView getTestEditPage() {
         return new ModelAndView("test-editor-page");
     }
 
-    @GetMapping("/editTest/{id}")
+    @GetMapping("/test-edit/{id}")
     public ModelAndView getTestEditPageById(@PathVariable Long id) {
         ModelAndView modelAndView = new ModelAndView("test-editor-page");
         modelAndView.addObject("testEditId", id);

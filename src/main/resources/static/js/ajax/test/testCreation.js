@@ -1,75 +1,73 @@
-$(document).ready(function () {
-    $("#step-3").find('textarea').text("   ");
-    testDescriptionClick()
-});
-
 var name = '';
 var subject = '';
 var description = '';
+
+$(document).ready(function () {
+    testDescriptionClick();
+
+    var template = $("#testCreationFormScript").html(),
+        $target = $(".testCreationForm"),
+        $btnAdd = $('#addOneMoreQuestion'),
+        $btnRemove = $('#deleteQuestion'),
+        count = 1,
+        inputRow = [];
+
+    $btnAdd.click(function () {
+        inputRow = {
+            count: count
+        };
+        var html = Mustache.to_html(template, inputRow);
+        $target.append(html);
+        count++;
+
+    });
+
+   $btnRemove.click(function (e) {
+        e.preventDefault();
+        $target.find('.testCreationDiv').last().remove();
+        if (count <= 1) {
+            count = 1;
+        } else {
+            count--;
+        }
+    });
+
+    var questions = [];
+
+    $("#finishOfCreation").click(function () {
+
+        $('.testCreationDiv').each(function (i) {
+            let index = i + 1;
+            var question = {};
+
+            var writeQuestion = $("#writeQuestion_" + index).val();
+            var writeFirstAnswer = $("#writeFirstAnswer_" + index).val();
+            var writeSecondAnswer = $("#writeSecondAnswer_" + index).val();
+            var writeThirdAnswer = $("#writeThirdAnswer_" + index).val();
+            var writeFourthAnswer = $("#writeFourthAnswer_" + index).val();
+
+            question["name"] = writeQuestion;
+
+            var answers = {};
+            answers[writeFirstAnswer] = $('#firstRadio_' + index).is(":checked") ? "true" : "false";
+            answers[writeSecondAnswer] = $('#secondRadio_' + index).is(":checked") ? "true" : "false";
+            answers[writeThirdAnswer] = $('#thirdRadio_' + index).is(":checked") ? "true" : "false";
+            answers[writeFourthAnswer] = $('#fourthRadio_' + index).is(":checked") ? "true" : "false";
+
+            question["answers"] = answers;
+
+            questions.push(question);
+        });
+
+        createTest(name, subject, description, questions);
+    });
+
+});
 
 function testDescriptionClick() {
     name = $("#testName").val();
     subject = $('#subject').val();
     description = $('#description').val();
-}
-
-function numbersOfQuestion() {
-    var numbers = $('#numberOfQuestions').val();
-    createQuestion(name, subject, description, numbers);
-}
-
-function createQuestion(name, subject, description, numbers) {
-    var questions = [];
-    var writeQuestion = '';
-    var writeFirstAnswer = '';
-    var writeSecondAnswer = '';
-    var writeThirdAnswer = '';
-    var writeFourthAnswer = '';
-
-    var i = 1;
-    $("#finishOfCreation").click(function () {
-        var question = {};
-        writeQuestion = $('#writeQuestion').val();
-        writeFirstAnswer = $('#writeFirstAnswer').val();
-        writeSecondAnswer = $('#writeSecondAnswer').val();
-        writeThirdAnswer = $('#writeThirdAnswer').val();
-        writeFourthAnswer = $('#writeFourthAnswer').val();
-
-        var answers = {};
-        answers[writeFirstAnswer] = $('#firstRadio').is(":checked") ? "true" : "false";
-        answers[writeSecondAnswer] = $('#secondRadio').is(":checked") ? "true" : "false";
-        answers[writeThirdAnswer] = $('#thirdRadio').is(":checked") ? "true" : "false";
-        answers[writeFourthAnswer] = $('#fourthRadio').is(":checked") ? "true" : "false";
-
-        question["name"] = writeQuestion;
-        question["answers"] = answers;
-
-        questions.push(question);
-
-        $('#writeQuestion').val('');
-        $('#writeFirstAnswer').val('');
-        $('#writeSecondAnswer').val('');
-        $('#writeThirdAnswer').val('');
-        $('#writeFourthAnswer').val('');
-        $('#firstRadio').prop("checked", false);
-        $('#secondRadio').prop("checked", false);
-        $('#thirdRadio').prop("checked", false);
-        $('#fourthRadio').prop("checked", false);
-
-        if (i < numbers) {
-            i++;
-            $("#indexOfQuestion").text(i);
-        } else {
-            createTest(name, subject, description, questions);
-        }
-
-    });
-
-}
-
-function createQuestionForm() {
-
-
 }
 
 function createTest(name, subject, description, questions) {
@@ -85,11 +83,8 @@ function createTest(name, subject, description, questions) {
                 questions: questions
             }),
             success: function () {
-                $("#to-coding-test-part").removeAttr('hidden');
-                $("#finishOfCreation").hide();
-                console.log($("#step-3").find('textarea'));
-                $("#step-3").find('textarea').text("  sas");
-
+                alert("Test has been successfully created!");
+                location.href = "/tests"
             },
             processData: false,
             contentType: 'application/json; charset=utf-8;',
@@ -97,9 +92,9 @@ function createTest(name, subject, description, questions) {
             cache: false,
             timeout: 1000000,
         });
-
     }
 }
+
 
 
 

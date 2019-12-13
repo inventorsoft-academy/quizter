@@ -20,7 +20,7 @@ import java.util.List;
 @Setter
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Test {
+public class Test<T extends AbstractQuestion> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +37,6 @@ public class Test {
 
     @Column
     @OneToMany(cascade = CascadeType.ALL)
-    List<Question> questions;
+    List<T> questions;
 
 }

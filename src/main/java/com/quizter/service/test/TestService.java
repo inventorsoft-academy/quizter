@@ -2,9 +2,8 @@ package com.quizter.service.test;
 
 import com.quizter.dto.test.QuestionDto;
 import com.quizter.dto.test.TestDto;
-import com.quizter.entity.test.Question;
+import com.quizter.entity.test.MultiVariantQuestion;
 import com.quizter.entity.test.Test;
-import com.quizter.entity.test.write_code_test.TestCase;
 import com.quizter.exception.ResourceNotFoundException;
 import com.quizter.mapper.test.TestMapper;
 import com.quizter.repository.QuestionRepository;
@@ -15,11 +14,8 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -59,11 +55,16 @@ public class TestService {
         Test test = testRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Test", "id", id));
 
         questionRepository.deleteAll(test.getQuestions());
+        test.getQuestions().clear();
+
+        test.getQuestions().clear();
 
         test.setId(id);
         test.setName(testDto.getName());
         test.setSubject(testDto.getSubject());
+        test.setDescription(testDto.getDescription());
         test.setQuestions(createQuestions(testDto.getQuestions()));
+        test.setDescription(testDto.getDescription());
 
         testRepository.save(test);
     }
@@ -74,13 +75,13 @@ public class TestService {
     }
 
     @Transactional
-    public List<Question> createQuestions(List<QuestionDto> questionDtos) {
-        List<Question> questions = testMapper.toQuestionList(questionDtos);
+    public List<MultiVariantQuestion> createQuestions(List<QuestionDto> questionDtos) {
+        List<MultiVariantQuestion> questions = testMapper.toQuestionList(questionDtos);
 
-        List<Question> savedQuestions = new ArrayList<>();
+        List<MultiVariantQuestion> savedQuestions = new ArrayList<>();
 
         questions.forEach(e -> {
-                    Question question = new Question();
+                    MultiVariantQuestion question = new MultiVariantQuestion();
                     question.setName(e.getName());
                     question.setAnswers(e.getAnswers());
 
@@ -92,25 +93,5 @@ public class TestService {
 
         return savedQuestions;
     }
-
-//    public void createCodingPartTest(TestCase.Input task){
-//        try (OutputStream outputStream = new FileOutputStream(getPathAndNameOfFile(fileToSave));
-//                ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream)) {
-//
-//            objectOutputStream.writeObject(letters);
-//            objectOutputStream.flush();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
-//    private String getPathAndNameOfFile(String fileName) {
-//        Map<String, String> fileProperties = propertiesService.getFileProperties();
-//        StringBuilder pathAndNameOfFile = new StringBuilder(fileProperties.get("path"));
-//        pathAndNameOfFile.append(File.separator);
-//        pathAndNameOfFile.append(fileProperties.get(fileName));
-//        return pathAndNameOfFile.toString();
-//    }
 
 }

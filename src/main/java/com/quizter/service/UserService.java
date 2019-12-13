@@ -2,8 +2,11 @@ package com.quizter.service;
 
 import com.quizter.dictionary.CacheType;
 import com.quizter.dto.PasswordDto;
+import com.quizter.dto.ProfileDto;
 import com.quizter.dto.RegistrationUserDto;
 import com.quizter.dto.UserEmailDto;
+import com.quizter.entity.Credentials;
+import com.quizter.entity.Profile;
 import com.quizter.entity.User;
 import com.quizter.exception.NoUserWithThatIDException;
 import com.quizter.exception.TokenException;
@@ -14,12 +17,16 @@ import com.quizter.util.EmailConstants;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @Transactional
 @AllArgsConstructor
@@ -58,23 +65,17 @@ public class UserService {
     }
 
     public void activateUser(Long id, String token) {
-
         Optional<User> user = userRepository.findById(id);
-
         if (user.isPresent()) {
             String trueToken = tokenService.getToken(user.get().getEmail(), CacheType.ACTIVATION).getToken();
-
             if (trueToken == null) {
                 userRepository.deleteById(id);
                 throw new TokenException("Authentication token expired");
             }
-
             if (!trueToken.equals(token)) {
                 throw new TokenException("Token is wrong");
             }
-
             tokenService.removeToken(user.get().getEmail(), CacheType.ACTIVATION);
-
             user.get().setActive(true);
             userRepository.save(user.get());
         } else {
@@ -103,6 +104,24 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(passwordDto.getPassword()));
         tokenService.removeToken(user.getEmail(), CacheType.RECOVERY);
         userRepository.save(user);
+    }
+
+    public void saveProfile(ProfileDto profileDto) {
+        ModelMapper modelMapper = new ModelMapper();
+        Profile profile = modelMapper.map(profileDto, Profile.class);
+        log.info("ProfileDto = " + profileDto.getFirstName());
+        User user = getUserPrincipal();
+        user.setProfile(profile);
+        profile.setUser(user);
+        profile.setId(user.getId());
+        log.info("Profile = " + profile);
+        log.info("User = " + user);
+        userRepository.save(user);
+    }
+
+    public User getUserPrincipal(){
+        Credentials credentials = (Credentials) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userRepository.findByEmail(credentials.getUsername()).orElseThrow();
     }
 
 }

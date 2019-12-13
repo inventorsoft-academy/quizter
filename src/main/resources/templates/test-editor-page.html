@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" data-layout-decorate="~{layout/home-layout}"  xmlns:th="http://www.thymeleaf.org">
+<html data-layout-decorate="~{layout/home-layout}" lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Test Editor</title>
 </head>
 
 <body>
-<div class="right_col" role="main" data-layout-fragment="content">
+<div class="right_col" data-layout-fragment="content" role="main">
     <div class="">
         <div class="page-title">
             <div class="title_left">
@@ -33,14 +33,14 @@
                             <div class="stepwizard">
                                 <div class="stepwizard-row setup-panel">
                                     <div class="stepwizard-step">
-                                        <a href="#step-1" type="button" class="btn btn-primary btn-circle">1</a>
+                                        <a class="btn btn-primary btn-circle" href="#step-1" type="button">1</a>
                                         <p>Step 1</p>
 
                                     </div>
 
                                     <div class="stepwizard-step">
-                                        <a href="#step-3Edit" type="button" class="btn btn-default btn-circle"
-                                           disabled="disabled">2</a>
+                                        <a class="btn btn-default btn-circle" disabled="disabled" href="#step-2Edit"
+                                           type="button">2</a>
                                         <p>Step 2</p>
                                     </div>
                                 </div>
@@ -56,21 +56,22 @@
                                             <form id="setTestDescription">
                                                 <div class="form-group">
                                                     <label class="control-label">Name*</label>
-                                                    <input id="newTestName" min="1900" max="2090" type="text"
-                                                           required="required"
-                                                           class="form-control" placeholder="Name"/>
+                                                    <input class="form-control" id="newTestName" max="2090" min="1900"
+                                                           placeholder="Name"
+                                                           required="required" type="text"/>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="control-label">Subject*</label>
-                                                    <input id="newSubject" min="1900" max="2090" type="text"
-                                                           required="required"
-                                                           class="form-control " placeholder="Subject"/>
+                                                    <input class="form-control " id="newSubject" max="2090" min="1900"
+                                                           placeholder="Subject"
+                                                           required="required" type="text"/>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="control-label">Description*</label>
-                                                    <textarea id="newDescription" min="1900" max="20090" rows="4"
-                                                              required="required" class="form-control"
-                                                              placeholder="Describe test"></textarea>
+                                                    <textarea class="form-control" id="newDescription" max="20090"
+                                                              min="1900"
+                                                              placeholder="Describe test" required="required"
+                                                              rows="4"></textarea>
                                                 </div>
 
                                                 <div class="ln_solid"></div>
@@ -82,11 +83,155 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row setup-content" id="step-3Edit">
+                                <div class="row setup-content" id="step-2Edit">
+                                    <div class="col-xs-12">
+                                        <div class="col-md-12">
+                                            <h3> Step 2</h3>
+                                            <small>Change questions</small>
 
+                                            <div class="testEditionForm">
+                                                <script id="testEditionFormScript" type="text/x-mustache-template">
+                                                    <div id="testEditionDivId" class="testEditionDiv parent col-xs-12">
+                                                        <div class="col-md-12">
+                                                            <div class="ln_solid"></div>
+                                                            <a class="deleteTestEdit close-link pull-right"><h2><i class="fa fa-close"></i></h2></a>
+                                                            <div><h2>Question # <span>{{editCount}}</span>
+                                                            </h2>
+                                                                <br/>
+                                                            </div>
+                                                            <div class="form-group">
+                                                        <textarea class="writeQuestionForEdit form-control"
+                                                                  id="writeQuestionForEdit_{{editCount}}"
+                                                                  maxlength="1000"
+                                                                  minlength="3" placeholder="Write some question"
+                                                                  required="required"
+                                                                  rows="2"></textarea>
+                                                            </div>
+                                                            <div class="ln_solid"></div>
+                                                            <h2>Answers <h2 class="pull-right">Right</h2></h2>
+                                                            <br/><br/><br/>
+                                                            <div class="form-group">
+                                                                <form class="form-horizontal form-label-left"
+                                                                      id="addQuestion">
+                                                                    <div class="form-group row">
+                                                                        <label class="control-label col-md-3"
+                                                                               for="writeFirstAnswerForEdit_{{editCount}}">First
+                                                                            answer <span
+                                                                                    class="required">*</span></label>
+                                                                        <div class="col-md-8">
+                                                                    <textarea
+                                                                            class=" writeFirstAnswerForEdit form-control col-md-8"
+                                                                            id="writeFirstAnswerForEdit_{{editCount}}"
+                                                                            maxlength="300"
+                                                                            minlength="1"
+                                                                            placeholder="Write option of answer"
+                                                                            required="required"
+                                                                            rows="1"></textarea>
+                                                                        </div>
+                                                                        <div class="firstRadio radio pull-right"><label>
+                                                                            <input
+                                                                                    class="flat"
+                                                                                    id="firstRadioEdit_{{editCount}}"
+                                                                                    name="iCheck"
+                                                                                    type="radio"> </label></div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label class="control-label col-md-3 pull-left"
+                                                                               for="writeSecondAnswerForEdit_{{editCount}}">Second
+                                                                            answer
+                                                                            <span
+                                                                                    class="required">*</span> </label>
+                                                                        <div class="col-md-8">
+                                                                    <textarea
+                                                                            class="writeSecondAnswerForEdit form-control col-md-8"
+                                                                            id="writeSecondAnswerForEdit_{{editCount}}"
+                                                                            maxlength="300"
+                                                                            minlength="3"
+                                                                            placeholder="Write option of answer"
+                                                                            required="required"
+                                                                            rows="1"></textarea>
+                                                                        </div>
+                                                                        <div class="secondRadio radio pull-right">
+                                                                            <label> <input
+                                                                                    class="flat"
+                                                                                    id="secondRadioEdit_{{editCount}}"
+                                                                                    name="iCheck"
+                                                                                    type="radio"> </label></div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label class="control-label col-md-3"
+                                                                               for="writeThirdAnswerForEdit_{{editCount}}">Third
+                                                                            answer <span
+                                                                                    class="required">*</span> </label>
+                                                                        <div class="col-md-8">
+                                                                    <textarea
+                                                                            class="writeThirdAnswerForEdit form-control col-md-8"
+                                                                            id="writeThirdAnswerForEdit_{{editCount}}"
+                                                                            maxlength="300"
+                                                                            minlength="3"
+                                                                            placeholder="Write option of answer"
+                                                                            required="required"
+                                                                            rows="1"></textarea>
+                                                                        </div>
+                                                                        <div class="thirdRadio radio pull-right"><label>
+                                                                            <input
+                                                                                    class="flat"
+                                                                                    id="thirdRadioEdit_{{editCount}}"
+                                                                                    name="iCheck"
+                                                                                    type="radio"> </label></div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label class="control-label col-md-3"
+                                                                               for="writeFourthAnswerForEdit_{{editCount}}">Fourth
+                                                                            answer
+                                                                            <span
+                                                                                    class="required">*</span> </label>
+                                                                        <div class="col-md-8">
+                                                                    <textarea
+                                                                            class="writeFourthAnswerForEdit form-control col-md-8"
+                                                                            id="writeFourthAnswerForEdit_{{editCount}}"
+                                                                            maxlength="300"
+                                                                            minlength="3"
+                                                                            placeholder="Write option of answer"
+                                                                            required="required"
+                                                                            rows="1"></textarea>
+                                                                        </div>
+                                                                        <div class="fourthRadio radio pull-right">
+                                                                            <label> <input
+                                                                                    class="flat"
+                                                                                    id="fourthRadioEdit_{{editCount}}"
+                                                                                    name="iCheck"
+                                                                                    type="radio"> </label></div>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </script>
+                                            </div>
+
+                                            <div class="clearfix"></div>
+                                            <div class="ln_solid"></div>
+
+                                            <button class="btn btn-success btn-lg pull-right"
+                                                    id="finishOfEdit"
+                                                    type="button"><i
+                                                    class="fa fa-save"></i> Save
+                                            </button>
+                                            <button class="btn btn-success btn-lg pull-right"
+                                                    id="addOneMoreQuestionToEdit"
+                                                    type="button"><i
+                                                    class="fa fa-plus-circle"></i> Add
+                                            </button>
+                                            <button class="btn btn-primary prevBtn btn-lg pull-left"
+                                                    type="button"><i
+                                                    class="fa fa-step-backward"></i> Back
+                                            </button>
+
+                                        </div>
+                                    </div>
                                 </div>
                             </form>
-
                         </div>
                     </div>
                 </div>

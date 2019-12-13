@@ -2,8 +2,6 @@ package com.quizter.controller.test;
 
 import com.quizter.dto.response.MessageResponse;
 import com.quizter.dto.test.TestDto;
-import com.quizter.entity.test.write_code_test.TestCase;
-import com.quizter.entity.test.write_code_test.TestClass;
 import com.quizter.service.test.TestService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -57,12 +54,8 @@ public class TestRestController {
     @DeleteMapping("/{id}")
     public ResponseEntity deleteTest(@PathVariable("id") Long id) {
         testService.deleteTest(id);
+
         return ResponseEntity.noContent().build();
     }
-
-//    @PostMapping(value = "create-coding-part-test")
-//    public ResponseEntity<MessageResponse> createCodingPartTest(@RequestBody TestCase.Input task){
-//
-//    }
 
 }
