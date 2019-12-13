@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    $("#step-3").find('textarea').text("   ");
     testDescriptionClick()
 });
 
@@ -19,8 +20,6 @@ function numbersOfQuestion() {
 
 function createQuestion(name, subject, description, numbers) {
     var questions = [];
-
-    createQuestionForm();
     var writeQuestion = '';
     var writeFirstAnswer = '';
     var writeSecondAnswer = '';
@@ -69,56 +68,8 @@ function createQuestion(name, subject, description, numbers) {
 }
 
 function createQuestionForm() {
-    $("#step-3").append(
-        '<div class="col-xs-12">' +
-        '<div class="col-md-12">' +
-        '<h3> Step 3</h3>' +
-        '<small>Create questions</small>' +
-        '<div class="ln_solid"></div>' +
-        '<div><h2>Question # <span id="indexOfQuestion">1</span> </h2> <br/></div>' +
 
-        '<div class="form-group">' +
-        '<textarea maxlength="1000" minlength="3" rows="2" id="writeQuestion" required="required" class="form-control" placeholder="Write some question"></textarea>' +
-        '</div>' +
 
-        '<div class="ln_solid"></div>' +
-
-        '<h2>Answers <h2 class="pull-right">Right</h2></h2><br/><br/><br/>' +
-
-        '<div class="form-group">' +
-
-        '<form  id="addQuestion" class="form-horizontal form-label-left">' +
-        '<div class="form-group row">' +
-        '<label class="control-label col-md-3" for="writeFirstAnswer">First answer <span class="required">*</span></label>' +
-        '<div class="col-md-8">' +
-        '<textarea maxlength="300" minlength="1" rows="1" id="writeFirstAnswer" required="required" class="form-control col-md-8" placeholder="Write option of answer"></textarea>' +
-        '</div> <div class="radio pull-right"> <label> <input id="firstRadio" type="radio" class="flat" name="iCheck"> </label> </div>' +
-        '</div> ' +
-        '<div class="form-group row">' +
-        '<label class="control-label col-md-3 pull-left" for="writeSecondAnswer">Second answer <span class="required">*</span> </label>' +
-        '<div class="col-md-8">' +
-        ' <textarea maxlength="300" minlength="3" rows="1" id="writeSecondAnswer" required="required" class="form-control col-md-8" placeholder="Write option of answer"></textarea>' +
-        '</div>' +
-        '<div class="radio pull-right"> <label> <input id="secondRadio" type="radio" class="flat" name="iCheck"> </label> </div>' +
-        '</div>' +
-        '<div class="form-group row">' +
-        '<label class="control-label col-md-3" for="writeThirdAnswer">Third answer <span class="required">*</span> </label> <div class="col-md-8">' +
-        '<textarea maxlength="300" minlength="3" rows="1" id="writeThirdAnswer" required="required" class="form-control col-md-8" placeholder="Write option of answer"></textarea>' +
-        '</div>' +
-        '<div class="radio pull-right"> <label> <input id="thirdRadio" type="radio" class="flat" name="iCheck"> </label> </div>' +
-        '</div>' +
-        '<div class="form-group row">' +
-        '<label class="control-label col-md-3" for="writeFourthAnswer">Fourth answer <span class="required">*</span> </label> <div class="col-md-8">' +
-        ' <textarea maxlength="300" minlength="3" rows="1" id="writeFourthAnswer" required="required" class="form-control col-md-8" placeholder="Write option of answer"></textarea> </div>' +
-        ' <div class="radio pull-right"> <label>  <input id="fourthRadio" type="radio" class="flat" name="iCheck"> </label> </div> ' +
-        '</div>' +
-        ' <button id="finishOfCreation" class="btn btn-success btn-lg pull-right" value="Next"  type="button"><i class="fa fa-save"></i>  Save  </button>' +
-        ' </form>' +
-        '</div>' +
-        '</div>' +
-
-        '</div>'
-    )
 }
 
 function createTest(name, subject, description, questions) {
@@ -134,7 +85,11 @@ function createTest(name, subject, description, questions) {
                 questions: questions
             }),
             success: function () {
-                $("#next-button").removeAttr('hidden');
+                $("#to-coding-test-part").removeAttr('hidden');
+                $("#finishOfCreation").hide();
+                console.log($("#step-3").find('textarea'));
+                $("#step-3").find('textarea').text("  sas");
+
             },
             processData: false,
             contentType: 'application/json; charset=utf-8;',
@@ -142,6 +97,7 @@ function createTest(name, subject, description, questions) {
             cache: false,
             timeout: 1000000,
         });
+
     }
 }
 
