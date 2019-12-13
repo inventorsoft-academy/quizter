@@ -2,10 +2,9 @@ package com.quizter.mapper.test;
 
 import com.quizter.dto.test.QuestionDto;
 import com.quizter.dto.test.TestDto;
-import com.quizter.entity.test.Question;
+import com.quizter.entity.test.MultiVariantQuestion;
 import com.quizter.entity.test.Test;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -35,8 +34,8 @@ public class TestMapper {
         return mapper.map(tests, targetListType);
     }
 
-    public List<Question> toQuestionList(List<QuestionDto> questionDtos) {
-        Type targetListType = new TypeToken<List<Question>>() {
+    public List<MultiVariantQuestion> toQuestionList(List<QuestionDto> questionDtos) {
+        Type targetListType = new TypeToken<List<MultiVariantQuestion>>() {
         }.getType();
 
         return mapper.map(questionDtos, targetListType);

@@ -3,7 +3,6 @@ package com.quizter.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.Entity;
@@ -16,7 +15,6 @@ import javax.persistence.Table;
 @Table(name = "profiles")
 @Getter
 @Setter
-@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Profile {
 

@@ -17,6 +17,7 @@ import com.quizter.util.EmailConstants;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @Transactional
 @AllArgsConstructor
@@ -107,9 +109,13 @@ public class UserService {
     public void saveProfile(ProfileDto profileDto) {
         ModelMapper modelMapper = new ModelMapper();
         Profile profile = modelMapper.map(profileDto, Profile.class);
+        log.info("ProfileDto = " + profileDto.getFirstName());
         User user = getUserPrincipal();
-        profile.setId(user.getId());
         user.setProfile(profile);
+        profile.setUser(user);
+        profile.setId(user.getId());
+        log.info("Profile = " + profile);
+        log.info("User = " + user);
         userRepository.save(user);
     }
 

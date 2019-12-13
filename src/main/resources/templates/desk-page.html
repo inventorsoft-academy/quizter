@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"
+      data-layout-decorate="~{layout/home-layout}"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Desk</title>
+</head>
+
+<body>
+<div class="right_col" role="main" data-layout-fragment="content">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Quizzes</h3>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <table class="tile_info">
+                            <tr th:each="quiz: ${quizzes}">
+                                <th th:text="${quiz.name}"></th>
+                                <th th:text="${quiz.subject}"></th>
+                                <th th:text="${quiz.description}"></th>
+                                <th>
+                                    <a th:href="@{/desk/quiz/{path}(path=${quiz.id})}">
+                                        <button class="btn-primary">Start quiz</button>
+                                    </a>
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

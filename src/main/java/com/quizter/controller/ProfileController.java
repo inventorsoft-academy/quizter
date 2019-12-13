@@ -6,10 +6,12 @@ import com.quizter.service.UserService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+@Slf4j
 @RestController
 @RequestMapping("/profile")
 @AllArgsConstructor
@@ -20,7 +22,8 @@ public class ProfileController {
 
     @GetMapping("/edit")
     public ModelAndView editProfilePage() {
-        return new ModelAndView("profile-page");
+        log.info("Profile controller getEdit");
+        return new ModelAndView("profile-edit-page");
     }
 
     @GetMapping
@@ -31,7 +34,8 @@ public class ProfileController {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<MessageResponse> editProfile(ProfileDto profileDto) {
+    public ResponseEntity<MessageResponse> editProfile(@RequestBody ProfileDto profileDto) {
+        log.info("Profile controller postEdit, DTO = " + profileDto.getFirstName());
         userService.saveProfile(profileDto);
         return ResponseEntity.ok(new MessageResponse("ok"));
     }
