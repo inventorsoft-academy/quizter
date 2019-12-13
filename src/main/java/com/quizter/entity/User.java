@@ -4,9 +4,9 @@ import com.quizter.dictionary.Role;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -22,7 +22,6 @@ import javax.persistence.Table;
 @Table(name = "Users")
 @Getter
 @Setter
-@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
 
@@ -34,7 +33,7 @@ public class User {
     @Column(unique = true)
     String email;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Profile profile;
 
     @Column

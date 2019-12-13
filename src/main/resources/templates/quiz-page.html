@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" data-layout-decorate="~{layout/home-layout}" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <script th:src="@{/js/ajax/quiz.js}"></script>
+    <title>Quiz</title>
+</head>
+
+<body>
+<div class="right_col" role="main" data-layout-fragment="content">
+    <div class="">
+        <div class="page-title">
+            <div class="title_center">
+                <h3 th:text="${quiz.name}"></h3>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <tr th:each="question: ${quiz.questions}">
+                        <h2>Question#<span th:text="${quiz.questions.indexOf(question) + 1}"></span></h2>
+                        <div class="x_panel">
+                            <table class="tile_info">
+                                <th th:text="${question.name}"></th>
+                                <table class="">
+                                    <tr th:each="answer: ${question.answers}">
+                                        <th style="padding: 8px">
+                                            <div class="radio pull-left">
+                                                <label>
+                                                    <input type="checkbox" class="flat" th:question="${question.name}"
+                                                           th:name="answersArray" th:value="${answer.key}">
+                                                </label>
+                                            </div>
+                                        </th>
+                                        <th th:text="${answer.key}"></th>
+                                    </tr>
+                                </table>
+                            </table>
+                        </div>
+                    </tr>
+                    <button class="btn-primary" onclick="endQuiz()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -2,7 +2,7 @@ package com.quizter.service.test;
 
 import com.quizter.dto.test.QuestionDto;
 import com.quizter.dto.test.TestDto;
-import com.quizter.entity.test.Question;
+import com.quizter.entity.test.MultiVariantQuestion;
 import com.quizter.entity.test.Test;
 import com.quizter.exception.ResourceNotFoundException;
 import com.quizter.mapper.test.TestMapper;
@@ -75,13 +75,13 @@ public class TestService {
     }
 
     @Transactional
-    public List<Question> createQuestions(List<QuestionDto> questionDtos) {
-        List<Question> questions = testMapper.toQuestionList(questionDtos);
+    public List<MultiVariantQuestion> createQuestions(List<QuestionDto> questionDtos) {
+        List<MultiVariantQuestion> questions = testMapper.toQuestionList(questionDtos);
 
-        List<Question> savedQuestions = new ArrayList<>();
+        List<MultiVariantQuestion> savedQuestions = new ArrayList<>();
 
         questions.forEach(e -> {
-                    Question question = new Question();
+                    MultiVariantQuestion question = new MultiVariantQuestion();
                     question.setName(e.getName());
                     question.setAnswers(e.getAnswers());
 

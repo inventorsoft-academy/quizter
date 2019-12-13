@@ -22,14 +22,7 @@ import java.util.Map;
 @Setter
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Question {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-
-    @Column(nullable = false)
-    String name;
+public class MultiVariantQuestion extends AbstractQuestion {
 
     @ElementCollection
     @CollectionTable(name = "question_answer_mapping",

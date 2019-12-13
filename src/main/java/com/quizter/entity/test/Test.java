@@ -37,6 +37,6 @@ public class Test {
 
     @Column
     @OneToMany(cascade = CascadeType.ALL)
-    List<Question> questions;
+    List<MultiVariantQuestion> questions;
 
 }
