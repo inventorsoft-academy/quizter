@@ -13,7 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Getter
@@ -37,6 +37,6 @@ public class Test {
 
     @Column
     @OneToMany(cascade = CascadeType.ALL)
-    Set<Question> questions;
+    List<Question> questions;
 
 }

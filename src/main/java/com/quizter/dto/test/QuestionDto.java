@@ -1,14 +1,18 @@
-package com.quizter.dto.request;
+package com.quizter.dto.test;
 
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Map;
 
-@Data
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class QuestionRequest {
+public class QuestionDto {
+
+    Long id;
 
     String name;
 

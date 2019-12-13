@@ -16,18 +16,13 @@ import javax.validation.constraints.NotNull;
 @Setter
 @ToString
 public class RegistrationUserDto {
-
-    @NotNull
-    @Email
+                                                                                                                                                                                                                                                                                                                                                                                                                                        
+    @NotNull(message = "Email can't be empty")
+    @Email(message = "Email is incorrect")
     String email;
 
-    @NotNull
     @PasswordMatches
     PasswordDto password;
 
-    @NotNull
-    String confirmPassword;
-
-    @NotNull
     Role role;
 }

@@ -1,14 +1,15 @@
 package com.quizter.service;
 
 import com.quizter.dictionary.CacheType;
+import com.quizter.dto.PasswordDto;
 import com.quizter.dto.RegistrationUserDto;
-import com.quizter.entity.Token;
+import com.quizter.dto.UserEmailDto;
 import com.quizter.entity.User;
 import com.quizter.exception.NoUserWithThatIDException;
 import com.quizter.exception.TokenException;
 import com.quizter.mapper.UserMapper;
-import com.quizter.repository.TokenRepository;
 import com.quizter.repository.UserRepository;
+import com.quizter.util.AppConstants;
 import com.quizter.util.EmailConstants;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.Optional;
 
 @Service
@@ -34,38 +34,30 @@ public class UserService {
 
     UserMapper userMapper;
 
+    ValidationService validationService;
+
     PasswordEncoder passwordEncoder;
 
-    TokenRepository tokenRepository;
+    AppConstants appConstants;
+
+    SecurityService securityService;
 
     public void registerUser(RegistrationUserDto registrationUserDto) {
+        validationService.registrationValidation(registrationUserDto);
         User user = userMapper.toUser(registrationUserDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActive(false);
         userRepository.save(user);
         mailWebService.mailSend(user.getEmail(), EmailConstants.REGISTRATION_SUBJECT, EmailConstants.MAIL_CONTENT_URL,
-                "http://localhost:8080/active-account?id=" + user.getId() + "&token=" + tokenService.generateToken(user.getEmail(), CacheType.ACTIVATION).getToken());
+                appConstants.getHost() + "/active-account?id=" + user.getId() + "&token="
+                        + tokenService.generateToken(user.getEmail(), CacheType.ACTIVATION).getToken());
     }
 
     public Optional<User> findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    public void createPasswordResetTokenForUser(User user, String token) {
-        Token passwordResetToken = new Token();
-        passwordResetToken.setUser(user);
-        passwordResetToken.setToken(token);
-        passwordResetToken.setExpiryDate(Instant.ofEpochSecond(Instant.now().getEpochSecond() + 3600));
-        tokenRepository.save(passwordResetToken);
-    }
-
-    public void saveNewPassword(User user, String password) {
-        user.setPassword(passwordEncoder.encode(password));
-        tokenRepository.deleteByUserId(user.getId());
-        userRepository.save(user);
-    }
-
-    public void activeUser(Long id, String token) {
+    public void activateUser(Long id, String token) {
 
         Optional<User> user = userRepository.findById(id);
 
@@ -89,4 +81,28 @@ public class UserService {
             throw new NoUserWithThatIDException("user", "id", id);
         }
     }
+
+    public void resetPassword(UserEmailDto userEmailDto) {
+        String email = userEmailDto.getUserEmail();
+        Optional<User> userOptional = findUserByEmail(email);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            String token = tokenService.generateToken(email, CacheType.RECOVERY).getToken();
+            String appUrl = appConstants.getHost() + "/newPassword?id=" + user.getId() + "&token=" + token;
+            mailWebService.mailSend(user.getEmail(), "Restore password",
+                    "reset-password-content", appUrl);
+        }
+    }
+
+    public void saveNewPassword(Long id, String token, PasswordDto passwordDto) {
+        if (!securityService.validateResetToken(id, token)) {
+            throw new TokenException("Token not valid");
+        }
+        validationService.passwordValidation(passwordDto);
+        User user = userRepository.findById(id).orElseThrow();
+        user.setPassword(passwordEncoder.encode(passwordDto.getPassword()));
+        tokenService.removeToken(user.getEmail(), CacheType.RECOVERY);
+        userRepository.save(user);
+    }
+
 }
