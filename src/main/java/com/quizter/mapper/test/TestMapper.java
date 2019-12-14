@@ -34,7 +34,7 @@ public class TestMapper {
         return mapper.map(tests, targetListType);
     }
 
-    public List<MultiVariantQuestion> toQuestionList(List<QuestionDto> questionDtos) {
+    public List<MultiVariantQuestion> toMultivariantQuestionList(List<QuestionDto> questionDtos) {
         Type targetListType = new TypeToken<List<MultiVariantQuestion>>() {
         }.getType();
 

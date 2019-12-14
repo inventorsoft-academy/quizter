@@ -1,8 +1,5 @@
 package com.quizter.service;
 
-import com.quizter.dto.QuizResultDto;
-import com.quizter.entity.QuizResult;
-import com.quizter.entity.test.MultiVariantQuestion;
 import com.quizter.repository.QuizResultRepository;
 import com.quizter.repository.TestRepository;
 import lombok.AccessLevel;
@@ -10,9 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional

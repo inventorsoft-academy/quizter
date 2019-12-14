@@ -8,14 +8,16 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Map;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class QuestionDto {
-	Long id;
+public class MultivariantQuestionDto extends QuestionDto{
 
-	String name;
+    Map<String, Boolean> answers;
+
 }

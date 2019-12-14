@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,23 +21,23 @@ import java.util.List;
 @Setter
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Test<T extends AbstractQuestion> {
+public class Test {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	Long id;
 
-    @Column(unique = true, nullable = false)
-    String name;
+	@Column(unique = true, nullable = false)
+	String name;
 
-    @Column(nullable = false)
-    String subject;
+	@Column(nullable = false)
+	String subject;
 
-    @Column(nullable = false)
-    String description;
+	@Column(nullable = false)
+	String description;
 
-    @Column
-    @OneToMany(cascade = CascadeType.ALL)
-    List<T> questions;
+	@Column(nullable = false)
+	@OneToMany(cascade = CascadeType.ALL)
+	List<AbstractQuestion> questions = new ArrayList();
 
 }

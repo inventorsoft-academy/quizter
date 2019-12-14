@@ -9,13 +9,11 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class QuestionDto {
-	Long id;
+public class CodingQuestionDto extends QuestionDto{
 
-	String name;
+
 }

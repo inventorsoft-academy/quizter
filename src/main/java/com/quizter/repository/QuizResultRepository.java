@@ -1,6 +1,6 @@
 package com.quizter.repository;
 
-import com.quizter.entity.QuizResult;
+import com.quizter.entity.test.QuizResult;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

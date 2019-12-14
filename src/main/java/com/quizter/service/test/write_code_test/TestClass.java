@@ -1,4 +1,4 @@
-package com.quizter.entity.test.write_code_test;
+package com.quizter.service.test.write_code_test;
 
 public class TestClass implements TestCase{
 
