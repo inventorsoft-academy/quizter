@@ -59,18 +59,21 @@ $(document).ready(function () {
             questions.push(question);
         });
         alert("Multivariant questions created");
-        $("#coding-part-creation").click(function () {
-            var question;
-            var task = $("#task").val();
-            var code = $("#code").val();
-            var test = $("#test").val();
-            question["name"] = task;
-            question["unitTest"] = test;
-            question["codeTask"] = code;
-            questions.push(question);
-            createTest(name, subject, description, questions);
+        // $("#coding-part-creation").
+            $("#coding-part-creation").click(function () {
 
-        });
+                var question = {};
+                var task = $("#task").val();
+                var code = $("#code").val();
+                var test = $("#test").val();
+                question["name"] = task;
+                question["unitTest"] = test;
+                question["codeTask"] = code;
+                questions.push(question);
+                createTest(name, subject, description, questions);
+
+            });
+
     });
 
 });
@@ -81,28 +84,28 @@ function testDescriptionClick() {
     description = $('#description').val();
 }
 
-function codingQuestionCreation() {
-    alert("CODE");
-
-    $.ajax({
-        url: '/tests/coding-question-creation',
-        type: 'POST',
-        enctype: 'multipart/form-data',
-        data: JSON.stringify({
-            name: task,
-            unitTest: test,
-            codeTask: code,
-        }),
-        success: function () {
-            alert("Test has been successfully created!");
-        },
-        processData: false,
-        contentType: 'application/json; charset=utf-8;',
-        dataType: 'json',
-        cache: false,
-        timeout: 1000000,
-    });
-}
+// function codingQuestionCreation() {
+//     alert("CODE");
+//
+//     $.ajax({
+//         url: '/tests/',
+//         type: 'POST',
+//         enctype: 'multipart/form-data',
+//         data: JSON.stringify({
+//             name: task,
+//             unitTest: test,
+//             codeTask: code,
+//         }),
+//         success: function () {
+//             alert("Test has been successfully created!");
+//         },
+//         processData: false,
+//         contentType: 'application/json; charset=utf-8;',
+//         dataType: 'json',
+//         cache: false,
+//         timeout: 1000000,
+//     });
+// }
 
 function createTest(name, subject, description, questions) {
     if (window.confirm("Do you really want to create test?")) {

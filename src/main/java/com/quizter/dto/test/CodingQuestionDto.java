@@ -13,7 +13,13 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CodingQuestionDto extends QuestionDto{
+@NoArgsConstructor
+public class CodingQuestionDto extends QuestionDto {
 
+	String unitTest;
+
+	String codeTask;
+
+	boolean reviewed;
 
 }

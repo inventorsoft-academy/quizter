@@ -1,6 +1,5 @@
 package com.quizter.service.test;
 
-import com.quizter.dto.test.MultivariantQuestionDto;
 import com.quizter.dto.test.QuestionDto;
 import com.quizter.dto.test.TestDto;
 import com.quizter.entity.test.AbstractQuestion;
@@ -22,13 +21,13 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class TestService {
+public class TestService<T extends AbstractQuestion, D extends QuestionDto> {
 
 	TestRepository testRepository;
 
-	QuestionRepository questionRepository;
+	QuestionRepository<AbstractQuestion> questionRepository;
 
-	TestMapper testMapper;
+	TestMapper<T, D> testMapper;
 
 	@Transactional(readOnly = true)
 	public List<TestDto> findAllTest() {
@@ -47,7 +46,7 @@ public class TestService {
 		test.setName(testDto.getName());
 		test.setDescription(testDto.getDescription());
 		test.setSubject(testDto.getSubject());
-		test.setQuestions(new ArrayList<>(createQuestions(testDto.getQuestions())));
+		test.setQuestions(createQuestions(testDto.getQuestions()));
 
 		testRepository.save(test);
 	}
@@ -56,14 +55,16 @@ public class TestService {
 	public void updateTest(Long id, TestDto testDto) {
 		Test test = testRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Test", "id", id));
 
-		questionRepository.deleteAll(new ArrayList(test.getQuestions()));
+		questionRepository.deleteAll(test.getQuestions());
+		test.getQuestions().clear();
+
 		test.getQuestions().clear();
 
 		test.setId(id);
 		test.setName(testDto.getName());
 		test.setSubject(testDto.getSubject());
 		test.setDescription(testDto.getDescription());
-		test.setQuestions(new ArrayList<>(createQuestions(testDto.getQuestions())));
+		test.setQuestions(createQuestions(testDto.getQuestions()));
 		test.setDescription(testDto.getDescription());
 
 		testRepository.save(test);
@@ -75,23 +76,23 @@ public class TestService {
 	}
 
 	@Transactional
-	public List<MultiVariantQuestion> createQuestions(List<QuestionDto> questionDtos) {
-		List<MultiVariantQuestion> questions = testMapper.toMultivariantQuestionList(questionDtos);
+	public  List<T> createQuestions(List<D> questionDtos) {
+		List<T> questions = testMapper.toQuestionList(questionDtos);
 
-		List<MultiVariantQuestion> savedQuestions = new ArrayList<>();
+//		List<MultiVariantQuestion> savedQuestions = new ArrayList<>();
 
-		questions.forEach(e -> {
-					MultiVariantQuestion question = new MultiVariantQuestion();
-					question.setName(e.getName());
-					question.setAnswers(e.getAnswers());
 
-					questionRepository.save(question);
+		questions.forEach(question -> {
+//			MultiVariantQuestion question = new MultiVariantQuestion();
+//			question.setName(e.getName());
+//			question.setAnswers(e.getAnswers());
 
-					savedQuestions.add(question);
-				}
-		);
+			questionRepository.save(question);
 
-		return savedQuestions;
+
+		});
+
+		return questions;
 	}
 
 }
