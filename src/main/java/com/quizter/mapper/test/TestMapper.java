@@ -1,10 +1,8 @@
 package com.quizter.mapper.test;
 
-import com.quizter.dto.test.MultivariantQuestionDto;
 import com.quizter.dto.test.QuestionDto;
 import com.quizter.dto.test.TestDto;
 import com.quizter.entity.test.AbstractQuestion;
-import com.quizter.entity.test.MultiVariantQuestion;
 import com.quizter.entity.test.Test;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -17,7 +15,7 @@ import java.util.List;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TestMapper<T extends AbstractQuestion, D extends QuestionDto> {
+public class TestMapper<T extends AbstractQuestion> {
 
 	ModelMapper mapper = new ModelMapper();
 
@@ -36,7 +34,7 @@ public class TestMapper<T extends AbstractQuestion, D extends QuestionDto> {
 		return mapper.map(tests, targetListType);
 	}
 
-	public List<T> toQuestionList(List<D> questionDtos) {
+	public List<T> toQuestionList(List<QuestionDto> questionDtos) {
 		Type targetListType = new TypeToken<List<T>>() {
 		}.getType();
 

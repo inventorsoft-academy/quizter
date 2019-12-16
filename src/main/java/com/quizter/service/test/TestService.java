@@ -1,11 +1,14 @@
 package com.quizter.service.test;
 
+import com.quizter.dictionary.QuestionType;
 import com.quizter.dto.test.QuestionDto;
 import com.quizter.dto.test.TestDto;
 import com.quizter.entity.test.AbstractQuestion;
+import com.quizter.entity.test.CodeQuestion;
 import com.quizter.entity.test.MultiVariantQuestion;
 import com.quizter.entity.test.Test;
 import com.quizter.exception.ResourceNotFoundException;
+import com.quizter.mapper.QuestionMapper;
 import com.quizter.mapper.test.TestMapper;
 import com.quizter.repository.QuestionRepository;
 import com.quizter.repository.TestRepository;
@@ -16,18 +19,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class TestService<T extends AbstractQuestion, D extends QuestionDto> {
+public class TestService<T extends AbstractQuestion> {
 
 	TestRepository testRepository;
 
 	QuestionRepository<AbstractQuestion> questionRepository;
 
-	TestMapper<T, D> testMapper;
+	TestMapper<T> testMapper;
+
+	QuestionMapper questionMapper;
 
 	@Transactional(readOnly = true)
 	public List<TestDto> findAllTest() {
@@ -46,7 +53,7 @@ public class TestService<T extends AbstractQuestion, D extends QuestionDto> {
 		test.setName(testDto.getName());
 		test.setDescription(testDto.getDescription());
 		test.setSubject(testDto.getSubject());
-		test.setQuestions(createQuestions(testDto.getQuestions()));
+		test.setQuestions(new ArrayList<>(createQuestions(testDto.getQuestions())));
 
 		testRepository.save(test);
 	}
@@ -58,13 +65,11 @@ public class TestService<T extends AbstractQuestion, D extends QuestionDto> {
 		questionRepository.deleteAll(test.getQuestions());
 		test.getQuestions().clear();
 
-		test.getQuestions().clear();
-
 		test.setId(id);
 		test.setName(testDto.getName());
 		test.setSubject(testDto.getSubject());
 		test.setDescription(testDto.getDescription());
-		test.setQuestions(createQuestions(testDto.getQuestions()));
+		test.setQuestions(new ArrayList<>(createQuestions(testDto.getQuestions())));
 		test.setDescription(testDto.getDescription());
 
 		testRepository.save(test);
@@ -76,23 +81,22 @@ public class TestService<T extends AbstractQuestion, D extends QuestionDto> {
 	}
 
 	@Transactional
-	public  List<T> createQuestions(List<D> questionDtos) {
-		List<T> questions = testMapper.toQuestionList(questionDtos);
+	public List createQuestions(List<QuestionDto> questionDtos) {
+		final MultiVariantQuestion[] multiVariantQuestion = new MultiVariantQuestion[1];
+		final CodeQuestion[] codeQuestion = new CodeQuestion[1];
+		return questionDtos.stream().filter(questionDto -> questionDto != null && questionDto.getQuestionType() != null).map(questionDto -> {
+			if (questionDto.getQuestionType().equals(QuestionType.CODE)) {
+				codeQuestion[0] = questionMapper.questionDtoToCodeQuestion(questionDto);
+				questionRepository.save(codeQuestion[0]);
+				return codeQuestion[0];
+			} else {
+				multiVariantQuestion[0] = questionMapper.questionDtoToMultivariantQuestion(questionDto);
+				questionRepository.save(multiVariantQuestion[0]);
+				return multiVariantQuestion[0];
+			}
 
-//		List<MultiVariantQuestion> savedQuestions = new ArrayList<>();
+		}).collect(Collectors.toList());
 
-
-		questions.forEach(question -> {
-//			MultiVariantQuestion question = new MultiVariantQuestion();
-//			question.setName(e.getName());
-//			question.setAnswers(e.getAnswers());
-
-			questionRepository.save(question);
-
-
-		});
-
-		return questions;
 	}
 
 }

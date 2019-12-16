@@ -47,7 +47,7 @@ $(document).ready(function () {
             var writeFourthAnswer = $("#writeFourthAnswer_" + index).val();
 
             question["name"] = writeQuestion;
-
+            question["questionType"] = "MULTIVARIANT";
             var answers = {};
             answers[writeFirstAnswer] = $('#firstRadio_' + index).is(":checked") ? "true" : "false";
             answers[writeSecondAnswer] = $('#secondRadio_' + index).is(":checked") ? "true" : "false";
@@ -59,20 +59,20 @@ $(document).ready(function () {
             questions.push(question);
         });
         alert("Multivariant questions created");
-        // $("#coding-part-creation").
-            $("#coding-part-creation").click(function () {
+        $("#coding-part-creation").click(function () {
 
-                var question = {};
-                var task = $("#task").val();
-                var code = $("#code").val();
-                var test = $("#test").val();
-                question["name"] = task;
-                question["unitTest"] = test;
-                question["codeTask"] = code;
-                questions.push(question);
-                createTest(name, subject, description, questions);
+            var question = {};
+            var task = $("#task").val();
+            var code = $("#code").val();
+            var test = $("#test").val();
+            question["name"] = task;
+            question["questionType"] = "CODE";
+            question["unitTest"] = test;
+            question["codeTask"] = code;
+            questions.push(question);
+            createTest(name, subject, description, questions);
 
-            });
+        });
 
     });
 
@@ -83,29 +83,6 @@ function testDescriptionClick() {
     subject = $('#subject').val();
     description = $('#description').val();
 }
-
-// function codingQuestionCreation() {
-//     alert("CODE");
-//
-//     $.ajax({
-//         url: '/tests/',
-//         type: 'POST',
-//         enctype: 'multipart/form-data',
-//         data: JSON.stringify({
-//             name: task,
-//             unitTest: test,
-//             codeTask: code,
-//         }),
-//         success: function () {
-//             alert("Test has been successfully created!");
-//         },
-//         processData: false,
-//         contentType: 'application/json; charset=utf-8;',
-//         dataType: 'json',
-//         cache: false,
-//         timeout: 1000000,
-//     });
-// }
 
 function createTest(name, subject, description, questions) {
     if (window.confirm("Do you really want to create test?")) {

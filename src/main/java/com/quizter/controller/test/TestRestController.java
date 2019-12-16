@@ -1,11 +1,8 @@
 package com.quizter.controller.test;
 
 import com.quizter.dto.response.MessageResponse;
-import com.quizter.dto.test.CodingQuestionDto;
-import com.quizter.dto.test.MultivariantQuestionDto;
 import com.quizter.dto.test.QuestionDto;
 import com.quizter.dto.test.TestDto;
-import com.quizter.entity.test.CodeQuestion;
 import com.quizter.service.test.TestService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -42,7 +39,7 @@ public class TestRestController {
 	}
 
 	@PostMapping
-	public <D extends QuestionDto> ResponseEntity<MessageResponse> createTest(@Valid @RequestBody TestDto<MultivariantQuestionDto> testDto) {
+	public ResponseEntity<MessageResponse> createTest(@Valid @RequestBody TestDto testDto) {
 		testService.createTest(testDto);
 
 		return ResponseEntity.ok(new MessageResponse("Test was created successfully"));

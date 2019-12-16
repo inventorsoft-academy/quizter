@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TestDto<D extends QuestionDto> {
+public class TestDto{
 
 	Long id;
 
@@ -20,5 +20,5 @@ public class TestDto<D extends QuestionDto> {
 
 	String description;
 
-	List<D> questions;
+	List<QuestionDto> questions;
 }
