@@ -2,7 +2,7 @@ package com.quizter.mapper.test;
 
 import com.quizter.dto.test.QuestionDto;
 import com.quizter.dto.test.TestDto;
-import com.quizter.entity.test.AbstractQuestion;
+import com.quizter.entity.test.Question;
 import com.quizter.entity.test.Test;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TestMapper<T extends AbstractQuestion> {
+public class TestMapper<T extends Question> {
 
 	ModelMapper mapper = new ModelMapper();
 

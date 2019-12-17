@@ -119,9 +119,15 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User getUserPrincipal(){
-        Credentials credentials = (Credentials) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userRepository.findByEmail(credentials.getUsername()).orElseThrow();
+    public User getUserPrincipal() {
+        log.info("Fignia = " + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        try {
+            Credentials credentials = (Credentials) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return userRepository.findByEmail(credentials.getUsername()).orElseThrow();
+
+        } catch (ClassCastException o_0) {
+            return new User();
+        }
     }
 
 }

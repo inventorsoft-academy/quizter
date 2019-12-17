@@ -6,14 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 
 @Entity
@@ -27,19 +22,19 @@ public class QuizResult {
     @GeneratedValue
     long id;
 
-    String testName;
+    Instant start;
+
+    Instant finished;
 
     @ManyToOne
-    User user;
+    User applicant;
+
+    @ManyToOne
+    Test test;
+
+    @Column(nullable = false)
+    double mark;
 
     @ElementCollection
-    @CollectionTable(name = "quiz_result_results",
-            joinColumns = {@JoinColumn(name = "quiz_result_id", referencedColumnName = "id")})
-    Map<String, String> results;
-
-    @ElementCollection
-    @CollectionTable(name = "quiz_result_right_results",
-            joinColumns = {@JoinColumn(name = "quiz_result_id", referencedColumnName = "id")})
-    Map<String, String> rightResults;
-
+    List<Answer> answers;
 }

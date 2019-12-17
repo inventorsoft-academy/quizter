@@ -23,7 +23,7 @@ import javax.persistence.InheritanceType;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="question_type",
         discriminatorType = DiscriminatorType.STRING)
-public class AbstractQuestion {
+public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

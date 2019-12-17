@@ -2,7 +2,6 @@ package com.quizter.entity.test;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +17,7 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue("coding")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CodeQuestion extends AbstractQuestion {
+public class CodeQuestion extends Question {
 
 	String unitTest;
 

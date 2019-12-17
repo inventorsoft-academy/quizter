@@ -2,8 +2,7 @@ package com.quizter.controller;
 
 import com.quizter.dto.QuizResultDto;
 import com.quizter.dto.response.MessageResponse;
-import com.quizter.dto.test.TestDto;
-import com.quizter.service.QuizService;
+import com.quizter.service.test.QuizService;
 import com.quizter.service.test.TestService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

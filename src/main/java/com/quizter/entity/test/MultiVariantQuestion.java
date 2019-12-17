@@ -21,7 +21,7 @@ import java.util.Map;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @DiscriminatorValue("multivariant")
-public class MultiVariantQuestion extends AbstractQuestion {
+public class MultiVariantQuestion extends Question {
 
     @ElementCollection
     @CollectionTable(name = "question_answer_mapping",

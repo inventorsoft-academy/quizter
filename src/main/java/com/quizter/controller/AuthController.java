@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DefaultController {
+public class AuthController {
 
     UserService userService;
 
@@ -21,7 +21,10 @@ public class DefaultController {
     public String defaultPage() {
         log.info("defaultController");
         User user = userService.getUserPrincipal();
-        if(user.getProfile() == null){
+        if (user.getEmail() == null) {
+            return "redirect:/login";
+        }
+        if (user.getProfile() == null) {
             return "redirect:/profile/edit";
         }
         switch (user.getRole()) {

@@ -1,7 +1,8 @@
-package com.quizter.service;
+package com.quizter.service.test;
 
 import com.quizter.repository.QuizResultRepository;
 import com.quizter.repository.TestRepository;
+import com.quizter.service.UserService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;

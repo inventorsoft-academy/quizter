@@ -3,7 +3,7 @@ package com.quizter.service.test;
 import com.quizter.dictionary.QuestionType;
 import com.quizter.dto.test.QuestionDto;
 import com.quizter.dto.test.TestDto;
-import com.quizter.entity.test.AbstractQuestion;
+import com.quizter.entity.test.Question;
 import com.quizter.entity.test.CodeQuestion;
 import com.quizter.entity.test.MultiVariantQuestion;
 import com.quizter.entity.test.Test;
@@ -19,18 +19,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class TestService<T extends AbstractQuestion> {
+public class TestService<T extends Question> {
 
 	TestRepository testRepository;
 
-	QuestionRepository<AbstractQuestion> questionRepository;
+	QuestionRepository<Question> questionRepository;
 
 	TestMapper<T> testMapper;
 

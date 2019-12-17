@@ -1,18 +1,15 @@
-package com.quizter.service;
+package com.quizter.service.test;
 
-import com.quizter.entity.test.AbstractQuestion;
+import com.quizter.entity.test.Question;
 import com.quizter.entity.test.MultiVariantQuestion;
 import com.quizter.entity.test.Test;
+import com.quizter.service.test.TestQuestionEvaluator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -37,12 +34,12 @@ public class TestResultService {
 	@Component
 	private static final class StandardEvaluator implements TestQuestionEvaluator {
 		@Override
-		public boolean isApplicable(AbstractQuestion question) {
+		public boolean isApplicable(Question question) {
 			return question instanceof MultiVariantQuestion;
 		}
 
 		@Override
-		public double evaluate(AbstractQuestion question, String answer) {
+		public double evaluate(Question question, String answer) {
 			return MultiVariantQuestion.class.cast(question).getAnswers().get(answer) ? question.getPrice() : 0.0;
 		}
 	}
