@@ -10,15 +10,15 @@ import java.util.List;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TestDto {
+public class TestDto{
 
-    Long id;
+	Long id;
 
-    String name;
+	String name;
 
-    String subject;
+	String subject;
 
-    String description;
+	String description;
 
-    List<QuestionDto> questions;
+	List<QuestionDto> questions;
 }

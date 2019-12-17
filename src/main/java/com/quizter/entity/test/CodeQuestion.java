@@ -1,9 +1,27 @@
 package com.quizter.entity.test;
 
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
-@Data
-public class CodeQuestion extends AbstractQuestion {
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
-    private String unitTestBlob;
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@DiscriminatorValue("coding")
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class CodeQuestion extends Question {
+
+	String unitTest;
+
+	String codeTask;
+
+	boolean reviewed;
 }

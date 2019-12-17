@@ -26,6 +26,8 @@ public class ValidationService {
 
     UserRepository userRepository;
 
+    Validator validator;
+
     private <T> Map<String, String> validate(T t) {
 
         Map<String, String> errors = new HashMap<>();
@@ -35,7 +37,7 @@ public class ValidationService {
             return errors;
         }
 
-        Set<ConstraintViolation<T>> constraintViolation = validator().validate(t);
+        Set<ConstraintViolation<T>> constraintViolation = validator.validate(t);
 
         if (constraintViolation != null && !constraintViolation.isEmpty()) {
             constraintViolation.forEach(x -> errors.put(x.getPropertyPath().toString() + "Error", x.getMessage()));
@@ -66,9 +68,9 @@ public class ValidationService {
         }
     }
 
-    @Bean
-    public Validator validator() {
-        return Validation.buildDefaultValidatorFactory().getValidator();
-    }
+//    @Bean
+//    public Validator validator() {
+//        return Validation.buildDefaultValidatorFactory().getValidator();
+//    }
 
 }

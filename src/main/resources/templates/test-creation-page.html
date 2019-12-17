@@ -41,6 +41,11 @@
                                            type="button">2</a>
                                         <p>Step 2</p>
                                     </div>
+                                    <div class="stepwizard-step">
+                                        <a class="btn btn-default btn-circle" disabled="disabled" href="#step-3"
+                                           type="button">3</a>
+                                        <p>Step 3</p>
+                                    </div>
                                 </div>
                             </div>
 
@@ -228,9 +233,41 @@
                                                     type="button"><i
                                                     class="fa fa-step-backward"></i> Back
                                             </button>
+                                            <a id="to-coding-part">
 
+                                                <button class="btn btn-primary nextBtn btn-lg pull-right"
+                                                        type="button">
+                                                    <i class="fa  fa-hand-o-right"></i> Next
+                                                </button>
+                                            </a>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row setup-content" id="step-3">
+                                    <form id="coding-test-form">
+                                        <div class="form-group">
+                                            <input id="task" type="text"
+                                                   required="required" class="form-control"
+                                                   placeholder="Task" style="width: 1350px">
+                                            <div id="textareas" style="padding-top: 50px">
+                                                <div id="coding-textarea" style="display:inline-block">
+                                            <textarea id="code" required="required" class="form-control"
+                                                      style="width: 650px;height: 550px"
+                                                      placeholder="Code..."></textarea>
+                                                </div>
+                                                <div id="testing-textarea" style="display:inline-block; padding-left: 75px">
+                                            <textarea id="test" required="required" class="form-control"
+                                                      style="width: 650px;height: 550px"
+                                                      placeholder="Tests..."></textarea>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                        <button id="coding-part-creation" class="btn btn-primary nextBtn btn-lg pull-right" type="button">
+                                            Create
+                                        </button>
+                                    </form>
                                 </div>
                             </form>
                         </div>

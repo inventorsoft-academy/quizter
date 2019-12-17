@@ -13,8 +13,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableConfigurationProperties(AppConstants.class)
 public class QuizterApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(QuizterApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(QuizterApplication.class, args);
+	}
 
 }

@@ -22,7 +22,7 @@ $(document).ready(function () {
 
     });
 
-   $btnRemove.click(function (e) {
+    $btnRemove.click(function (e) {
         e.preventDefault();
         $target.find('.testCreationDiv').last().remove();
         if (count <= 1) {
@@ -47,7 +47,7 @@ $(document).ready(function () {
             var writeFourthAnswer = $("#writeFourthAnswer_" + index).val();
 
             question["name"] = writeQuestion;
-
+            question["questionType"] = "MULTIVARIANT";
             var answers = {};
             answers[writeFirstAnswer] = $('#firstRadio_' + index).is(":checked") ? "true" : "false";
             answers[writeSecondAnswer] = $('#secondRadio_' + index).is(":checked") ? "true" : "false";
@@ -58,8 +58,22 @@ $(document).ready(function () {
 
             questions.push(question);
         });
+        alert("Multivariant questions created");
+        $("#coding-part-creation").click(function () {
 
-        createTest(name, subject, description, questions);
+            var question = {};
+            var task = $("#task").val();
+            var code = $("#code").val();
+            var test = $("#test").val();
+            question["name"] = task;
+            question["questionType"] = "CODE";
+            question["unitTest"] = test;
+            question["codeTask"] = code;
+            questions.push(question);
+            createTest(name, subject, description, questions);
+
+        });
+
     });
 
 });
@@ -84,7 +98,6 @@ function createTest(name, subject, description, questions) {
             }),
             success: function () {
                 alert("Test has been successfully created!");
-                location.href = "/tests"
             },
             processData: false,
             contentType: 'application/json; charset=utf-8;',
@@ -93,9 +106,5 @@ function createTest(name, subject, description, questions) {
             timeout: 1000000,
         });
     }
+
 }
-
-
-
-
-

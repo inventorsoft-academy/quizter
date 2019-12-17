@@ -1,6 +1,7 @@
 package com.quizter.controller.test;
 
 import com.quizter.dto.response.MessageResponse;
+import com.quizter.dto.test.QuestionDto;
 import com.quizter.dto.test.TestDto;
 import com.quizter.service.test.TestService;
 import lombok.AccessLevel;
@@ -25,37 +26,37 @@ import java.util.List;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class TestRestController {
 
-    TestService testService;
+	TestService testService;
 
-    @GetMapping
-    public ResponseEntity<List<TestDto>> getAllTest() {
-        return ResponseEntity.ok(testService.findAllTest());
-    }
+	@GetMapping
+	public ResponseEntity<List<TestDto>> getAllTest() {
+		return ResponseEntity.ok(testService.findAllTest());
+	}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<TestDto> getTestById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(testService.findTestById(id));
-    }
+	@GetMapping("/{id}")
+	public ResponseEntity<TestDto> getTestById(@PathVariable("id") Long id) {
+		return ResponseEntity.ok(testService.findTestById(id));
+	}
 
-    @PostMapping
-    public ResponseEntity<MessageResponse> createTest(@Valid @RequestBody TestDto testDto) {
-        testService.createTest(testDto);
+	@PostMapping
+	public ResponseEntity<MessageResponse> createTest(@Valid @RequestBody TestDto testDto) {
+		testService.createTest(testDto);
 
-        return ResponseEntity.ok(new MessageResponse("Test was created successfully"));
-    }
+		return ResponseEntity.ok(new MessageResponse("Test was created successfully"));
+	}
 
-    @PutMapping("/{id}")
-    public ResponseEntity<MessageResponse> updateTest(@PathVariable("id") Long id, @Valid @RequestBody TestDto testDto) {
-        testService.updateTest(id, testDto);
+	@PutMapping("/{id}")
+	public ResponseEntity<MessageResponse> updateTest(@PathVariable("id") Long id, @Valid @RequestBody TestDto testDto) {
+		testService.updateTest(id, testDto);
 
-        return ResponseEntity.ok(new MessageResponse("Test was updated successfully"));
-    }
+		return ResponseEntity.ok(new MessageResponse("Test was updated successfully"));
+	}
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteTest(@PathVariable("id") Long id) {
-        testService.deleteTest(id);
+	@DeleteMapping("/{id}")
+	public ResponseEntity deleteTest(@PathVariable("id") Long id) {
+		testService.deleteTest(id);
 
-        return ResponseEntity.noContent().build();
-    }
+		return ResponseEntity.noContent().build();
+	}
 
 }

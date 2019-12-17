@@ -1,18 +1,17 @@
 package com.quizter.entity.test;
 
+import com.quizter.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -35,8 +34,14 @@ public class Test {
     @Column(nullable = false)
     String description;
 
-    @Column
+//	@Column(nullable = false)
+	Duration duration;
+
+    @ManyToOne
+    User author;
+
+    @Column(nullable = false)
     @OneToMany(cascade = CascadeType.ALL)
-    List<MultiVariantQuestion> questions;
+    List<Question> questions = new ArrayList();
 
 }
