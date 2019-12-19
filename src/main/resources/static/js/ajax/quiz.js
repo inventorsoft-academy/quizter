@@ -41,16 +41,54 @@ function endQuiz(){
 
   });
 
+    postToBack(data);
+}
 
+$(document).ready(function () {
+    var ckbox = $('#checkbox');
 
-   var myUrl = document.URL;
+    $('input[name="answersArray"]').on('click',function () {
+       var answers = [];
+       var questionType;
+       var questionId;
+       questionId =$(this).attr("questionId");
+       questionType =$(this).attr("questionType");
+        if (this.checked) {
+            $('input[questionId='+questionId+']').each(function(){
+            if(this.checked) {
+                answers.push($(this).val());
+            }
+            });
+            saveResult(questionId, questionType, answers);
+        } else {
+            $('input[questionId='+questionId+']').each(function(){
+                        if(this.checked) {
+                            answers.push($(this).val());
+                        }
+                        });
+            saveResult(questionId, questionType, answers);
+        }
+    });
+});
+
+function saveResult(questionId, questionType, answers){
+   var result = {};
+   var data = {};
+   result[questionId] = answers;
+   data[questionType] = result;
+   postToBack(data);
+
+}
+
+function postToBack(data){
+ var myUrl = document.URL;
    $.ajax({
        contentType:"application/json; charset=utf-8",
        type: "POST",
        url: myUrl,
        data: JSON.stringify(data),
        success: function (response) {
-          alert("Quiz finished with rating " + response.message);
+//          alert("Quiz finished with rating " + response.message);
        },
        error: function (xhr, status, errorThrown) {
        console.log(xhr.responseJSON.message);
