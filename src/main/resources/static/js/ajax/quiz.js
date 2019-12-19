@@ -1,5 +1,9 @@
 function endQuiz(){
-   confirm("Are You sure you want to end quiz?");
+confirm("Are You sure you want to end quiz?");
+finishQuiz();
+}
+
+function finishQuiz(){
    var questionType;
    var questionId;
    var answers = [];
@@ -100,11 +104,38 @@ function putToBack(data){
        url: myUrl,
        data: JSON.stringify(data),
        success: function (response) {
-          console.log('saved = ' + response);
+
        },
        error: function (xhr, status, errorThrown) {
        console.log(xhr.responseJSON.message);
          alert("ERROR");
        }
    })
+}
+
+function start(){
+document.getElementById('startId').style.display = "none";
+document.getElementById('endId').style.display = "block";
+document.getElementById('rowId').style.display = "block";
+var duration = parseInt($('#time').text()) * 60;
+var timer = duration, minutes, seconds;
+var x = setInterval(function () {
+            minutes = parseInt(timer / 60, 10)
+            seconds = parseInt(timer % 60, 10);
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            document.getElementById('time').textContent = minutes + ":" + seconds;
+
+            if (--timer < 60) {
+                $('#time').css({"color": "red"})
+            }
+            if (timer <= 0) {
+            document.getElementById('time').textContent = "00:00";
+            clearInterval(x);
+            finishQuiz();
+            }
+        }, 1000);
+
 }

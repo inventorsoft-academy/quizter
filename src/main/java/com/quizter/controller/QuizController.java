@@ -26,6 +26,7 @@ public class QuizController {
     public ModelAndView quizPage(@PathVariable Long id) {
         ModelAndView modelAndView = new ModelAndView("quiz-page");
         modelAndView.addObject("quiz", testService.findTestById(id));
+        modelAndView.addObject("duration", "1");
         return modelAndView;
     }
 
@@ -34,7 +35,11 @@ public class QuizController {
                                                    @RequestBody List<QuizResultDto> quizResultDtos) {
         log.info("Post Request = " + quizResultDtos);
         log.info("Post Id = " + id);
-        return ResponseEntity.ok().build();//;new MessageResponse(String.valueOf(quizService.saveResult(id, quizResultDto))));
+        //TODO save results
+        //TODO add time
+        //TODO get rating
+        //TODO fetch less data from db
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("{id}")
@@ -42,6 +47,7 @@ public class QuizController {
                                                        @RequestBody List<QuizResultDto> quizResultDtos) {
         log.info("Put Request = " + quizResultDtos);
         log.info("Put Id = " + id);
+        //TODO update results
         return ResponseEntity.ok().build();
     }
 }
