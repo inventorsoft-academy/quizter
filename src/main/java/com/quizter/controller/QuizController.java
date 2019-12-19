@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/desk/quiz")
@@ -29,11 +31,17 @@ public class QuizController {
 
     @PostMapping("{id}")
     public ResponseEntity<MessageResponse> getRank(@PathVariable Long id,
-                                                   @RequestBody String quizResultDto) {
-        log.info("Request = " + quizResultDto);
-        log.info("Id = " + id);
+                                                   @RequestBody List<QuizResultDto> quizResultDtos) {
+        log.info("Post Request = " + quizResultDtos);
+        log.info("Post Id = " + id);
         return ResponseEntity.ok().build();//;new MessageResponse(String.valueOf(quizService.saveResult(id, quizResultDto))));
     }
 
-    //TODO send all check to back
+    @PutMapping("{id}")
+    public ResponseEntity<MessageResponse> saveChecked(@PathVariable Long id,
+                                                       @RequestBody List<QuizResultDto> quizResultDtos) {
+        log.info("Put Request = " + quizResultDtos);
+        log.info("Put Id = " + id);
+        return ResponseEntity.ok().build();
+    }
 }
