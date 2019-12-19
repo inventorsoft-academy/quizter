@@ -1,6 +1,8 @@
 function endQuiz(){
-confirm("Are You sure you want to end quiz?");
+var finish = confirm("Are You sure you want to end quiz?");
+if(finish === true){
 finishQuiz();
+}
 }
 
 function finishQuiz(){
@@ -49,7 +51,11 @@ function finishQuiz(){
            url: myUrl,
            data: JSON.stringify(result),
            success: function (response) {
+              clearInterval(countdownTimer);
               alert("Quiz finished with rating " + response.message);
+              document.getElementById('endId').style.display = "none";
+              document.getElementById('rowId').style.display = "none";
+              document.getElementById('time').style.display = "none";
            },
            error: function (xhr, status, errorThrown) {
            console.log(xhr.responseJSON.message);
@@ -113,13 +119,14 @@ function putToBack(data){
    })
 }
 
+var countdownTimer;
 function start(){
 document.getElementById('startId').style.display = "none";
 document.getElementById('endId').style.display = "block";
 document.getElementById('rowId').style.display = "block";
 var duration = parseInt($('#time').text()) * 60;
 var timer = duration, minutes, seconds;
-var x = setInterval(function () {
+countdownTimer = setInterval(function () {
             minutes = parseInt(timer / 60, 10)
             seconds = parseInt(timer % 60, 10);
 
@@ -133,7 +140,7 @@ var x = setInterval(function () {
             }
             if (timer <= 0) {
             document.getElementById('time').textContent = "00:00";
-            clearInterval(x);
+            clearInterval(countdownTimer);
             finishQuiz();
             }
         }, 1000);

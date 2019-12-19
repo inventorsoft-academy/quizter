@@ -34,7 +34,6 @@ public class QuizController {
     public ResponseEntity<MessageResponse> getRank(@PathVariable Long id,
                                                    @RequestBody List<QuizResultDto> quizResultDtos) {
         log.info("Post Request = " + quizResultDtos);
-        log.info("Post Id = " + id);
         //TODO save results
         //TODO add time
         //TODO get rating
@@ -46,7 +45,6 @@ public class QuizController {
     public ResponseEntity<MessageResponse> saveChecked(@PathVariable Long id,
                                                        @RequestBody List<QuizResultDto> quizResultDtos) {
         log.info("Put Request = " + quizResultDtos);
-        log.info("Put Id = " + id);
         //TODO update results
         return ResponseEntity.ok().build();
     }
