@@ -12,12 +12,13 @@ import org.springframework.stereotype.Component;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuestionMapper {
 
-	ModelMapper mapper = new ModelMapper();
+    ModelMapper mapper = new ModelMapper();
 
-	public MultiVariantQuestion questionDtoToMultivariantQuestion(QuestionDto questionDto) {
-		return mapper.map(questionDto, MultiVariantQuestion.class);
-	}
-	public CodeQuestion questionDtoToCodeQuestion(QuestionDto questionDto) {
-		return mapper.map(questionDto,CodeQuestion.class);
-	}
+    public MultiVariantQuestion questionDtoToMultivariantQuestion(QuestionDto questionDto) {
+        return mapper.map(questionDto, MultiVariantQuestion.class);
+    }
+
+    public CodeQuestion questionDtoToCodeQuestion(QuestionDto questionDto) {
+        return mapper.map(questionDto, CodeQuestion.class);
+    }
 }

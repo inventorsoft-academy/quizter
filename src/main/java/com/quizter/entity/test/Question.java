@@ -1,19 +1,13 @@
 package com.quizter.entity.test;
 
+import com.quizter.dictionary.QuestionType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -28,6 +22,10 @@ public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
+
+    @Column(name = "question_type", insertable = false, updatable = false)
+    @Enumerated(EnumType.STRING)
+    protected QuestionType questionType;
 
     protected String name;
 

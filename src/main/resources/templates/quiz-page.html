@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" data-layout-decorate="~{layout/home-layout}" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" data-layout-decorate="~{layout/home-layout}"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <script th:src="@{/js/ajax/quiz.js}"></script>
     <title>Quiz</title>
@@ -20,19 +22,35 @@
                         <div class="x_panel">
                             <table class="tile_info">
                                 <th th:text="${question.name}"></th>
-                                <table class="">
-                                    <tr th:each="answer: ${question.answers}">
-                                        <th style="padding: 8px">
-                                            <div class="radio pull-left">
-                                                <label>
-                                                    <input type="checkbox" class="flat" th:question="${question.name}"
-                                                           th:name="answersArray" th:value="${answer.key}">
-                                                </label>
-                                            </div>
-                                        </th>
-                                        <th th:text="${answer.key}"></th>
-                                    </tr>
-                                </table>
+
+                                <tr th:if="${question.questionType == T(com.quizter.dictionary.QuestionType).CODE}">
+                                    <table class="">
+                                        <textarea class="resultAnswer" style="width: 100%; height: 100%;"
+                                                  th:questionType="${question.questionType}"
+                                                  th:questionId="${question.id}"
+                                                  th:name="answersArray"
+                                                  th:text="${question.codeTask}"></textarea>
+                                    </table>
+                                </tr>
+
+                                <div th:if="${question.questionType ==
+                                T(com.quizter.dictionary.QuestionType).MULTIVARIANT}">
+                                    <table class="">
+                                        <tr th:each="answer: ${question.answers}">
+                                            <th style="padding: 8px">
+                                                <div class="radio pull-left">
+                                                    <label>
+                                                        <input type="checkbox" class="resultAnswer"
+                                                               th:questionType="${question.questionType}"
+                                                               th:questionId="${question.id}"
+                                                               th:name="answersArray" th:value="${answer.key}">
+                                                    </label>
+                                                </div>
+                                            </th>
+                                            <th th:text="${answer.key}"></th>
+                                        </tr>
+                                    </table>
+                                </div>
                             </table>
                         </div>
                     </tr>

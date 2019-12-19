@@ -1,26 +1,48 @@
 function endQuiz(){
    confirm("Are You sure you want to end quiz?");
    var data = {};
+   var questionType;
    var answers = [];
-   var previous_question = 'empty';
-   $('input[name="answersArray"]:checked').each(function(){
-   var question =$(this).attr("question");
-   if (question === previous_question){
+   var previousQuestionId = 'empty';
+   var result = {};
+
+   $('.resultAnswer').each(function() {
+       questionType = $(this).attr("questionType");
+
+   if("MULTIVARIANT" === questionType) {
+   result = {};
+   $('input[name="answersArray"]:checked').each(function() {
+   var questionId =$(this).attr("questionId");
+   if (questionId === previousQuestionId){
         answers.push($(this).val());
-   } else if (previous_question === 'empty'){
+   } else if (previousQuestionId === 'empty'){
         answers = new Array();
         answers.push($(this).val());
-        previous_question = question;
-   } else if (question !== previous_question){
-        data[previous_question] = answers;
-        console.log("data1 = " + JSON.stringify(data));
+        previousQuestionId = questionId;
+   } else if (questionId !== previousQuestionId){
+        result[previousQuestionId] = answers;
         answers = new Array();
         answers.push($(this).val());
-        previous_question = question;
+        previousQuestionId = questionId;
    }
+   result[previousQuestionId] = answers;
+   data[questionType] = result;
    });
-   data[previous_question] = answers;
-   console.log("data = " + JSON.stringify(data));
+   }
+
+   if("CODE" === questionType) {
+       var questionId =$(this).attr("questionId");
+       answers = new Array();
+       result = {};
+       answers.push($(this).val());
+       result[questionId] = answers;
+       data[questionType] = result;
+   }
+
+  });
+
+
+
    var myUrl = document.URL;
    $.ajax({
        contentType:"application/json; charset=utf-8",
