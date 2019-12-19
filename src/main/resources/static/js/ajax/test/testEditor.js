@@ -4,26 +4,29 @@ $(document).ready(function () {
     getAllTestsForEdit();
 });
 
-var name = '';
-var subject = '';
+var version = '';
 var description = '';
+var questions = [];
+var duration = '';
 
 function newTestDescriptionClick() {
-    name = $("#newTestName").val();
-    subject = $('#newSubject').val();
+    version = $("#version").val();
     description = $('#newDescription').val();
+    duration = $('#editTestDuration').val();
 }
 
 function getAllTestsForEdit() {
     var testId = $("#testEditPage").attr("dataEdit_id");
-    $.getJSON("/tests/" + testId,
+    $.getJSON("/cabinet/tests/" + testId,
         function (data) {
-            $("#newTestName").val(
-                data.name
+            $("#editTestDuration").val(
+                data.duration
             );
-            $("#newSubject").val(
-                data.subject
+
+            $("#version").val(
+                data.version
             );
+
             $("#newDescription").val(
                 data.description
             );
@@ -37,44 +40,63 @@ function getAllTestsForEdit() {
             var j = 1;
 
             $.each(data.questions, function (index, question) {
-                inputRowEdit = {
-                    editCount: editCount
-                };
+                console.log(question.questionType);
 
-                var htmlEdit = Mustache.to_html(templateEdit, inputRowEdit);
-                $targetEdit.append(htmlEdit);
-                editCount++;
+                if (question.questionType === "MULTIVARIANT") {
 
-                $("#writeQuestionForEdit_" + j).append(
-                    question.name
-                );
+                    inputRowEdit = {
+                        editCount: editCount
+                    };
 
-                var keys = [];
-                var values = [];
-                $.each(question.answers, function (key, value) {
-                    keys.push(key);
-                    values.push(value);
-                });
+                    var htmlEdit = Mustache.to_html(templateEdit, inputRowEdit);
+                    $targetEdit.append(htmlEdit);
+                    editCount++;
 
-                $("#writeFirstAnswerForEdit_" + j).val(keys[0]);
-                $("#writeSecondAnswerForEdit_" + j).val(keys[1]);
-                $("#writeThirdAnswerForEdit_" + j).val(keys[2]);
-                $("#writeFourthAnswerForEdit_" + j).val(keys[3]);
+                    $("#questionMarkForEdit_" + j).val(
+                        question.price,
+                    );
 
-                values[0] ? $("#firstRadioEdit_" + j).prop('checked', true) : $("#firstRadioEdit_" + j).prop('checked', false);
-                values[1] ? $("#secondRadioEdit_" + j).prop("checked", true) : $("#secondRadioEdit_" + j).prop("checked", false);
-                values[2] ? $("#thirdRadioEdit_" + j).prop("checked", true) : $("#thirdRadioEdit_" + j).prop("checked", false);
-                values[3] ? $("#fourthRadioEdit_" + j).prop("checked", true) : $("#fourthRadioEdit_" + j).prop("checked", false);
+                    $("#writeQuestionForEdit_" + j).append(
+                        question.name
+                    );
+
+                    var keys = [];
+                    var values = [];
+                    $.each(question.answers, function (key, value) {
+                        keys.push(key);
+                        values.push(value);
+                    });
+
+                    $("#writeFirstAnswerForEdit_" + j).val(keys[0]);
+                    $("#writeSecondAnswerForEdit_" + j).val(keys[1]);
+                    $("#writeThirdAnswerForEdit_" + j).val(keys[2]);
+                    $("#writeFourthAnswerForEdit_" + j).val(keys[3]);
+
+                    values[0] ? $("#firstRadioEdit_" + j).prop('checked', true) : $("#firstRadioEdit_" + j).prop('checked', false);
+                    values[1] ? $("#secondRadioEdit_" + j).prop("checked", true) : $("#secondRadioEdit_" + j).prop("checked", false);
+                    values[2] ? $("#thirdRadioEdit_" + j).prop("checked", true) : $("#thirdRadioEdit_" + j).prop("checked", false);
+                    values[3] ? $("#fourthRadioEdit_" + j).prop("checked", true) : $("#fourthRadioEdit_" + j).prop("checked", false);
+
+                }else {
+                    $("#editTask").val(
+                        question.name
+                    );
+                    $("#editCodeMark").val(
+                        question.price
+                    );
+                    $("#editCode").val(
+                        question.codeTask
+                    );
+                    $("#editTests").val(
+                        question.unitTest
+                    );
+                }
 
                 j++;
             });
 
-            // $('.testEditionDiv').on('click', '.deleteTestEdit', function () {
-            //$(this).parent().remove();
-
-            $('.deleteTestEdit').on('click', function () {
-                var div = $(this).attr('testEditionDivId');
-                $targetEdit.find(div).remove();
+            $('.testEditionDiv').on('click', '.deleteTestEdit', function () {
+                $(this).parent().parent().remove();
 
                 if (editCount <= 1) {
                     editCount = 1;
@@ -93,14 +115,31 @@ function getAllTestsForEdit() {
             });
 
 
-            var questions = [];
-            $("#finishOfEdit").click(function () {
+            $("#edit-question-part-creation").click(function () {
+                questions = [];
+
+                var form = $(this).closest(".setup-content");
+                var curInputs = form.find("input[type='radio'],textarea"),
+                    isValid = true;
+
+                $(".form-group").removeClass("has-error");
+                for (var i = 0; i < curInputs.length; i++) {
+                    if (!curInputs[i].validity.valid) {
+                        isValid = false;
+                        $(curInputs[i]).closest(".form-group").addClass("has-error");
+                    }
+                }
+
+                if (isValid) {
+                    $(".form-group").removeClass("has-error");
+                }
 
                 $('.testEditionDiv').each(function (i) {
                     let index = i + 1;
 
                     var question = {};
                     var writeQuestion = $("#writeQuestionForEdit_" + index).val();
+                    var questionMark = $("#questionMarkForEdit_" + index).val();
                     var writeFirstAnswer = $("#writeFirstAnswerForEdit_" + index).val();
                     var writeSecondAnswer = $("#writeSecondAnswerForEdit_" + index).val();
                     var writeThirdAnswer = $("#writeThirdAnswerForEdit_" + index).val();
@@ -113,32 +152,58 @@ function getAllTestsForEdit() {
                     answers[writeFourthAnswer] = $('#fourthRadioEdit_' + index).is(":checked") ? "true" : "false";
 
                     question["name"] = writeQuestion;
+                    question["price"] = questionMark;
                     question["answers"] = answers;
 
                     questions.push(question);
                 });
 
-                editTestFunc(data.id, name, subject, description, questions);
+            });
+
+            $("#edit-coding-part-creation").click(function () {
+                var question = {};
+
+                var task = $("#editTask").val();
+                var code = $("#editCode").val();
+                var test = $("#editTest").val();
+                var codeMark = $("#editCodeMark").val();
+
+                question["name"] = task;
+                question["price"] = codeMark;
+                question["questionType"] = "CODE";
+                question["unitTest"] = test;
+                question["codeTask"] = code;
+
+                questions.push(question);
+
+                editTestFunc(data.id, data.name, data.subject, duration, version, description, questions);
             });
         }
     );
 }
 
-function editTestFunc(id, name, subject, description, questions) {
+function editTestFunc(id, name, subject, version, duration, description, questions) {
     if (window.confirm("Do you really want to change test?")) {
         $.ajax({
-            url: '/tests/' + id,
+            url: '/cabinet/tests/' + id,
             type: 'PUT',
             enctype: 'multipart/form-data',
             data: JSON.stringify({
                 name: name,
                 subject: subject,
                 description: description,
-                questions: questions
+                version: version,
+                questions: questions,
+                duration: duration
             }),
             success: function () {
                 alert("Test has been successfully changed!");
-                location.href = "/tests"
+                location.href = "/cabinet/tests"
+            },
+            error: function (xhr, status, errorThrown) {
+                var response = new ErrorResponse(JSON.parse(xhr.responseText));
+
+                alert(response.fieldErrors.TestCreationFormError);
             },
             processData: false,
             contentType: 'application/json; charset=utf-8;',
@@ -148,8 +213,6 @@ function editTestFunc(id, name, subject, description, questions) {
         });
     }
 }
-
-
 
 
 

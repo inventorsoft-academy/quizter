@@ -7,10 +7,15 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +39,11 @@ public class Test {
     @Column(nullable = false)
     String description;
 
-//	@Column(nullable = false)
-	Duration duration;
+    @Column(nullable = false)
+    Integer duration;
+
+    @Column(nullable = false)
+    String version;
 
     @ManyToOne
     User author;

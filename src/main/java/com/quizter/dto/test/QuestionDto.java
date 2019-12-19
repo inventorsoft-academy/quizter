@@ -28,6 +28,8 @@ public class QuestionDto {
 
 	String codeTask;
 
+	Double price;
+
 	boolean reviewed;
 
 	QuestionType questionType;

@@ -3,21 +3,23 @@ package com.quizter.service.test;
 import com.quizter.dictionary.QuestionType;
 import com.quizter.dto.test.QuestionDto;
 import com.quizter.dto.test.TestDto;
-import com.quizter.entity.test.Question;
 import com.quizter.entity.test.CodeQuestion;
 import com.quizter.entity.test.MultiVariantQuestion;
+import com.quizter.entity.test.Question;
 import com.quizter.entity.test.Test;
 import com.quizter.exception.ResourceNotFoundException;
 import com.quizter.mapper.QuestionMapper;
 import com.quizter.mapper.test.TestMapper;
 import com.quizter.repository.QuestionRepository;
 import com.quizter.repository.TestRepository;
+import com.quizter.service.ValidationService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,75 +29,85 @@ import java.util.stream.Collectors;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class TestService<T extends Question> {
 
-	TestRepository testRepository;
+    TestRepository testRepository;
 
-	QuestionRepository<Question> questionRepository;
+    QuestionRepository<Question> questionRepository;
 
-	TestMapper<T> testMapper;
+    TestMapper<T> testMapper;
 
-	QuestionMapper questionMapper;
+    QuestionMapper questionMapper;
 
-	@Transactional(readOnly = true)
-	public List<TestDto> findAllTest() {
-		return testMapper.toTestListDto(testRepository.findAll());
-	}
+    ValidationService validationService;
 
-	@Transactional(readOnly = true)
-	public TestDto findTestById(Long id) {
-		return testMapper.toTestDto(testRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Test", "id", id)));
-	}
+    @Transactional(readOnly = true)
+    public List<TestDto> findAllTest() {
+        return testMapper.toTestListDto(testRepository.findAll());
+    }
 
-	@Transactional
-	public void createTest(TestDto testDto) {
-		Test test = new Test();
+    @Transactional(readOnly = true)
+    public TestDto findTestById(Long id) {
+        return testMapper.toTestDto(testRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Test", "id", id)));
+    }
 
-		test.setName(testDto.getName());
-		test.setDescription(testDto.getDescription());
-		test.setSubject(testDto.getSubject());
-		test.setQuestions(new ArrayList<>(createQuestions(testDto.getQuestions())));
+    @Transactional
+    public void createTest(TestDto testDto) {
+        validationService.testCreationFormValidation(testDto);
 
-		testRepository.save(test);
-	}
+        Test test = new Test();
+        test.setName(testDto.getName());
+        test.setDescription(testDto.getDescription());
+        test.setSubject(testDto.getSubject());
+        test.setDuration(testDto.getDuration());
+        test.setVersion(YearMonth.now().getMonth().toString());
+        test.setQuestions(new ArrayList<>(createQuestions(testDto.getQuestions())));
 
-	@Transactional
-	public void updateTest(Long id, TestDto testDto) {
-		Test test = testRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Test", "id", id));
+        testRepository.save(test);
+    }
 
-		questionRepository.deleteAll(test.getQuestions());
-		test.getQuestions().clear();
+    @Transactional
+    public void updateTest(Long id, TestDto testDto) {
 
-		test.setId(id);
-		test.setName(testDto.getName());
-		test.setSubject(testDto.getSubject());
-		test.setDescription(testDto.getDescription());
-		test.setQuestions(new ArrayList<>(createQuestions(testDto.getQuestions())));
-		test.setDescription(testDto.getDescription());
+        Test testFromDB = testRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Test", "id", id));
 
-		testRepository.save(test);
-	}
+        Test test = new Test();
 
-	@Transactional
-	public void deleteTest(Long id) {
-		testRepository.deleteById(id);
-	}
+        test.setId(id);
+        test.setName(testDto.getName());
+        test.setSubject(testDto.getSubject());
+        test.setDuration(testDto.getDuration());
+        test.setDescription(testDto.getDescription());
 
-	@Transactional
-	public List createQuestions(List<QuestionDto> questionDtos) {
-		final MultiVariantQuestion[] multiVariantQuestion = new MultiVariantQuestion[1];
-		final CodeQuestion[] codeQuestion = new CodeQuestion[1];
-		return questionDtos.stream().filter(questionDto -> questionDto != null && questionDto.getQuestionType() != null).map(questionDto -> {
-			if (questionDto.getQuestionType().equals(QuestionType.CODE)) {
-				codeQuestion[0] = questionMapper.questionDtoToCodeQuestion(questionDto);
-				questionRepository.save(codeQuestion[0]);
-				return codeQuestion[0];
-			} else {
-				multiVariantQuestion[0] = questionMapper.questionDtoToMultivariantQuestion(questionDto);
-				questionRepository.save(multiVariantQuestion[0]);
-				return multiVariantQuestion[0];
-			}
+        validationService.validateVersion(testDto.getVersion(), testFromDB.getVersion());
+        test.setVersion(testDto.getVersion());
 
-		}).collect(Collectors.toList());
+        test.setQuestions(new ArrayList<>(createQuestions(testDto.getQuestions())));
 
-	}
+        testRepository.save(test);
+    }
+
+    @Transactional
+    public void deleteTest(Long id) {
+        testRepository.deleteById(id);
+    }
+
+    @Transactional
+    public List createQuestions(List<QuestionDto> questionDtos) {
+        final MultiVariantQuestion[] multiVariantQuestion = new MultiVariantQuestion[1];
+        final CodeQuestion[] codeQuestion = new CodeQuestion[1];
+
+        return questionDtos.stream().filter(questionDto -> questionDto != null && questionDto.getQuestionType() != null).map(questionDto -> {
+            if (questionDto.getQuestionType().equals(QuestionType.CODE)) {
+                codeQuestion[0] = questionMapper.questionDtoToCodeQuestion(questionDto);
+                questionRepository.save(codeQuestion[0]);
+
+                return codeQuestion[0];
+            } else {
+                multiVariantQuestion[0] = questionMapper.questionDtoToMultivariantQuestion(questionDto);
+                questionRepository.save(multiVariantQuestion[0]);
+
+                return multiVariantQuestion[0];
+            }
+        }).collect(Collectors.toList());
+    }
 
 }

@@ -43,6 +43,11 @@
                                            type="button">2</a>
                                         <p>Step 2</p>
                                     </div>
+                                    <div class="stepwizard-step">
+                                        <a class="btn btn-default btn-circle" disabled="disabled" href="#step-3Edit"
+                                           type="button">3</a>
+                                        <p>Step 3</p>
+                                    </div>
                                 </div>
                             </div>
 
@@ -55,15 +60,9 @@
                                             <div class="ln_solid"></div>
                                             <form id="setTestDescription">
                                                 <div class="form-group">
-                                                    <label class="control-label">Name*</label>
-                                                    <input class="form-control" id="newTestName" max="2090" min="1900"
-                                                           placeholder="Name"
-                                                           required="required" type="text"/>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="control-label">Subject*</label>
-                                                    <input class="form-control " id="newSubject" max="2090" min="1900"
-                                                           placeholder="Subject"
+                                                    <label class="control-label">Set new version*</label>
+                                                    <input class="form-control" id="version" max="2090" min="1900"
+                                                           placeholder="Version"
                                                            required="required" type="text"/>
                                                 </div>
                                                 <div class="form-group">
@@ -74,6 +73,13 @@
                                                               rows="4"></textarea>
                                                 </div>
 
+                                                <div class="form-group col-md-2 col-xs-2">
+                                                    <label class="control-label">Test duration*</label>
+                                                    <input class="form-control " id="editTestDuration" min="5"
+                                                           placeholder="0 min" type="number">
+                                                </div>
+
+                                                <div class="clearfix"></div>
                                                 <div class="ln_solid"></div>
                                                 <button class="btn btn-primary nextBtn btn-lg pull-right"
                                                         onclick="newTestDescriptionClick();" type="button">
@@ -93,8 +99,13 @@
                                                 <script id="testEditionFormScript" type="text/x-mustache-template">
                                                     <div id="testEditionDivId" class="testEditionDiv parent col-xs-12">
                                                         <div class="col-md-12">
-                                                            <div class="ln_solid"></div>
                                                             <a class="deleteTestEdit close-link pull-right"><h2><i class="fa fa-close"></i></h2></a>
+                                                            <div class="ln_solid"></div>
+                                                            <div class="col-md-1  form-group pull-right">
+                                                                <label class="control-label " for="questionMarkForEdit_{{editCount}}">Mark</label>
+                                                                <input type="text" class="questionMarkForEdit form-control"
+                                                                       id="questionMarkForEdit_{{editCount}}">
+                                                            </div>
                                                             <div><h2>Question # <span>{{editCount}}</span>
                                                             </h2>
                                                                 <br/>
@@ -214,11 +225,6 @@
                                             <div class="ln_solid"></div>
 
                                             <button class="btn btn-success btn-lg pull-right"
-                                                    id="finishOfEdit"
-                                                    type="button"><i
-                                                    class="fa fa-save"></i> Save
-                                            </button>
-                                            <button class="btn btn-success btn-lg pull-right"
                                                     id="addOneMoreQuestionToEdit"
                                                     type="button"><i
                                                     class="fa fa-plus-circle"></i> Add
@@ -227,10 +233,73 @@
                                                     type="button"><i
                                                     class="fa fa-step-backward"></i> Back
                                             </button>
+                                            <button class="btn btn-primary nextBtn btn-lg pull-left"
+                                                    id="edit-question-part-creation" type="button">
+                                                <i class="fa  fa-hand-o-right"></i> Next
+                                            </button>
 
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="row setup-content" id="step-3Edit">
+                                    <div class="col-xs-12">
+                                        <div class="col-md-12">
+                                            <h3> Step 3 </h3>
+                                            <small>Change code questions</small>
+                                            <div class="ln_solid"></div>
+                                            <form id="coding-test-form lign-self-center form-horizontal">
+                                                <div class="form-group ">
+                                                    <div class="col-md-1  pull-right">
+                                                        <label class="control-label " for="editCodeMark">Mark<span
+                                                                class="required"></span>
+                                                        </label>
+                                                        <input class="form-control" id="editCodeMark"
+                                                               type="text">
+                                                    </div>
+                                                    <div class="col-md-10">
+                                                        <div class="form-group row">
+                                                            <label class="control-label " for="editTask">Task<span
+                                                                    class="required"></span></label>
+                                                            <input class="form-control" id="editTask" max="2090" min="1900"
+                                                                   placeholder="Task"
+                                                                   required="required" type="text"/>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="control-label " for="editCode">Code<span
+                                                                    class="required"></span>
+                                                            </label>
+                                                            <textarea class="col-md-6 form-control" id="editCode"
+                                                                      placeholder="Code..."
+                                                                      required="required"
+                                                                      style="height: 200px"></textarea>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="control-label " for="editTests">Tests<span
+                                                                    class="required"></span></label>
+                                                            <textarea class="form-control" id="editTests"
+                                                                      placeholder="Tests..."
+                                                                      required="required"
+                                                                      style="height: 200px"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+                                            <div class="clearfix"></div>
+                                            <div class="ln_solid"></div>
+
+                                            <button class="btn btn-primary prevBtn btn-lg pull-left"
+                                                    type="button"><i
+                                                    class="fa fa-step-backward"></i> Back
+                                            </button>
+                                            <button class="btn btn-success nextBtn btn-lg pull-right"
+                                                    id="edit-coding-part-creation" type="button">Update
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </form>
                         </div>
                     </div>

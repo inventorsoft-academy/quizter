@@ -5,7 +5,7 @@ $(document).ready(function () {
 function getTest() {
     var dataId = $("#viewPage").attr("data_id");
 
-    $.getJSON("/tests/" + dataId,
+    $.getJSON("/cabinet/tests/" + dataId,
         function (data) {
             var testName = Mustache.render("{{name}}", data);
             $("#testName").html(testName);
@@ -30,7 +30,14 @@ function getTest() {
                     "secondAnswer": keys[1],
                     "thirdAnswer": keys[2],
                     "fourthAnswer": keys[3],
+                    "codeTask": question.codeTask
                 };
+
+                if (question.questionType === "CODE") {
+                    $("#getAnswers").hide();
+                } else {
+                    $("#getCodeQuestion").hide();
+                }
 
                 $("#getQuestions").append(
                     Mustache.render(getQuestionsScript, questionWithAnswer)
