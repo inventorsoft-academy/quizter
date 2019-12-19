@@ -1,4 +1,4 @@
-package com.quizter.controller.test;
+package com.quizter.controller.teacher;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class TestController {
+public class TeacherController {
 
     @GetMapping("/test-view")
     public ModelAndView getTestViewPagePage() {

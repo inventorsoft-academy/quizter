@@ -34,4 +34,10 @@ public class GlobalHandler {
         ErrorResponse errorResponse = new ErrorResponse(Instant.now(), exception.getMessage(), exception.getValidationErrors());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
+
+    @ExceptionHandler(UserIsNotAuthorizedException.class)
+    public ResponseEntity getPrincipalHandler(UserIsNotAuthorizedException exception) {
+        ErrorResponse errorResponse = new ErrorResponse(Instant.now(), exception.getMessage(), Collections.emptyMap());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    }
 }

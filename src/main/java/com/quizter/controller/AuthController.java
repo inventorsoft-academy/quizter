@@ -9,33 +9,36 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.Optional;
+
 @Slf4j
 @Controller
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthController {
 
-    UserService userService;
+	UserService userService;
 
-    @GetMapping("/")
-    public String defaultPage() {
-        log.info("defaultController");
-        User user = userService.getUserPrincipal();
-        if (user.getEmail() == null) {
-            return "redirect:/login";
-        }
-        if (user.getProfile() == null) {
-            return "redirect:/profile/edit";
-        }
-        switch (user.getRole()) {
-            case ADMIN:
-                return "redirect:/admin";
-            case TEACHER:
-                return "redirect:/teacher";
-            case STUDENT:
-                return "redirect:/desk";
-            default:
-                return "redirect:/login";
-        }
-    }
+	@GetMapping("/")
+	public String defaultPage() {
+		log.info("defaultController");
+		Optional<User> user = userService.getUserPrincipal();
+		if (user.isPresent()) {
+			if (user.get().getProfile() == null) {
+				return "redirect:/profile/edit";
+			}
+			switch (user.get().getRole()) {
+			case ADMIN:
+				return "redirect:/admin";
+			case TEACHER:
+				return "redirect:/teacher";
+			case STUDENT:
+				return "redirect:/desk";
+			default:
+				return "redirect:/login";
+			}
+		} else {
+			return "redirect:/login";
+		}
+	}
 }

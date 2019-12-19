@@ -21,12 +21,13 @@
                     <div class="x_panel">
                         <table class="tile_info">
                             <tr th:each="quiz: ${quizzes}">
+                                <th id="quiz-id" th:text="${quiz.id}" hidden="hidden"></th>
                                 <th th:text="${quiz.name}"></th>
                                 <th th:text="${quiz.subject}"></th>
                                 <th th:text="${quiz.description}"></th>
                                 <th>
                                     <a th:href="@{/desk/quiz/{path}(path=${quiz.id})}">
-                                        <button class="btn-primary">Start quiz</button>
+                                        <button class="btn-primary" onclick="startQuiz()">Start quiz</button>
                                     </a>
                                 </th>
                             </tr>

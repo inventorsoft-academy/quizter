@@ -1,4 +1,4 @@
-package com.quizter.controller;
+package com.quizter.controller.student;
 
 import com.quizter.dto.test.TestDto;
 import com.quizter.service.test.TestService;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @RestController
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DeskController {
+public class StudentController {
 
     TestService testService;
 

@@ -1,7 +1,6 @@
-package com.quizter.controller.test;
+package com.quizter.controller.teacher;
 
 import com.quizter.dto.response.MessageResponse;
-import com.quizter.dto.test.QuestionDto;
 import com.quizter.dto.test.TestDto;
 import com.quizter.service.test.TestService;
 import lombok.AccessLevel;
@@ -24,7 +23,7 @@ import java.util.List;
 @RequestMapping("/tests/")
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class TestRestController {
+public class TeacherRestController {
 
 	TestService testService;
 

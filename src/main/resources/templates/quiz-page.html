@@ -11,15 +11,17 @@
         <div class="page-title">
             <div class="title_center">
                 <h3 th:text="${quiz.name}"></h3>
+                <h1 id="id-test" th:text="${quiz.id}" hidden="hidden"></h1>
             </div>
             <div class="clearfix"></div>
             <div class="row">
                 <div class="col-md-12 col-sm-12 col-xs-12">
-                    <tr th:each="question: ${quiz.questions}">
-                        <h2>Question#<span th:text="${quiz.questions.indexOf(question) + 1}"></span></h2>
+                    <tr th:each="question: ${multivariant}">
+                        <h2>Question#<span th:text="${multivariant.indexOf(question)+1} "></span></h2>
                         <div class="x_panel">
                             <table class="tile_info">
-                                <th th:text="${question.name}"></th>
+                                <th id="question-id" th:text="${question.id}" hidden="hidden"></th>
+                                <th id="question-name" th:text="${question.name}"></th>
                                 <table class="">
                                     <tr th:each="answer: ${question.answers}">
                                         <th style="padding: 8px">
@@ -34,6 +36,15 @@
                                     </tr>
                                 </table>
                             </table>
+                        </div>
+                    </tr>
+                    <tr th:each="coding: ${code}">
+                        <h2>Question#<span th:text="${multivariant.size()+code.indexOf(coding)+1}"></span></h2>
+                        <div class="x_panel">
+                            <th th:text="${coding.name}"></th>
+                            <textarea th:text="${coding.codeTask}" th:name="code-answer" id="answer" class="form-control"
+                                      style="width: 650px;height: 550px"
+                            ></textarea>
                         </div>
                     </tr>
                     <button class="btn-primary" onclick="endQuiz()">Submit</button>

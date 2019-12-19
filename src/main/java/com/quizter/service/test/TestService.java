@@ -42,7 +42,10 @@ public class TestService<T extends Question> {
 
 	@Transactional(readOnly = true)
 	public TestDto findTestById(Long id) {
-		return testMapper.toTestDto(testRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Test", "id", id)));
+		Test test = testRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Test", "id", id));
+		TestDto testDto = testMapper.toTestDto(test);
+		testDto.setQuestions(test.getQuestions().stream().map(questionMapper::questionEntityToQuestionDto).collect(Collectors.toList()));
+		return testDto;
 	}
 
 	@Transactional

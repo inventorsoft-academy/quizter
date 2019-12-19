@@ -1,4 +1,4 @@
-package com.quizter.dto;
+package com.quizter.dto.test;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,7 +12,9 @@ import java.util.Map;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuizResultDto {
-//TODO Long
-    Map<String, List<String>> answers;
+
+    Long testId;
+
+    Map<Long, List<AnswerDto>> answers;
 
 }
