@@ -12,6 +12,7 @@ import com.quizter.mapper.QuestionMapper;
 import com.quizter.mapper.test.TestMapper;
 import com.quizter.repository.QuestionRepository;
 import com.quizter.repository.TestRepository;
+import com.quizter.service.UserService;
 import com.quizter.service.ValidationService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -39,6 +40,8 @@ public class TestService<T extends Question> {
 
     ValidationService validationService;
 
+    UserService userService;
+
     @Transactional(readOnly = true)
     public List<TestDto> findAllTest() {
         return testMapper.toTestListDto(testRepository.findAll());
@@ -60,17 +63,18 @@ public class TestService<T extends Question> {
         test.setDuration(testDto.getDuration());
         test.setVersion(YearMonth.now().getMonth().toString());
         test.setQuestions(new ArrayList<>(createQuestions(testDto.getQuestions())));
+        test.setAuthor(userService.getUserPrincipal());
 
         testRepository.save(test);
     }
 
     @Transactional
     public void updateTest(Long id, TestDto testDto) {
+        validationService.testCreationFormValidation(testDto);
 
         Test testFromDB = testRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Test", "id", id));
 
         Test test = new Test();
-
         test.setId(id);
         test.setName(testDto.getName());
         test.setSubject(testDto.getSubject());

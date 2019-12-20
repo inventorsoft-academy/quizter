@@ -6,7 +6,6 @@ $(document).ready(function () {
 
 var version = '';
 var description = '';
-var questions = [];
 var duration = '';
 
 function newTestDescriptionClick() {
@@ -40,9 +39,7 @@ function getAllTestsForEdit() {
             var j = 1;
 
             $.each(data.questions, function (index, question) {
-                console.log(question.questionType);
-
-                if (question.questionType === "MULTIVARIANT") {
+                if (question.answers !== null) {
 
                     inputRowEdit = {
                         editCount: editCount
@@ -77,7 +74,7 @@ function getAllTestsForEdit() {
                     values[2] ? $("#thirdRadioEdit_" + j).prop("checked", true) : $("#thirdRadioEdit_" + j).prop("checked", false);
                     values[3] ? $("#fourthRadioEdit_" + j).prop("checked", true) : $("#fourthRadioEdit_" + j).prop("checked", false);
 
-                }else {
+                } else {
                     $("#editTask").val(
                         question.name
                     );
@@ -87,7 +84,7 @@ function getAllTestsForEdit() {
                     $("#editCode").val(
                         question.codeTask
                     );
-                    $("#editTests").val(
+                    $("#editUnitTest").val(
                         question.unitTest
                     );
                 }
@@ -114,12 +111,13 @@ function getAllTestsForEdit() {
                 editCount++;
             });
 
+            var questions = [];
 
             $("#edit-question-part-creation").click(function () {
                 questions = [];
 
                 var form = $(this).closest(".setup-content");
-                var curInputs = form.find("input[type='radio',type='number'], textarea"),
+                var curInputs = form.find("input[type='radio,number'], textarea"),
                     isValid = true;
 
                 $(".form-group").removeClass("has-error");
@@ -152,6 +150,7 @@ function getAllTestsForEdit() {
                     answers[writeFourthAnswer] = $('#fourthRadioEdit_' + index).is(":checked") ? "true" : "false";
 
                     question["name"] = writeQuestion;
+                    question["questionType"] = "MULTIVARIANT";
                     question["price"] = questionMark;
                     question["answers"] = answers;
 
@@ -165,7 +164,7 @@ function getAllTestsForEdit() {
 
                 var task = $("#editTask").val();
                 var code = $("#editCode").val();
-                var test = $("#editTest").val();
+                var test = $("#editUnitTest").val();
                 var codeMark = $("#editCodeMark").val();
 
                 question["name"] = task;
@@ -182,7 +181,7 @@ function getAllTestsForEdit() {
     );
 }
 
-function editTestFunc(id, name, subject, version, duration, description, questions) {
+function editTestFunc(id, name, subject, duration, version, description, questions) {
     if (window.confirm("Do you really want to change test?")) {
         $.ajax({
             url: '/cabinet/tests/' + id,
@@ -198,12 +197,24 @@ function editTestFunc(id, name, subject, version, duration, description, questio
             }),
             success: function () {
                 alert("Test has been successfully changed!");
-                location.href = "/cabinet/tests"
+                location.href = "/tests"
             },
             error: function (xhr, status, errorThrown) {
                 var response = new ErrorResponse(JSON.parse(xhr.responseText));
 
-              //  alert(response.fieldErrors.TestCreationFormError);
+                if (response.fieldErrors.TestCreationFormError == "Please set new version") {
+                    alert(response.fieldErrors.TestCreationFormError);
+                    $("#newVersionLabel").append(" - " + response.fieldErrors.TestCreationFormError);
+                    $("#newVersionLabel").css("color", "red");
+                } else if (response.fieldErrors.descriptionError) {
+                    alert(response.fieldErrors.descriptionError);
+                    $("#testDescriptionLabel").append(" - " + response.fieldErrors.descriptionError);
+                    $("#testDescriptionLabel").css("color", "red");
+                } else if (response.fieldErrors.durationError) {
+                    alert(response.fieldErrors.durationError);
+                    $("#testDurationLabel").append(" - " + response.fieldErrors.durationError);
+                    $("#testDurationLabel").css("color", "red");
+                } else alert(response.fieldErrors.TestCreationFormError);
             },
             processData: false,
             contentType: 'application/json; charset=utf-8;',

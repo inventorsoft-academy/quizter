@@ -158,7 +158,6 @@ function createTest(name, subject, description, questions, duration) {
                     $("#testDurationLabel").css("color", "red");
                 } else alert(response.fieldErrors.TestCreationFormError);
 
-
             },
             processData: false,
             contentType: 'application/json; charset=utf-8;',

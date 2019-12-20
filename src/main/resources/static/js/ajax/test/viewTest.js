@@ -11,6 +11,8 @@ function getTest() {
             $("#testName").html(testName);
             var testSubject = Mustache.render("{{subject}}", data);
             $("#testSubject").html(testSubject);
+            var testAuthor = Mustache.render("{{author.email}}", data);
+            $("#testAuthor").html(testAuthor);
             var testDescription = Mustache.render("{{description}}", data);
             $("#testDescription").html(testDescription);
 

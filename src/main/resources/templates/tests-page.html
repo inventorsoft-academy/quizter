@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-layout-decorate="~{layout/home-layout}" lang="en">
+<html data-layout-decorate="~{layout/home-layout}" lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Tests</title>
@@ -30,7 +30,7 @@
                         </ul>
                         <div class="clearfix"></div>
                     </div>
-                    <div class="x_content" id="getTests">
+                    <div class="x_content" id="getTests" >
 
                         <p>Simple table with test listing </p>
 
@@ -59,8 +59,8 @@
                                         </td>
                                         <td >
                                             <a href="#" class="view btn btn-primary btn-xs" data-id ={{id}}><i class="fa fa-folder"></i> View </a>
-                                            <a href="#" class="edit btn btn-info btn-xs" data-id = {{id}}><i class="fa fa-pencil"></i> Edit </a>
-                                            <a href ="#" class="delete btn btn-danger btn-xs" data-id = {{id}}> <i class="fa fa-trash-o"></i> Delete </a>
+                                            <a sec:authorize="hasAuthority('STUDENT')" href="#" class="edit btn btn-info btn-xs" data-id = {{id}}><i class="fa fa-pencil"></i> Edit </a>
+                                            <a sec:authorize="hasAuthority('TEACHER')"  href ="#" class="delete btn btn-danger btn-xs" data-id = {{id}}> <i class="fa fa-trash-o" ></i> Delete </a>
                                         </td>
                                     </tr>
                                 </script>

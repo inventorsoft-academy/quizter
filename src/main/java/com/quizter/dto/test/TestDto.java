@@ -1,5 +1,6 @@
 package com.quizter.dto.test;
 
+import com.quizter.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,6 +36,8 @@ public class TestDto {
     Integer duration;
 
     String version;
+
+    User author;
 
     List<QuestionDto> questions;
 
