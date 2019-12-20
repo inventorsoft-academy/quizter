@@ -7,6 +7,8 @@ import javax.persistence.*;
 @Data
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="answer_type",
+		discriminatorType = DiscriminatorType.STRING)
 public class Answer {
 
 	@Id

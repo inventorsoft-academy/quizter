@@ -35,7 +35,7 @@ public class Test {
     String description;
 
 //	@Column(nullable = false)
-	Duration duration;
+	Long duration;
 
     @ManyToOne
     User author;

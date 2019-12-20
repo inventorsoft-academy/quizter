@@ -22,5 +22,7 @@ public class TestDto{
 
 	String description;
 
+	Long duration;
+
 	List<QuestionDto> questions;
 }

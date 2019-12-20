@@ -1,20 +1,33 @@
 package com.quizter.service.test;
 
+import com.quizter.dictionary.QuestionType;
+import com.quizter.dto.test.QuizResultDto;
 import com.quizter.entity.test.Question;
 import com.quizter.entity.test.MultiVariantQuestion;
+import com.quizter.entity.test.QuizResult;
 import com.quizter.entity.test.Test;
+import com.quizter.mapper.test.TestMapper;
+import com.quizter.repository.QuizResultRepository;
+import com.quizter.service.UserService;
 import com.quizter.service.test.TestQuestionEvaluator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
-public class TestResultService {
+public class QuizResultService {
 
+	private UserService userService;
+	private TestService testService;
+	private TestMapper testMapper;
+	private QuizResultRepository quizResultRepository;
 	private List<TestQuestionEvaluator> evaluators;
 
 	public double evaluate(final Test test, Map<Long, String> answers) {
@@ -29,6 +42,21 @@ public class TestResultService {
 //		});
 //		return awers.values().stream().mapToDouble(Double::doubleValue).sum();
 		return 0;
+	}
+
+    public Long beginQuiz(Long id) {
+		QuizResult quizResult = new QuizResult();
+		quizResult.setApplicant(userService.getUserPrincipal());
+		quizResult.setStart(Instant.now());
+		Test test = testMapper.toTest(testService.findTestById(id));
+		long minutes = test.getDuration();
+		quizResult.setFinished(Instant.now().plus(Duration.ofMinutes(minutes)));
+		quizResult.setTest(test);
+		return quizResultRepository.save(quizResult).getId();
+    }
+
+	public void updateQuiz(Long resultId, List<QuizResultDto> quizResultDtos) {
+		QuizResult quizResult = quizResultRepository.findById(resultId).orElseThrow();
 	}
 
 	@Component

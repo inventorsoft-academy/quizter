@@ -2,6 +2,7 @@ package com.quizter.controller;
 
 import com.quizter.dto.test.QuizResultDto;
 import com.quizter.dto.response.MessageResponse;
+import com.quizter.service.test.QuizResultService;
 import com.quizter.service.test.TestService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.List;
 public class QuizController {
 
     TestService testService;
+    QuizResultService quizResultService;
 
     @GetMapping("{id}")
     public ModelAndView quizPage(@PathVariable Long id) {
@@ -31,21 +33,28 @@ public class QuizController {
     }
 
     @PostMapping("{id}")
-    public ResponseEntity<MessageResponse> getRank(@PathVariable Long id,
+    public ResponseEntity<MessageResponse> beginQuiz(@PathVariable Long id,
                                                    @RequestBody List<QuizResultDto> quizResultDtos) {
         log.info("Post Request = " + quizResultDtos);
         //TODO save results
         //TODO add time
         //TODO get rating
         //TODO fetch less data from db
+        long resultId = quizResultService.beginQuiz(id);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<MessageResponse> saveChecked(@PathVariable Long id,
+    @PutMapping("{id}/{resultId}")
+    public ResponseEntity<MessageResponse> saveChecked(@PathVariable Long resultId,
                                                        @RequestBody List<QuizResultDto> quizResultDtos) {
         log.info("Put Request = " + quizResultDtos);
         //TODO update results
+        quizResultService.updateQuiz(resultId, quizResultDtos);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("{id}/rating")
+    public ResponseEntity<MessageResponse> finishQuiz(){
         return ResponseEntity.ok().build();
     }
 }
