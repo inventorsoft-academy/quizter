@@ -16,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AnswerDto {
+
 	Long id;
 
 	String name;

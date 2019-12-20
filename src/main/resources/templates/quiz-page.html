@@ -41,7 +41,10 @@
                     <tr th:each="coding: ${code}">
                         <h2>Question#<span th:text="${multivariant.size()+code.indexOf(coding)+1}"></span></h2>
                         <div class="x_panel">
-                            <th th:text="${coding.name}"></th>
+                            <table>
+                                <th id="coding-id" th:text="${coding.id}" hidden="hidden"></th>
+                                <th id="coding-name" th:text="${coding.name}"></th>
+                            </table>
                             <textarea th:text="${coding.codeTask}" th:name="code-answer" id="answer" class="form-control"
                                       style="width: 650px;height: 550px"
                             ></textarea>

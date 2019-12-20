@@ -4,69 +4,64 @@ function endQuiz() {
     var answers = [];
     var previous_question = 'empty';
     $('input[name="answersArray"]:checked').each(function () {
+
         var question = $(this).attr("question");
         if (question === previous_question) {
             answers.push($(this).val());
         } else if (previous_question === 'empty') {
-            answers = new Array();
             answers.push(JSON.stringify({
-                id : $("#question-id").val(),
-                name: $("#question-name").val(),
+                id : $("#question-id").text(),
+                name: $("#question-name").text(),
                 answer:$(this).val(),
                 answerType : "MULTIVARIANT"
             }));
             previous_question = question;
         } else if (question !== previous_question) {
-            data.set($("#id-test").val(),answers);
-            console.log("data1 = " + JSON.stringify(data));
-            answers = new Array();
+            console.log(JSON.stringify(data));
             answers.push(JSON.stringify({
-                id : $("#question-id").val(),
-                name: $("#question-name").val(),
+                id : $("#question-id").text(),
+                name: $("#question-name").text(),
                 answer:$(this).val(),
                 answerType : "MULTIVARIANT"
             }));
             previous_question = question;
         }
     });
+    console.log(answers);
     $("textarea").each(function () {
+        console.log($("#coding-id").val());
         var question = $(this).attr("question");
         if (question === previous_question) {
             answers.push($(this).val());
         } else if (previous_question === 'empty') {
-            answers = new Array();
             answers.push(JSON.stringify({
-                id : $("#question-id").val(),
-                name: $("#question-name").val(),
+                id : $("#coding-id").text(),
+                name: $("#coding-name").text(),
                 answer:$(this).val(),
-                answerType : "MULTIVARIANT"
+                answerType : "CODE"
             }));
             previous_question = question;
         } else if (question !== previous_question) {
-            data.set($("#id-test").val(),answers);
-            console.log("data1 = " + JSON.stringify(data));
-            answers = new Array();
             answers.push(JSON.stringify({
-                id : $("#question-id").val(),
-                name: $("#question-name").val(),
+                id : $("#coding-id").text(),
+                name: $("#coding-name").text(),
                 answer:$(this).val(),
-                answerType : "MULTIVARIANT"
+                answerType : "CODE"
             }));
             previous_question = question;
         }
 
     });
-    data answers;
-    console.log("data = " + JSON.stringify(data));
+    data.set($("#id-test").text(),answers);
+    console.log(Object.fromEntries(data));
     var myUrl = document.URL;
-    console.log(document.URL);
     $.ajax({
         contentType: "application/json; charset=utf-8",
         type: "POST",
         url: myUrl,
         data: JSON.stringify({
-            testId: 2,
-            answers: Object.fromEntries(data)
+            testId: $("#id-test"),
+            answers: JSON.stringify(mapToObj(data))
         }),
         success: function (response) {
             alert("Quiz finished with rating " + response.message);
@@ -76,6 +71,15 @@ function endQuiz() {
             alert("ERROR");
         }
     })
+}
+function mapToObj(inputMap) {
+    let obj = {};
+
+    inputMap.forEach(function(value, key){
+        obj[key] = value
+    });
+
+    return obj;
 }
 
 function startQuiz() {
