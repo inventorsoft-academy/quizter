@@ -35,8 +35,8 @@ function registration() {
 
         },
         error: function (xhr, status, errorThrown) {
-
             var response = new ErrorResponse(JSON.parse(xhr.responseText));
+
             if (response.fieldErrors.emailError !== undefined) {
                 $("#email-error").removeAttr('hidden');
                 $("#email-error").text(response.fieldErrors.emailError);

@@ -48,7 +48,7 @@ $(document).ready(function () {
         questions = [];
 
         var form = $(this).closest(".setup-content");
-        var curInputs = form.find("input[type='radio'],textarea"),
+        var curInputs = form.find("input[type='radio'], input[type='number'], textarea"),
             isValid = true;
 
         $(".form-group").removeClass("has-error");
@@ -140,7 +140,25 @@ function createTest(name, subject, description, questions, duration) {
             error: function (xhr, status, errorThrown) {
                 var response = new ErrorResponse(JSON.parse(xhr.responseText));
 
-                alert(response.fieldErrors.TestCreationFormError);
+                if (response.fieldErrors.nameError) {
+                    alert(response.fieldErrors.nameError);
+                    $("#testNameLabel").append(" - " + response.fieldErrors.nameError);
+                    $("#testNameLabel").css("color", "red");
+                } else if (response.fieldErrors.subjectError) {
+                    alert(response.fieldErrors.subjectError);
+                    $("#testSubjectLabel").append(" - " + response.fieldErrors.subjectError);
+                    $("#testSubjectLabel").css("color", "red");
+                } else if (response.fieldErrors.descriptionError) {
+                    alert(response.fieldErrors.descriptionError);
+                    $("#testDescriptionLabel").append(" - " + response.fieldErrors.descriptionError);
+                    $("#testDescriptionLabel").css("color", "red");
+                } else if (response.fieldErrors.durationError) {
+                    alert(response.fieldErrors.durationError);
+                    $("#testDurationLabel").append(" - " + response.fieldErrors.durationError);
+                    $("#testDurationLabel").css("color", "red");
+                } else alert(response.fieldErrors.TestCreationFormError);
+
+
             },
             processData: false,
             contentType: 'application/json; charset=utf-8;',

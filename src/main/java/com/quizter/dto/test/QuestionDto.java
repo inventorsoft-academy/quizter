@@ -9,6 +9,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Map;
 
 @AllArgsConstructor
@@ -18,20 +20,22 @@ import java.util.Map;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuestionDto {
-	Long id;
+    Long id;
 
-	String name;
+    @NotNull(message = "Question name can't be empty")
+    String name;
 
-	Map<String, Boolean> answers;
+    Map<String, Boolean> answers;
 
-	String unitTest;
+    String unitTest;
 
-	String codeTask;
+    String codeTask;
 
-	Double price;
+    @NotNull(message = "Question mark doesn't set")
+    Double price;
 
-	boolean reviewed;
+    boolean reviewed;
 
-	QuestionType questionType;
+    QuestionType questionType;
 
 }

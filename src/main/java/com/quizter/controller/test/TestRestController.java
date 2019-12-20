@@ -6,6 +6,7 @@ import com.quizter.dto.test.TestDto;
 import com.quizter.service.test.TestService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Value;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,14 +40,14 @@ public class TestRestController {
 	}
 
 	@PostMapping
-	public ResponseEntity<MessageResponse> createTest(@Valid @RequestBody TestDto testDto) {
+	public ResponseEntity<MessageResponse> createTest(@RequestBody TestDto testDto) {
 		testService.createTest(testDto);
 
 		return ResponseEntity.ok(new MessageResponse("Test was created successfully"));
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<MessageResponse> updateTest(@PathVariable("id") Long id, @Valid @RequestBody TestDto testDto) {
+	public ResponseEntity<MessageResponse> updateTest(@PathVariable("id") Long id, @RequestBody TestDto testDto) {
 		testService.updateTest(id, testDto);
 
 		return ResponseEntity.ok(new MessageResponse("Test was updated successfully"));

@@ -119,7 +119,7 @@ function getAllTestsForEdit() {
                 questions = [];
 
                 var form = $(this).closest(".setup-content");
-                var curInputs = form.find("input[type='radio'],textarea"),
+                var curInputs = form.find("input[type='radio',type='number'], textarea"),
                     isValid = true;
 
                 $(".form-group").removeClass("has-error");
@@ -203,7 +203,7 @@ function editTestFunc(id, name, subject, version, duration, description, questio
             error: function (xhr, status, errorThrown) {
                 var response = new ErrorResponse(JSON.parse(xhr.responseText));
 
-                alert(response.fieldErrors.TestCreationFormError);
+              //  alert(response.fieldErrors.TestCreationFormError);
             },
             processData: false,
             contentType: 'application/json; charset=utf-8;',
