@@ -25,15 +25,15 @@ import java.util.stream.Collectors;
 @Service
 public class QuizResultService {
 
-    private UserService userService;
-    private TestService testService;
-    private TestMapper testMapper;
-    private ResultMapper resultMapper;
-    private QuizResultRepository quizResultRepository;
-    private List<TestQuestionEvaluator> evaluators;
-    private ResultAnswerRepository resultAnswerRepository;
+	private UserService userService;
+	private TestService testService;
+	private TestMapper testMapper;
+	private ResultMapper resultMapper;
+	private QuizResultRepository quizResultRepository;
+	private List<TestQuestionEvaluator> evaluators;
+	private ResultAnswerRepository resultAnswerRepository;
 
-    public double evaluate(final Test test, Map<Long, String> answers) {
+	public double evaluate(final Test test, Map<Long, String> answers) {
 //		List<AbstractQuestion> abstractQuestions = test.getQuestions();
 //		Map<Long, AbstractQuestion> questionById = abstractQuestions.stream().collect(Collectors.toMap(AbstractQuestion::getId, Function.identity()));
 //		Map<Long, Double> awers = new HashMap<>();
@@ -44,51 +44,63 @@ public class QuizResultService {
 //			awers.put(questionId, evaluator.evaluate(abstractQuestion, answer));
 //		});
 //		return awers.values().stream().mapToDouble(Double::doubleValue).sum();
-        return 0;
-    }
+		return 0;
+	}
 
-    public Optional<QuizResult> findById(Long id) {
-        return quizResultRepository.findById(id);
-    }
+	public Optional<QuizResult> findById(Long id){
+		return quizResultRepository.findById(id);
+	}
 
     public Long beginQuiz(Long id) {
-        QuizResult quizResult = new QuizResult();
+		QuizResult quizResult = new QuizResult();
 //		User user = userService.getUserPrincipal();
 //		quizResult.setApplicant(user);
 //		quizResult.setStart(Instant.now());
-        Test test = testMapper.toTest(testService.findTestById(id));
+		Test test = testMapper.toTest(testService.findTestById(id));
 //		long minutes = test.getDuration();
 //		quizResult.setFinished(Instant.now().plus(Duration.ofMinutes(minutes)));
-        quizResult.setTest(test);
-        return quizResultRepository.save(quizResult).getId();
+		quizResult.setTest(test);
+		return quizResultRepository.save(quizResult).getId();
     }
 
-    public void updateQuiz(Long resultId, List<QuizResultDto> quizResultDtos) {
-        QuizResult quizResult = quizResultRepository.findById(resultId).orElseThrow();
-        final ResultAnswer[] resultAnswer = new ResultAnswer[1];
-        List<ResultAnswer> answers = quizResultDtos.stream()
-                .map(dto -> {
-                    resultAnswer[0] = resultMapper.quizResultDtoToAnswer(dto);
-                    resultAnswer[0].setQuizResult(quizResult);
-                    resultAnswerRepository.save(resultAnswer[0]);
-                    return resultAnswer[0];
-                })
-                .collect(Collectors.toList());
-        log.info("Answers = " + answers);
-        quizResult.setResultAnswers(answers);
-        quizResultRepository.save(quizResult);
-    }
+	public void updateQuiz(Long resultId, List<QuizResultDto> quizResultDtos) {
+		QuizResult quizResult = quizResultRepository.findById(resultId).orElseThrow();
+//		final ResultAnswer[] resultAnswer = new ResultAnswer[1];
+//		List<ResultAnswer> answers = quizResultDtos.stream()
+//				.map(dto -> {
+//					resultAnswer[0] = resultMapper.quizResultDtoToAnswer(dto);
+//					resultAnswer[0].setQuizResult(quizResult);
+//					resultAnswerRepository.save(resultAnswer[0]);
+//					return resultAnswer[0];
+//				})
+//				.collect(Collectors.toList());
+		List<ResultAnswer> answers = quizResultDtos.stream()
+				.map(dto -> resultMapper.quizResultDtoToAnswer(dto))
+				.collect(Collectors.toList());
+		answers.forEach(answer-> answer.setQuizResult(quizResult));
 
-    @Component
-    private static final class StandardEvaluator implements TestQuestionEvaluator {
-        @Override
-        public boolean isApplicable(Question question) {
-            return question instanceof MultiVariantQuestion;
-        }
+		for (ResultAnswer answer: answers) {
+			if (resultAnswerRepository.findByQuestionId(answer.getQuestion().getId()).isPresent()){
+				answer.setId(resultAnswerRepository.findByQuestionId(answer.getQuestion().getId()).get().getId());
+			}
+		}
 
-        @Override
-        public double evaluate(Question question, String answer) {
-            return MultiVariantQuestion.class.cast(question).getAnswers().get(answer) ? question.getPrice() : 0.0;
-        }
-    }
+		answers.forEach(answer -> resultAnswerRepository.save(answer));
+		log.info("Answers = " + answers);
+		quizResult.setResultAnswers(answers);
+		quizResultRepository.save(quizResult);
+	}
+
+	@Component
+	private static final class StandardEvaluator implements TestQuestionEvaluator {
+		@Override
+		public boolean isApplicable(Question question) {
+			return question instanceof MultiVariantQuestion;
+		}
+
+		@Override
+		public double evaluate(Question question, String answer) {
+			return MultiVariantQuestion.class.cast(question).getAnswers().get(answer) ? question.getPrice() : 0.0;
+		}
+	}
 }
