@@ -65,6 +65,8 @@ function finishQuiz(){
 }
 
 $(document).ready(function () {
+
+    startTimer();
     var ckbox = $('#checkbox');
 
     $('input[name="answersArray"]').on('click',function () {
@@ -120,10 +122,8 @@ function putToBack(data){
 }
 
 var countdownTimer;
-function start(){
-document.getElementById('startId').style.display = "none";
-document.getElementById('endId').style.display = "block";
-document.getElementById('rowId').style.display = "block";
+
+function startTimer(){
 var duration = parseInt($('#time').text()) * 60;
 var timer = duration, minutes, seconds;
 countdownTimer = setInterval(function () {
@@ -144,5 +144,4 @@ countdownTimer = setInterval(function () {
             finishQuiz();
             }
         }, 1000);
-
 }

@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Table(name = "quiz_result")
@@ -26,15 +25,15 @@ public class QuizResult {
 
     Instant finished;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     User applicant;
 
     @ManyToOne
     Test test;
 
     @Column(nullable = false)
-    double mark;
+    double totalRating;
 
-    @ElementCollection
-    List<Answer> answers;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "quizResult")
+    List<ResultAnswer> resultAnswers;
 }

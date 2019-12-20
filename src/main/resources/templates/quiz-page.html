@@ -22,13 +22,13 @@
                 box-shadow: 10px 10px 5px grey;">
         <h3>Time left</h3>
         <h1 id="time" th:text="${duration}"></h1>
-        <button id="startId" style="width: 100%; height: 40px" class="btn-primary" th:onclick="start()">Start quiz</button><br>
-        <button id="endId" style="display: none; width: 100%; height: 40px" class="btn-primary" onclick="endQuiz()">End quiz</button>
+        <button id="endId" style="width: 80%; height: 40px; margin: 15px"
+                class="btn-primary" onclick="endQuiz()">End quiz</button>
     </div>
 </div>
 
     <div class="">
-        <div class="page-title" id="rowId" style="display: none;">
+        <div class="page-title" id="rowId">
             <div class="title_center">
                 <h3 th:text="${quiz.name}"></h3>
             </div>

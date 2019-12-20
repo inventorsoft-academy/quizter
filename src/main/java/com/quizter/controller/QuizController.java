@@ -27,34 +27,39 @@ public class QuizController {
     @GetMapping("{id}")
     public ModelAndView quizPage(@PathVariable Long id) {
         ModelAndView modelAndView = new ModelAndView("quiz-page");
-        modelAndView.addObject("quiz", testService.findTestById(id));
+        modelAndView.addObject("quiz",
+                testService.findTestById(quizResultService.findById(id).orElseThrow().getTest().getId()));
         modelAndView.addObject("duration", "1");
         return modelAndView;
     }
 
-    @PostMapping("{id}")
-    public ResponseEntity<MessageResponse> beginQuiz(@PathVariable Long id,
-                                                   @RequestBody List<QuizResultDto> quizResultDtos) {
-        log.info("Post Request = " + quizResultDtos);
-        //TODO save results
-        //TODO add time
-        //TODO get rating
-        //TODO fetch less data from db
-        long resultId = quizResultService.beginQuiz(id);
-        return ResponseEntity.ok().build();
+    @GetMapping
+    public ModelAndView quizBeginPage(@RequestParam Long id) {
+        ModelAndView modelAndView = new ModelAndView("quiz-begin-page");
+//        modelAndView.addObject("duration", testService.findTestById(id).getDuration());
+        modelAndView.addObject("duration", "1");
+        return modelAndView;
     }
 
-    @PutMapping("{id}/{resultId}")
-    public ResponseEntity<MessageResponse> saveChecked(@PathVariable Long resultId,
+    @PostMapping
+    public ResponseEntity<MessageResponse> beginQuiz(@RequestParam Long id) {
+        return ResponseEntity.ok(new MessageResponse(String.valueOf(quizResultService.beginQuiz(id))));
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<MessageResponse> saveChecked(@PathVariable Long id,
                                                        @RequestBody List<QuizResultDto> quizResultDtos) {
         log.info("Put Request = " + quizResultDtos);
         //TODO update results
-        quizResultService.updateQuiz(resultId, quizResultDtos);
+        quizResultService.updateQuiz(id, quizResultDtos);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("{id}/rating")
-    public ResponseEntity<MessageResponse> finishQuiz(){
+    @PostMapping("{id}")
+    public ResponseEntity<MessageResponse> finishQuiz(@PathVariable Long id,
+                                                      @RequestBody List<QuizResultDto> quizResultDtos){
+        log.info("Post Request = " + quizResultDtos);
+        quizResultService.updateQuiz(id, quizResultDtos);
         return ResponseEntity.ok().build();
     }
 }
