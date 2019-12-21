@@ -9,9 +9,9 @@
 
 <body>
 <div class="right_col" role="main" data-layout-fragment="content">
-<div class="row" style="margin-right: 40px;">
-    <H6 id="duration" th:text="${duration}" hidden="hidden"></H6>
-    <div class="" style="position: fixed;
+    <div class="row" style="margin-right: 40px;">
+        <H6 id="duration" th:text="${duration}" hidden="hidden"></H6>
+        <div class="" style="position: fixed;
                 z-index:100;
                 background: #EDEDED;
                 text-align: center;
@@ -20,12 +20,13 @@
                 height: 150px;
                 width: 13%;
                 box-shadow: 10px 10px 5px grey;">
-        <h3>Time left</h3>
-        <h1 id="time"></h1>
-        <button id="endId" style="width: 80%; height: 40px; margin: 15px"
-                class="btn-primary" onclick="endQuiz()">End quiz</button>
-    </div>
-    <div class="" id="modal" style="position: fixed;
+            <h3>Time left</h3>
+            <h1 id="time"></h1>
+            <button id="endId" style="width: 80%; height: 40px; margin: 15px"
+                    class="btn-primary" onclick="endQuiz()">End quiz
+            </button>
+        </div>
+        <div class="" id="modal" style="position: fixed;
                 display: none;
                 z-index:100;
                 background: #EDEDED;
@@ -35,11 +36,12 @@
                 height: 150px;
                 width: 25%;
                 box-shadow: 10px 10px 5px grey;">
-        <h4>Are You sure you want to end quiz?</h4>
-        <button style="width: 30%; height: 40px; margin: 15px" class="btn-primary" onclick="finishQuiz()">Yes</button>
-        <button style="width: 30%; height: 40px; margin: 15px" class="btn-primary" onclick="proceed()">No</button>
+            <h4>Are You sure you want to end quiz?</h4>
+            <button style="width: 30%; height: 40px; margin: 15px" class="btn-primary" onclick="finishQuiz()">Yes
+            </button>
+            <button style="width: 30%; height: 40px; margin: 15px" class="btn-primary" onclick="proceed()">No</button>
+        </div>
     </div>
-</div>
 
     <div class="">
         <div class="page-title" id="rowId">
@@ -47,46 +49,48 @@
                 <h3 th:text="${quiz.name}"></h3>
             </div>
             <div class="clearfix"></div>
-            <div class="row">
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                    <tr th:each="question: ${quiz.questions}">
-                        <h2>Question#<span th:text="${quiz.questions.indexOf(question) + 1}"></span></h2>
-                        <div class="x_panel">
-                            <table class="tile_info">
-                                <th th:text="${question.name}"></th>
-<div th:if="${question.questionType == T(com.quizter.dictionary.QuestionType).CODE}">
-                                <tr>
-                                    <table class="" style="height: 200px;">
+            <div class="x_panel">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <tr th:each="question: ${quiz.questions}">
+                            <h2>Question#<span th:text="${quiz.questions.indexOf(question) + 1}"></span></h2>
+                            <div class="x_panel">
+                                <table class="tile_info">
+                                    <th th:text="${question.name}"></th>
+                                    <div th:if="${question.questionType == T(com.quizter.dictionary.QuestionType).CODE}">
+                                        <tr>
+                                            <table class="tile_info" style="height: 200px;">
                                         <textarea class="resultAnswer" style="width: 100%; height: 180px;"
                                                   th:questionType="${question.questionType}"
                                                   th:questionId="${question.id}"
                                                   th:name="answersArray"
                                                   th:text="${question.codeTask}"></textarea>
-                                    </table>
-                                </tr>
-</div>
-                                <div th:if="${question.questionType ==
-                                T(com.quizter.dictionary.QuestionType).MULTIVARIANT}">
-                                    <table class="">
-                                        <tr th:each="answer: ${question.answers}">
-                                            <th style="padding: 8px">
-                                                <div class="radio pull-left">
-                                                    <label>
-                                                        <input type="checkbox" class="resultAnswer"
-                                                               th:questionType="${question.questionType}"
-                                                               th:questionId="${question.id}"
-                                                               th:name="answersArray"
-                                                               th:value="${answer.key}">
-                                                    </label>
-                                                </div>
-                                            </th>
-                                            <th th:text="${answer.key}"></th>
+                                            </table>
                                         </tr>
-                                    </table>
-                                </div>
-                            </table>
-                        </div>
-                    </tr>
+                                    </div>
+                                    <div th:if="${question.questionType ==
+                                T(com.quizter.dictionary.QuestionType).MULTIVARIANT}">
+                                        <table class="">
+                                            <tr th:each="answer: ${question.answers}">
+                                                <th style="padding: 8px">
+                                                    <div class="radio pull-left">
+                                                        <label>
+                                                            <input type="checkbox" class="resultAnswer"
+                                                                   th:questionType="${question.questionType}"
+                                                                   th:questionId="${question.id}"
+                                                                   th:name="answersArray"
+                                                                   th:value="${answer.key}">
+                                                        </label>
+                                                    </div>
+                                                </th>
+                                                <th th:text="${answer.key}"></th>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </table>
+                            </div>
+                        </tr>
+                    </div>
                 </div>
             </div>
         </div>
