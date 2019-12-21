@@ -2,7 +2,11 @@ package com.quizter.service.test;
 
 import com.quizter.dto.test.QuizResultDto;
 import com.quizter.entity.User;
-import com.quizter.entity.test.*;
+import com.quizter.entity.test.MultiVariantQuestion;
+import com.quizter.entity.test.Question;
+import com.quizter.entity.test.QuizResult;
+import com.quizter.entity.test.ResultAnswer;
+import com.quizter.entity.test.Test;
 import com.quizter.mapper.test.ResultMapper;
 import com.quizter.mapper.test.TestMapper;
 import com.quizter.repository.QuizResultRepository;
