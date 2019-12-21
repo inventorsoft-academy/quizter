@@ -83,8 +83,8 @@ public class TestService<T extends Question> {
 
         validationService.validateVersion(testDto.getVersion(), testFromDB.getVersion());
         test.setVersion(testDto.getVersion());
-
         test.setQuestions(new ArrayList<>(createQuestions(testDto.getQuestions())));
+        test.setAuthor(testFromDB.getAuthor());
 
         testRepository.save(test);
     }

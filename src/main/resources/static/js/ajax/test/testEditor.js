@@ -197,7 +197,7 @@ function editTestFunc(id, name, subject, duration, version, description, questio
             }),
             success: function () {
                 alert("Test has been successfully changed!");
-                location.href = "/tests"
+                location.href = "/cabinet/tests"
             },
             error: function (xhr, status, errorThrown) {
                 var response = new ErrorResponse(JSON.parse(xhr.responseText));
