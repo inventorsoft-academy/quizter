@@ -135,7 +135,7 @@ function createTest(name, subject, description, questions, duration) {
             }),
             success: function () {
                 alert("Test has been successfully created!");
-                location.href = "/tests"
+                location.href = "/cabinet/tests"
             },
             error: function (xhr, status, errorThrown) {
                 var response = new ErrorResponse(JSON.parse(xhr.responseText));

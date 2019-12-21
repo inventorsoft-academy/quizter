@@ -8,7 +8,7 @@ function saveProfile(){
        url: myUrl,
        data: JSON.stringify(data),
        success: function () {
-          window.location.replace("/desk");
+          window.location.replace("/");
        },
        error: function (xhr, status, errorThrown) {
        console.log(xhr.responseJSON.message);
