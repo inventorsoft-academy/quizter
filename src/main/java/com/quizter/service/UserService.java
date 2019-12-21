@@ -124,7 +124,7 @@ public class UserService {
         try {
             Credentials credentials = (Credentials) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             return userRepository.findByEmail(credentials.getUsername())
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                    .orElseThrow();
         } catch (ClassCastException o_0) {
             return new User();
         }

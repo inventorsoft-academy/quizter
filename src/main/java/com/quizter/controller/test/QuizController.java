@@ -63,8 +63,7 @@ public class QuizController {
     @PostMapping("{quizResultId}")
     public ResponseEntity<MessageResponse> finishQuiz(@PathVariable String quizResultId,
                                                       @RequestBody List<QuizResultDto> quizResultDtos){
-        log.info("Post Request = " + quizResultDtos);
-        quizResultService.finishQuiz(quizResultId, quizResultDtos);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(
+                new MessageResponse(String.valueOf(quizResultService.finishQuiz(quizResultId, quizResultDtos))));
     }
 }

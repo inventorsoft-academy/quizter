@@ -1,9 +1,9 @@
 package com.quizter.service.test;
 
+import com.quizter.dictionary.QuestionType;
 import com.quizter.dto.test.QuizResultDto;
 import com.quizter.entity.User;
 import com.quizter.entity.test.MultiVariantQuestion;
-import com.quizter.entity.test.Question;
 import com.quizter.entity.test.QuizResult;
 import com.quizter.entity.test.ResultAnswer;
 import com.quizter.entity.test.Test;
@@ -12,9 +12,10 @@ import com.quizter.mapper.test.TestMapper;
 import com.quizter.repository.QuizResultRepository;
 import com.quizter.repository.ResultAnswerRepository;
 import com.quizter.service.UserService;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,15 +31,15 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Transactional
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuizResultService {
 
-    private UserService userService;
-    private TestService testService;
-    private TestMapper testMapper;
-    private ResultMapper resultMapper;
-    private QuizResultRepository quizResultRepository;
-    private List<TestQuestionEvaluator> evaluators;
-    private ResultAnswerRepository resultAnswerRepository;
+    UserService userService;
+    TestService testService;
+    TestMapper testMapper;
+    ResultMapper resultMapper;
+    QuizResultRepository quizResultRepository;
+    ResultAnswerRepository resultAnswerRepository;
 
     public Optional<QuizResult> findById(String quizResultId) {
         return quizResultRepository.findById(quizResultId);
@@ -56,8 +57,8 @@ public class QuizResultService {
         QuizResult quizResult = new QuizResult();
         quizResult.setIsCompleted(false);
         quizResult.setId(createQuizResultId());
-		User user = userService.getUserPrincipal();
-		quizResult.setApplicant(user);
+        User user = userService.getUserPrincipal();
+        quizResult.setApplicant(user);
         quizResult.setStart(Instant.now());
         Test test = testMapper.toTest(testService.findTestById(testId));
         long minutes = test.getDuration();
@@ -72,7 +73,7 @@ public class QuizResultService {
         quizResultRepository.save(quizResult);
     }
 
-    private List<ResultAnswer> getResultAnswers(QuizResult quizResult, List<QuizResultDto> quizResultDtos){
+    private List<ResultAnswer> getResultAnswers(QuizResult quizResult, List<QuizResultDto> quizResultDtos) {
         final ResultAnswer[] resultAnswers = new ResultAnswer[1];
         return quizResultDtos.stream()
                 .map(dto -> {
@@ -88,12 +89,13 @@ public class QuizResultService {
                 }).collect(Collectors.toList());
     }
 
-    public void finishQuiz(String quizResultId, List<QuizResultDto> quizResultDtos) {
+    public Double finishQuiz(String quizResultId, List<QuizResultDto> quizResultDtos) {
         QuizResult quizResult = quizResultRepository.findById(quizResultId).orElseThrow();
         quizResult.setFinished(Instant.now());
         quizResult.setResultAnswers(getResultAnswers(quizResult, quizResultDtos));
         quizResult.setIsCompleted(true);
         quizResultRepository.save(quizResult);
+        return evaluate(quizResult);
     }
 
     public Long getDuration(String quizResultId) {
@@ -101,30 +103,29 @@ public class QuizResultService {
         return (quizResult.getFinished().getEpochSecond() - Instant.now().getEpochSecond());
     }
 
-    public double evaluate(final Test test, Map<Long, String> answers) {
-//		List<AbstractQuestion> abstractQuestions = test.getQuestions();
-//		Map<Long, AbstractQuestion> questionById = abstractQuestions.stream().collect(Collectors.toMap(AbstractQuestion::getId, Function.identity()));
-//		Map<Long, Double> awers = new HashMap<>();
-//		answers.forEach((questionId, answer) -> {
-//			AbstractQuestion abstractQuestion = questionById.get(questionId);
-//			TestQuestionEvaluator evaluator = evaluators.stream().filter(eval -> eval.isApplicable(abstractQuestion)).findFirst()
-//					.orElseThrow(() -> new IllegalStateException("Unsupported question type"));
-//			awers.put(questionId, evaluator.evaluate(abstractQuestion, answer));
-//		});
-//		return awers.values().stream().mapToDouble(Double::doubleValue).sum();
-        return 0;
+    private double evaluate(QuizResult quizResult) {
+        final Double maxPrice = quizResult.getResultAnswers().stream()
+                .filter(answer -> QuestionType.MULTIVARIANT.equals(answer.getQuestion().getQuestionType()))
+                .map(answer -> answer.getQuestion().getPrice())
+                .reduce(Double::sum).orElse(100.0);
+        double totalPrice = 0;
+        for (ResultAnswer answer : quizResult.getResultAnswers()) {
+            MultiVariantQuestion question = (MultiVariantQuestion) answer.getQuestion();
+            double price = answer.getQuestion().getPrice();
+            List<String> rightAnswers = question.getAnswers().entrySet().stream()
+                    .filter(qAnswer -> qAnswer.getValue().equals(true))
+                    .map(Map.Entry::getKey)
+                    .collect(Collectors.toList());
+            long quant = answer.getStringAnswers().stream()
+                    .filter(rightAnswers::contains)
+                    .count();
+            if (quant == rightAnswers.size()) {
+                totalPrice += price;
+            } else if(quant < rightAnswers.size() && quant == answer.getStringAnswers().size()){
+                totalPrice +=price/2;
+            }
+        }
+        return totalPrice*100/maxPrice;
     }
 
-    @Component
-    private static final class StandardEvaluator implements TestQuestionEvaluator {
-        @Override
-        public boolean isApplicable(Question question) {
-            return question instanceof MultiVariantQuestion;
-        }
-
-        @Override
-        public double evaluate(Question question, String answer) {
-            return MultiVariantQuestion.class.cast(question).getAnswers().get(answer) ? question.getPrice() : 0.0;
-        }
-    }
 }
