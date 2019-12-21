@@ -54,8 +54,8 @@
                         <div class="x_panel">
                             <table class="tile_info">
                                 <th th:text="${question.name}"></th>
-
-                                <tr th:if="${question.questionType == T(com.quizter.dictionary.QuestionType).CODE}">
+<div th:if="${question.questionType == T(com.quizter.dictionary.QuestionType).CODE}">
+                                <tr>
                                     <table class="" style="height: 200px;">
                                         <textarea class="resultAnswer" style="width: 100%; height: 180px;"
                                                   th:questionType="${question.questionType}"
@@ -64,7 +64,7 @@
                                                   th:text="${question.codeTask}"></textarea>
                                     </table>
                                 </tr>
-
+</div>
                                 <div th:if="${question.questionType ==
                                 T(com.quizter.dictionary.QuestionType).MULTIVARIANT}">
                                     <table class="">

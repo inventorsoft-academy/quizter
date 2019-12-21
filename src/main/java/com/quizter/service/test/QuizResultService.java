@@ -109,7 +109,10 @@ public class QuizResultService {
                 .map(answer -> answer.getQuestion().getPrice())
                 .reduce(Double::sum).orElse(100.0);
         double totalPrice = 0;
-        for (ResultAnswer answer : quizResult.getResultAnswers()) {
+        List<ResultAnswer> resultAnswers = quizResult.getResultAnswers().stream()
+                .filter(answer -> QuestionType.MULTIVARIANT.equals(answer.getQuestion().getQuestionType()))
+                .collect(Collectors.toList());
+        for (ResultAnswer answer : resultAnswers) {
             MultiVariantQuestion question = (MultiVariantQuestion) answer.getQuestion();
             double price = answer.getQuestion().getPrice();
             List<String> rightAnswers = question.getAnswers().entrySet().stream()
