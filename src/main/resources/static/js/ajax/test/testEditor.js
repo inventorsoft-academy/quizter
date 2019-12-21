@@ -93,7 +93,7 @@ function getAllTestsForEdit() {
             });
 
             $('.testEditionDiv').on('click', '.deleteTestEdit', function () {
-                $(this).parent().parent().remove();
+                $(this).parent().remove();
 
                 if (editCount <= 1) {
                     editCount = 1;

@@ -59,7 +59,7 @@
                                         </td>
                                         <td >
                                             <a href="#" class="view btn btn-primary btn-xs" data-id ={{id}}><i class="fa fa-folder"></i> View </a>
-                                            <a sec:authorize="hasAuthority('STUDENT')" href="#" class="edit btn btn-info btn-xs" data-id = {{id}}><i class="fa fa-pencil"></i> Edit </a>
+                                            <a href="#" class="edit btn btn-info btn-xs" data-id = {{id}}><i class="fa fa-pencil"></i> Edit </a>
                                             <a sec:authorize="hasAuthority('TEACHER')"  href ="#" class="delete btn btn-danger btn-xs" data-id = {{id}}> <i class="fa fa-trash-o" ></i> Delete </a>
                                         </td>
                                     </tr>
