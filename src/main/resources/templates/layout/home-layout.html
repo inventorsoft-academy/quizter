@@ -23,7 +23,7 @@
         <!-- Custom Theme -->
         <link href="/css/custom.min.css" rel="stylesheet">
         <!-- Test creation Theme -->
-        <link href="/css/testcreation.css" rel="stylesheet">
+        <link href="/css/stepWizard.css" rel="stylesheet">
     </head>
 
     <body class="nav-md">
@@ -32,10 +32,7 @@
                 <div class="col-md-3 left_col">
                     <div class="left_col scroll-view">
                         <div class="navbar nav_title" style="border: 0;">
-                            <a data-th-href="@{/}" class="site_title">
-                                <i class="fa fa-space-shuttle"></i>
-                                <span>Quizter</span>
-                            </a>
+                            <a data-th-href="@{/}" class="site_title"><i class="fa fa-space-shuttle"></i> <span>Quizter</span></a>
                         </div>
 
                         <div class="clearfix"></div>
@@ -71,20 +68,30 @@
         <script src="/webjars/jquery/2.2.3/jquery.js"></script>
         <!-- Bootstrap -->
         <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+        <!-- MustacheJS -->
+        <script src="/webjars/mustachejs/2.2.1/mustache.js"></script>
         <!-- FastClick -->
         <script src="/webjars/fastclick/fastclick.js"></script>
         <!-- NProgress -->
         <script src="/webjars/nprogress/nprogress.js"></script>
         <!-- CheckButtons -->
         <script src="/webjars/iCheck/1.0.2/icheck.min.js"></script>
+
+        <!-- Create test-->
+        <script src="/js/ajax/test/testCreation.js"></script>
+        <!-- Edit test-->
+        <script src="/js/ajax/test/testEditor.js"></script>
+        <!-- View test  -->
+        <script src="/js/ajax/test/viewTest.js"></script>
+        <!-- Get all tests   -->
+        <script src="/js/ajax/test/tests.js"></script>
+        <!-- Test wizard navigation   -->
+        <script src="/js/ajax/wizardFormNavigation.js"></script>
+
         <!-- Custom Theme Scripts -->
         <script src="/js/custom.min.js"></script>
-        <!-- Create test-->
-        <script src="/js/ajax/testcreation.js"></script>
-        <!-- View test  -->
-        <script src="/js/ajax/viewTest.js"></script>
-        <!-- Get all tests   -->
-        <script src="/js/ajax/tests.js"></script>
+        <script src="/js/model/error-response.js">
 
+        </script>
     </body>
 </html>

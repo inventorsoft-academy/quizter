@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" data-layout-decorate="~{layout/home-layout}">
+<html data-layout-decorate="~{layout/home-layout}" lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Tests</title>
 </head>
 <body>
-<div class="right_col" role="main" data-layout-fragment="content">
+<div class="right_col" data-layout-fragment="content" role="main">
     <div class="">
         <div class="page-title">
             <div class="title_left">
@@ -30,25 +30,42 @@
                         </ul>
                         <div class="clearfix"></div>
                     </div>
-                    <div id= "getTests" class="x_content">
+                    <div class="x_content" id="getTests" >
 
                         <p>Simple table with test listing </p>
 
-                        <table id = "testTable" class="table table-striped table-bordered projects">
+                        <table class="table table-striped table-bordered projects" id="testTable">
                             <thead>
                             <tr>
                                 <th style="width: 1%">#</th>
                                 <th style="width: 20%">Subject</th>
                                 <th>Name</th>
-                                <th>Status</th>
+                                <th>Version</th>
                                 <th style="width: 20%">#Edit</th>
                             </tr>
                             </thead>
                             <tbody id="tBody">
-
+                                <script id="tBodyScript" type="text/x-mustache-template">
+                                    <tr>
+                                        <td> #</td>
+                                        <td>
+                                            <a> {{subject}} </a>
+                                        </td>
+                                        <td>
+                                            <a> {{name}} </a>
+                                        </td>
+                                        <td>
+                                            <a> {{version}} </a>
+                                        </td>
+                                        <td >
+                                            <a href="#" class="view btn btn-primary btn-xs" data-id ={{id}}><i class="fa fa-folder"></i> View </a>
+                                            <a href="#" class="edit btn btn-info btn-xs" data-id = {{id}}><i class="fa fa-pencil"></i> Edit </a>
+                                            <a sec:authorize="hasAuthority('TEACHER')"  href ="#" class="delete btn btn-danger btn-xs" data-id = {{id}}> <i class="fa fa-trash-o" ></i> Delete </a>
+                                        </td>
+                                    </tr>
+                                </script>
                             </tbody>
                         </table>
-
                     </div>
                 </div>
             </div>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html data-layout-decorate="~{layout/home-layout}" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View</title>
+</head>
+<body>
+<div class="right_col" data-layout-fragment="content" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>View test</h3>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="viewPage row" id="viewPage" th:attr="data_id=${testId}">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <div><h2 id="testName">{{testName}}</h2>
+                        </div>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            <li><a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <a><p id="testSubject">{{testSubject}}</p></a>
+                        <div class="byline">
+                            <span>created</span> by <a id="testAuthor">{{testAuthor}}</a>
+                        </div>
+                        <br/>
+                        <p id="testDescription">{{testDescription}}</p>
+                        <br/>
+                    </div>
+                    <div class="x_content">
+                        <div class="dashboard-widget-content">
+                            <ul class="list-unstyled timeline widget" id="getQuestions">
+                                <script id="getQuestionsScript" type="text/x-mustache-template">
+                                    <li>
+                                        <div class="block">
+                                            <div class="block_content">
+                                                <h2 class="title">
+                                                    <a>{{questionIndex}}</a> :
+                                                    <a>{{name}}</a>
+                                                </h2>
+                                                <p class="excerpt">
+                                                    <div id="getCodeQuestion">
+                                                         <p class="excerpt">
+                                                         <textarea class="col-md-12 " style="height: 400px;" disabled>{{codeTask}}</textarea>
+                                                   </div>
+
+                                            <div id="getAnswers" class="form-group row">
+                                                <div class="checkbox"><label
+                                                        class="col-md-3 col-sm-3  control-label">
+                                                    {{firstAnswer}}
+                                                </label>
+                                                </div>
+                                                <br>
+                                                <div class="checkbox"><label
+                                                        class="col-md-3 col-sm-3  control-label">
+                                                    {{secondAnswer}}
+                                                </label>
+                                                </div>
+                                                <br>
+                                                <div class="checkbox"><label
+                                                        class="col-md-3 col-sm-3  control-label">
+                                                    {{thirdAnswer}}
+                                                </label>
+                                                </div>
+                                                <br>
+                                                <div class="checkbox"><label
+                                                        class="col-md-3 col-sm-3  control-label">
+                                                    {{fourthAnswer}}
+                                                </label>
+                                                </div>
+                                                <br>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </script>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

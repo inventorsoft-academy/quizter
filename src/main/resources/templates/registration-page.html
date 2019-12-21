@@ -1,37 +1,52 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
+<!--      data-layout-decorate="~{layout/scripts-layout}"-->
+
+
 
 <head>
     <meta charset="utf-8"/>
     <title>Registration</title>
     <link th:href="@{/css/app.css}" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="/js/ajax/registration.js"></script>
+
 </head>
 
 <body>
 <div class="input_box">
-    <form accept-charset="UTF-8" method="post" th:href="@{~/registration/${user.getRole()}|}" th:object="${user}">
+    <form accept-charset="UTF-8" id="registration-form">
         <div class="form-group py-2">
             <label for="email">Email</label>
-            <input id="email" type="text" class="form-control" th:field="*{email}" autocomplete="off" required>
+            <input id="email" type="text" class="form-control" autocomplete="off" required>
+            <label id="email-error" hidden="true"></label>
         </div>
         <div class="form-group py-2">
             <label for="password">Password</label>
-            <input id="password" type="password" class="form-control" th:field="*{password}" autocomplete="off"
+            <input id="password" type="password" class="form-control" autocomplete="off"
                    required>
+            <label id="password-error" hidden=true></label>
+
         </div>
         <div class="form-group py-2">
             <label for="confirmPassword">Confirm password</label>
-            <input id="confirmPassword" type="password" class="form-control" th:field="*{confirmPassword}"
+            <input id="confirmPassword" type="password" class="form-control"
                    autocomplete="off" required>
-        </div>
+            <label id="confirm-password-error" hidden=true></label>
 
+        </div>
+        <input id="role" name="role" type="text" hidden="true" th:value="${role}">
         <div class="container text-center py-4">
-            <button type="submit" class="my_button"
+            <button type="submit" id="register" class="my_button"
                     data-loading-text="Create employee...">SUBMIT
             </button>
         </div>
     </form>
+</div>
+<div th:include="layout/scripts-layout">
+
 </div>
 </body>
 </html>

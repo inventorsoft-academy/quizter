@@ -25,21 +25,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
-                .antMatchers("/newPassword").hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
+                .antMatchers(LOGIN_PAGE, "/registration", "/newPassword", "/resetPassword").permitAll()
+                .antMatchers("/", "/profile/**").hasAnyAuthority("ADMIN", "TEACHER", "STUDENT")
+                .antMatchers("/desk/**").hasAnyAuthority("ADMIN", "STUDENT")
+                .antMatchers("/cabinet/**").hasAnyAuthority("ADMIN", "TEACHER")
+                .antMatchers("/admin/**").hasAuthority("ADMIN")
 
                 .and()
                 .formLogin()
                 .loginPage(LOGIN_PAGE)
                 .loginProcessingUrl(LOGIN_PAGE)
                 .defaultSuccessUrl("/")
+                .failureUrl("/login?error=true")
 
                 .and()
                 .logout()
                 .logoutUrl("/logout")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
-                .logoutSuccessUrl("/login")
+                .logoutSuccessUrl(LOGIN_PAGE)
 
                 .and()
                 .csrf().disable();

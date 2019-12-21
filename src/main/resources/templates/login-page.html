@@ -12,9 +12,12 @@
 <div class="input_box">
     <form id="sign_in" th:action="@{/login}" method="post">
         <label for="email">Email</label>
-        <input type="text" name="username" id="email" placeholder="Enter email">
+        <input type="email" name="username" id="email" placeholder="Enter email" required>
         <label for="password">Password</label>
-        <input type="password" name="password" id="password" placeholder="Enter password">
+        <input type="password" name="password" id="password" placeholder="Enter password" required>
+        <div th:if="${param.error}">
+            <p style="color: red">Bad credentials</p>
+        </div>
         <input type="submit" value="Login">
     </form>
     <p style="color: #ffffff"><a href="/resetPassword" style="color: #3AE2CE">Forgot password</a></p>

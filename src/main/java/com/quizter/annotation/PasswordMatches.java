@@ -7,12 +7,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.TYPE)
+@Target({ElementType.FIELD,ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = PasswordMatchesValidation.class)
 public @interface PasswordMatches {
 
-    String message() default "Passwords didn't matches";
+    String message() default "Passwords is incorrect";
 
     Class<?>[] groups() default {};
 
