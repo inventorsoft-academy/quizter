@@ -1,4 +1,4 @@
-package com.quizter.controller;
+package com.quizter.controller.test;
 
 import com.quizter.dto.test.QuizResultDto;
 import com.quizter.dto.response.MessageResponse;

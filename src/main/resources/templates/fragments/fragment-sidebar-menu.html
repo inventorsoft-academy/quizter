@@ -1,15 +1,30 @@
-<div id="sidebar-menu" class="main_menu_side hidden-print main_menu" data-th-fragment="sidebar-menu">
+<div class="main_menu_side hidden-print main_menu" data-th-fragment="sidebar-menu" id="sidebar-menu"
+     xmlns:sec="http://www.w3.org/1999/xhtml">
     <div class="menu_section">
 
         <hr class="col-xs-12">
         <h3>General</h3>
         <ul class="nav side-menu">
-            <li><a><i class="fa fa-home"></i> Test <span class="fa fa-chevron-down"></span></a>
+            <li><a><i class="fa fa-home"></i> Home <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
-                    <li><a data-th-href="@{/tests}">Tests</a></li>
-                    <li><a data-th-href="@{/test-create}">TestCreationForm</a></li>
+                    <li sec:authorize="hasAuthority('TEACHER')"><a data-th-href="@{/cabinet}">Cabinet</a></li>
+                </ul>
+                <ul class="nav child_menu">
+                    <li sec:authorize="hasAuthority('STUDENT')"><a data-th-href="@{/desk}">Desk</a></li>
                 </ul>
 
+            </li>
+            <li><a><i class="fa fa-edit"></i> Test <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a data-th-href="@{/cabinet/tests}">Tests</a></li>
+                    <li sec:authorize="hasAuthority('TEACHER')"><a data-th-href="@{/cabinet/test-create}">TestCreationForm</a>
+                    </li>
+                </ul>
+            </li>
+            <li><a><i class="fa fa-cog"></i> Settings <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a data-th-href="@{/profile/edit}">Edit profile</a></li>
+                </ul>
             </li>
         </ul>
 

@@ -34,7 +34,7 @@ public class User {
     String email;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Profile profile;
+    Profile profile;
 
     @Column
     String password;

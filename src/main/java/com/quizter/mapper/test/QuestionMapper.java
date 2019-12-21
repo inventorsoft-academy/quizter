@@ -1,4 +1,4 @@
-package com.quizter.mapper;
+package com.quizter.mapper.test;
 
 import com.quizter.dto.test.QuestionDto;
 import com.quizter.entity.test.CodeQuestion;
