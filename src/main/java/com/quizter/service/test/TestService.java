@@ -8,7 +8,7 @@ import com.quizter.entity.test.MultiVariantQuestion;
 import com.quizter.entity.test.Question;
 import com.quizter.entity.test.Test;
 import com.quizter.exception.ResourceNotFoundException;
-import com.quizter.mapper.QuestionMapper;
+import com.quizter.mapper.test.QuestionMapper;
 import com.quizter.mapper.test.TestMapper;
 import com.quizter.repository.QuestionRepository;
 import com.quizter.repository.TestRepository;
@@ -17,6 +17,7 @@ import com.quizter.service.ValidationService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)

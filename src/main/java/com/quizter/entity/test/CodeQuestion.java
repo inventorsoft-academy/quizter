@@ -15,7 +15,7 @@ import javax.persistence.Entity;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@DiscriminatorValue("coding")
+@DiscriminatorValue("CODE")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CodeQuestion extends Question {
 
