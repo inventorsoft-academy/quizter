@@ -18,7 +18,7 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                            <div><h2 id="testName">{{testName}}</h2>
+                        <div><h2 id="testName">{{testName}}</h2>
                         </div>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -31,7 +31,7 @@
                     <div class="x_content">
                         <a><p id="testSubject">{{testSubject}}</p></a>
                         <div class="byline">
-                            <span>created</span> by <a id="testCreator">Jane Smith</a>
+                            <span>created</span> by <a id="testAuthor">{{testAuthor}}</a>
                         </div>
                         <br/>
                         <p id="testDescription">{{testDescription}}</p>
@@ -49,32 +49,36 @@
                                                     <a>{{name}}</a>
                                                 </h2>
                                                 <p class="excerpt">
-                                                <div id="getAnswers" class="form-group row">
-                                                    <div class="checkbox"><label
-                                                            class="col-md-3 col-sm-3  control-label">
-                                                        {{firstAnswer}}
-                                                    </label>
-                                                    </div>
-                                                    <br>
-                                                    <div class="checkbox"><label
-                                                            class="col-md-3 col-sm-3  control-label">
-                                                        {{secondAnswer}}
-                                                    </label>
-                                                    </div>
-                                                    <br>
-                                                    <div class="checkbox"><label
-                                                            class="col-md-3 col-sm-3  control-label">
-                                                        {{thirdAnswer}}
-                                                    </label>
-                                                    </div>
-                                                    <br>
-                                                    <div class="checkbox"><label
-                                                            class="col-md-3 col-sm-3  control-label">
-                                                        {{fourthAnswer}}
-                                                    </label>
-                                                    </div>
-                                                    <br>
+                                                    <div id="getCodeQuestion">
+                                                         <p class="excerpt">
+                                                         <textarea class="col-md-12 " style="height: 400px;" disabled>{{codeTask}}</textarea>
+                                                   </div>
+
+                                            <div id="getAnswers" class="form-group row">
+                                                <div class="checkbox"><label
+                                                        class="col-md-3 col-sm-3  control-label">
+                                                    {{firstAnswer}}
+                                                </label>
                                                 </div>
+                                                <br>
+                                                <div class="checkbox"><label
+                                                        class="col-md-3 col-sm-3  control-label">
+                                                    {{secondAnswer}}
+                                                </label>
+                                                </div>
+                                                <br>
+                                                <div class="checkbox"><label
+                                                        class="col-md-3 col-sm-3  control-label">
+                                                    {{thirdAnswer}}
+                                                </label>
+                                                </div>
+                                                <br>
+                                                <div class="checkbox"><label
+                                                        class="col-md-3 col-sm-3  control-label">
+                                                    {{fourthAnswer}}
+                                                </label>
+                                                </div>
+                                                <br>
                                             </div>
                                         </div>
                                     </li>

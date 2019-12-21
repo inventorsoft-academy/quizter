@@ -2,25 +2,29 @@ package com.quizter.service;
 
 import com.quizter.dto.PasswordDto;
 import com.quizter.dto.RegistrationUserDto;
+import com.quizter.dto.test.QuestionDto;
+import com.quizter.dto.test.TestDto;
 import com.quizter.exception.ValidationException;
 import com.quizter.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.context.annotation.Bean;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
 import javax.validation.Validator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
 @AllArgsConstructor
+@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ValidationService {
 
@@ -44,7 +48,6 @@ public class ValidationService {
         }
 
         return errors;
-
     }
 
     public void registrationValidation(RegistrationUserDto registrationUserDto) {
@@ -57,7 +60,7 @@ public class ValidationService {
         handle(validationResult);
     }
 
-    public void passwordValidation(PasswordDto passwordDto){
+    public void passwordValidation(PasswordDto passwordDto) {
         Map<String, String> validationResult = validate(passwordDto);
         handle(validationResult);
     }
@@ -68,9 +71,57 @@ public class ValidationService {
         }
     }
 
-//    @Bean
-//    public Validator validator() {
-//        return Validation.buildDefaultValidatorFactory().getValidator();
-//    }
+    public void testCreationFormValidation(TestDto testDto) {
+        Map<String, String> validationResult = validate(testDto);
+
+        if (!validationResult.isEmpty()) {
+            handle(validationResult);
+        } else {
+            List<QuestionDto> multivariantQuestionList = testDto.getQuestions()
+                    .stream()
+                    .filter(questionDto -> questionDto.getQuestionType().name().equals("MULTIVARIANT")).collect(Collectors.toList());
+
+            if (testDto.getName().equals(testDto.getSubject()) || testDto.getName().equals(testDto.getDescription()) || testDto.getDescription().equals(testDto.getSubject())) {
+                validationResult.put("TestCreationFormError", "Test parameters must be different");
+                handle(validationResult);
+            } else if (multivariantQuestionList.size() < 1) {
+                validationResult.put("TestCreationFormError", "Question quantity should have at least 5");
+                handle(validationResult);
+            } else if (multivariantQuestionList.stream().anyMatch(questionDto -> questionDto.getAnswers().keySet().contains(""))) {
+                validationResult.put("TestCreationFormError", "Some answer name is not set");
+                handle(validationResult);
+            }
+
+            multivariantQuestionList
+                    .forEach(questionDto -> {
+                        if (questionDto.getAnswers().keySet().size() < 4) {
+                            validationResult.put("TestCreationFormError", "Question answers must be different");
+                        }
+
+                        handle(validationResult);
+
+                        int countOfRightAnswer = (int) questionDto.getAnswers()
+                                .values()
+                                .stream()
+                                .filter(Boolean::booleanValue).count();
+
+                        if (countOfRightAnswer != 1) {
+                            validationResult.put("TestCreationFormError", "Right answer is not set");
+                        }
+
+                        handle(validationResult);
+                    });
+        }
+    }
+
+    public void validateVersion(String versionFromDto, String versionFromDB) {
+        Map<String, String> validationResult = validate(versionFromDto);
+
+        if (versionFromDto.equals(versionFromDB)) {
+            validationResult.put("TestCreationFormError", "Please set new version");
+        }
+
+        handle(validationResult);
+    }
 
 }

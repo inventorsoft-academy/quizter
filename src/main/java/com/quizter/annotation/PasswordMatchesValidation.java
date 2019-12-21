@@ -17,7 +17,7 @@ public class PasswordMatchesValidation implements ConstraintValidator<PasswordMa
         } else
             constraintValidatorContext.buildConstraintViolationWithTemplate("Password Mismatch").
                     addPropertyNode("Password").addConstraintViolation();
-        ;
+
         return user.getPassword().equals(user.getConfirmPassword());
     }
 }

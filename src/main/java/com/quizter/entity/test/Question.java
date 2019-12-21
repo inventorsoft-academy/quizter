@@ -1,10 +1,11 @@
 package com.quizter.entity.test;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
@@ -21,15 +22,16 @@ import javax.persistence.InheritanceType;
 @NoArgsConstructor
 @Entity(name = "question")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="question_type",
+@DiscriminatorColumn(name = "question_type",
         discriminatorType = DiscriminatorType.STRING)
+@FieldDefaults(level = AccessLevel.PROTECTED)
 public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long id;
+    Long id;
 
-    protected String name;
+    String name;
 
-    protected double price;
+    Double price;
 }

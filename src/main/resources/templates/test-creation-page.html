@@ -56,26 +56,33 @@
                                             <h3> Step 1 </h3>
                                             <small>Set Test parameters</small>
                                             <div class="ln_solid"></div>
-                                            <form id="setTestDescription">
+                                            <form class="form-inline" id="setTestDescription">
                                                 <div class="form-group">
-                                                    <label class="control-label">Name*</label>
+                                                    <label id="testNameLabel" class="control-label">Name*</label>
                                                     <input class="form-control" id="testName" max="2090" min="1900"
                                                            placeholder="Name"
                                                            required="required" type="text"/>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="control-label">Subject*</label>
+                                                    <label id="testSubjectLabel" class="control-label">Subject*</label>
                                                     <input class="form-control " id="subject" max="2090" min="1900"
                                                            placeholder="Subject"
                                                            required="required" type="text"/>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="control-label">Description*</label>
+                                                    <label id="testDescriptionLabel" class="control-label">Description*</label>
                                                     <textarea class="form-control" id="description" max="20090"
                                                               min="1900"
                                                               placeholder="Describe test" required="required"
                                                               rows="4"></textarea>
                                                 </div>
+                                                <div class="form-group col-md-2 col-xs-2">
+                                                    <label  id="testDurationLabel" class="control-label">Test duration (min)*</label>
+                                                    <input class="form-control " id="testDuration" min="5"
+                                                           value="60" type="number">
+                                                </div>
+
+                                                <div class="clearfix"></div>
                                                 <div class="ln_solid"></div>
                                                 <button class="btn btn-primary nextBtn btn-lg pull-right"
                                                         onclick="testDescriptionClick();" type="button">
@@ -98,9 +105,16 @@
                                                     <div class="testCreationDiv col-xs-12">
                                                         <div class="col-md-12">
                                                             <div class="ln_solid"></div>
-                                                            <div><h2>Question # <span>{{count}}</span>
+                                                            <div class="col-md-1  form-group pull-right">
+                                                                <label class="control-label "
+                                                                       for="questionMark_{{count}}">Mark<span
+                                                                        class="required"></span>
+                                                                </label>
+                                                                <input type="number" class="form-control"
+                                                                       id="questionMark_{{count}}">
+                                                            </div>
 
-                                                            </h2>
+                                                            <div><h2>Question # <span>{{count}}</span></h2>
                                                                 <br/>
                                                             </div>
                                                             <div class="form-group">
@@ -191,13 +205,14 @@
                                                                             <span
                                                                                     class="required">*</span> </label>
                                                                         <div class="col-md-8">
-                                                                    <textarea class="writeFourthAnswer form-control col-md-8"
-                                                                              id="writeFourthAnswer_{{count}}"
-                                                                              maxlength="300"
-                                                                              minlength="3"
-                                                                              placeholder="Write option of answer"
-                                                                              required="required"
-                                                                              rows="1"></textarea>
+                                                                    <textarea
+                                                                            class="writeFourthAnswer form-control col-md-8"
+                                                                            id="writeFourthAnswer_{{count}}"
+                                                                            maxlength="300"
+                                                                            minlength="3"
+                                                                            placeholder="Write option of answer"
+                                                                            required="required"
+                                                                            rows="1"></textarea>
                                                                         </div>
                                                                         <div class="fourthRadio radio pull-right">
                                                                             <label> <input
@@ -216,11 +231,6 @@
                                             <div class="ln_solid"></div>
 
                                             <button class="btn btn-success btn-lg pull-right"
-                                                    id="finishOfCreation"
-                                                    type="button"><i
-                                                    class="fa fa-save"></i> Save
-                                            </button>
-                                            <button class="btn btn-success btn-lg pull-right"
                                                     id="addOneMoreQuestion"
                                                     type="button"><i
                                                     class="fa fa-plus-circle"></i> Add
@@ -233,42 +243,72 @@
                                                     type="button"><i
                                                     class="fa fa-step-backward"></i> Back
                                             </button>
-                                            <a id="to-coding-part">
-
-                                                <button class="btn btn-primary nextBtn btn-lg pull-right"
-                                                        type="button">
-                                                    <i class="fa  fa-hand-o-right"></i> Next
-                                                </button>
-                                            </a>
+                                            <button class="btn btn-primary nextBtn btn-lg pull-left"
+                                                    id="question-part-creation" type="button">
+                                                <i class="fa  fa-hand-o-right"></i> Next
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="row setup-content" id="step-3">
-                                    <form id="coding-test-form">
-                                        <div class="form-group">
-                                            <input id="task" type="text"
-                                                   required="required" class="form-control"
-                                                   placeholder="Task" style="width: 1350px">
-                                            <div id="textareas" style="padding-top: 50px">
-                                                <div id="coding-textarea" style="display:inline-block">
-                                            <textarea id="code" required="required" class="form-control"
-                                                      style="width: 650px;height: 550px"
-                                                      placeholder="Code..."></textarea>
+                                    <div class="col-xs-12">
+                                        <div class="col-md-12">
+                                            <h3> Step 3 </h3>
+                                            <small>Set codes question</small>
+                                            <div class="ln_solid"></div>
+                                            <form id="coding-test-form lign-self-center form-horizontal">
+                                                <div class="form-group ">
+                                                    <div class="col-md-1  pull-right">
+                                                        <label class="control-label " for="codeMark">Mark<span
+                                                                class="required"></span>
+                                                        </label>
+                                                        <input class="form-control" id="codeMark"
+                                                               type="number">
+                                                    </div>
+                                                    <div class="col-md-10">
+                                                        <div class="form-group row">
+                                                            <label class="control-label " for="task">Task<span
+                                                                    class="required"></span></label>
+                                                            <input class="form-control" id="task" max="2090" min="1900"
+                                                                   placeholder="Task"
+                                                                   required="required" type="text"/>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="control-label " for="code">Code<span
+                                                                    class="required"></span>
+                                                            </label>
+                                                            <textarea class="col-md-6 form-control" id="code"
+                                                                      placeholder="Code..."
+                                                                      required="required"
+                                                                      style="height: 200px"></textarea>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="control-label " for="test">Tests<span
+                                                                    class="required"></span></label>
+                                                            <textarea class="form-control" id="test"
+                                                                      placeholder="Tests..."
+                                                                      required="required"
+                                                                      style="height: 200px"></textarea>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div id="testing-textarea" style="display:inline-block; padding-left: 75px">
-                                            <textarea id="test" required="required" class="form-control"
-                                                      style="width: 650px;height: 550px"
-                                                      placeholder="Tests..."></textarea>
-                                                </div>
-                                            </div>
+                                            </form>
 
+                                            <div class="clearfix"></div>
+                                            <div class="ln_solid"></div>
 
+                                            <button class="btn btn-primary prevBtn btn-lg pull-left"
+                                                    type="button"><i
+                                                    class="fa fa-step-backward"></i> Back
+                                            </button>
+                                            <button class="btn btn-success nextBtn btn-lg pull-right"
+                                                    id="coding-part-creation" type="button">Create
+                                            </button>
                                         </div>
-                                        <button id="coding-part-creation" class="btn btn-primary nextBtn btn-lg pull-right" type="button">
-                                            Create
-                                        </button>
-                                    </form>
+                                    </div>
                                 </div>
+
                             </form>
                         </div>
                     </div>
