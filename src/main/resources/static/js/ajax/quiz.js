@@ -1,11 +1,14 @@
+
 function endQuiz(){
-var finish = confirm("Are You sure you want to end quiz?");
-if(finish === true){
-finishQuiz();
+    document.getElementById('modal').style.display = "block";
 }
+
+function proceed(){
+    document.getElementById('modal').style.display = "none";
 }
 
 function finishQuiz(){
+    document.getElementById('modal').style.display = "none";
    var questionType;
    var questionId;
    var answers = [];
@@ -52,10 +55,11 @@ function finishQuiz(){
            data: JSON.stringify(result),
            success: function (response) {
               clearInterval(countdownTimer);
-              alert("Quiz finished with rating " + response.message);
               document.getElementById('endId').style.display = "none";
               document.getElementById('rowId').style.display = "none";
               document.getElementById('time').style.display = "none";
+              alert("Quiz finished with rating " + response.message);
+              window.location.href = "/desk/";
            },
            error: function (xhr, status, errorThrown) {
            console.log(xhr.responseJSON.message);
@@ -65,7 +69,7 @@ function finishQuiz(){
 }
 
 $(document).ready(function () {
-
+    duration = parseInt($('#duration').text());
     startTimer();
     var ckbox = $('#checkbox');
 
@@ -112,7 +116,9 @@ function putToBack(data){
        url: myUrl,
        data: JSON.stringify(data),
        success: function (response) {
-
+            clearInterval(countdownTimer);
+            duration = parseInt(response.message);
+            startTimer();
        },
        error: function (xhr, status, errorThrown) {
        console.log(xhr.responseJSON.message);
@@ -122,9 +128,9 @@ function putToBack(data){
 }
 
 var countdownTimer;
+var duration;
 
 function startTimer(){
-var duration = parseInt($('#duration').text());
 var timer = duration, minutes, seconds;
 countdownTimer = setInterval(function () {
             minutes = parseInt(timer / 60, 10)

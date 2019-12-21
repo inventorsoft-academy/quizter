@@ -3,9 +3,9 @@ package com.quizter.service.test;
 import com.quizter.dictionary.QuestionType;
 import com.quizter.dto.test.QuestionDto;
 import com.quizter.dto.test.TestDto;
-import com.quizter.entity.test.Question;
 import com.quizter.entity.test.CodeQuestion;
 import com.quizter.entity.test.MultiVariantQuestion;
+import com.quizter.entity.test.Question;
 import com.quizter.entity.test.Test;
 import com.quizter.exception.ResourceNotFoundException;
 import com.quizter.mapper.QuestionMapper;
@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.List;
 import java.util.stream.Collectors;
 
