@@ -16,14 +16,25 @@ import java.util.List;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuizResult {
+    //todo show available and passed quizzes for Student
+    //TODO update quiz page + relogin
+    //TODO bind student with his open test + add students
+    //using quizResult
+    // add testCompleted
+//TODO save results
+//TODO add time synchro
+//TODO get rating
+//TODO fetch less data from db
+
 
     @Id
-    @GeneratedValue
-    long id;
+    String id;
 
     Instant start;
 
     Instant finished;
+
+    Boolean isCompleted;
 
     @ManyToOne(cascade = CascadeType.ALL)
     User applicant;

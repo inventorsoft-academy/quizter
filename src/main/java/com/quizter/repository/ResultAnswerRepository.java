@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface ResultAnswerRepository extends CrudRepository<ResultAnswer, Long> {
 
-    Optional<ResultAnswer> findByQuestionId(Long id);
+    Optional<ResultAnswer> findByQuizResultIdAndQuestionId(String quizResultId, Long questionId);
 }

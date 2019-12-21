@@ -34,7 +34,7 @@ public class Test {
     @Column(nullable = false)
     String description;
 
-//	@Column(nullable = false)
+	@Column(nullable = false)
 	Long duration;
 
     @ManyToOne

@@ -24,20 +24,18 @@ public class QuizController {
     TestService testService;
     QuizResultService quizResultService;
 
-    @GetMapping("{id}")
-    public ModelAndView quizPage(@PathVariable Long id) {
+    @GetMapping("{quizResultId}")
+    public ModelAndView quizPage(@PathVariable String quizResultId) {
         ModelAndView modelAndView = new ModelAndView("quiz-page");
         modelAndView.addObject("quiz",
-                testService.findTestById(quizResultService.findById(id).orElseThrow().getTest().getId()));
-        modelAndView.addObject("duration", "1");
+                testService.findTestById(quizResultService.findById(quizResultId).orElseThrow().getTest().getId()));
         return modelAndView;
     }
 
     @GetMapping
     public ModelAndView quizBeginPage(@RequestParam Long id) {
         ModelAndView modelAndView = new ModelAndView("quiz-begin-page");
-//        modelAndView.addObject("duration", testService.findTestById(id).getDuration());
-        modelAndView.addObject("duration", "1");
+        modelAndView.addObject("duration", testService.findTestById(id).getDuration());
         return modelAndView;
     }
 
@@ -46,20 +44,19 @@ public class QuizController {
         return ResponseEntity.ok(new MessageResponse(String.valueOf(quizResultService.beginQuiz(id))));
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<MessageResponse> saveChecked(@PathVariable Long id,
+    @PutMapping("{quizResultId}")
+    public ResponseEntity<MessageResponse> saveChecked(@PathVariable String quizResultId,
                                                        @RequestBody List<QuizResultDto> quizResultDtos) {
         log.info("Put Request = " + quizResultDtos);
-        //TODO update results
-        quizResultService.updateQuiz(id, quizResultDtos);
+        quizResultService.updateQuiz(quizResultId, quizResultDtos);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("{id}")
-    public ResponseEntity<MessageResponse> finishQuiz(@PathVariable Long id,
+    @PostMapping("{quizResultId}")
+    public ResponseEntity<MessageResponse> finishQuiz(@PathVariable String quizResultId,
                                                       @RequestBody List<QuizResultDto> quizResultDtos){
         log.info("Post Request = " + quizResultDtos);
-        quizResultService.updateQuiz(id, quizResultDtos);
+        quizResultService.finishQuiz(quizResultId, quizResultDtos);
         return ResponseEntity.ok().build();
     }
 }

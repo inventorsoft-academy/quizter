@@ -1,5 +1,5 @@
 function beginQuiz(id) {
-    window.location.href = "/desk/quiz/" + parseInt(id);
+    window.location.href = "/desk/quiz/" + id;
 
 }
 
