@@ -24,6 +24,7 @@
                                 <th th:text="${quiz.name}"></th>
                                 <th th:text="${quiz.subject}"></th>
                                 <th th:text="${quiz.description}"></th>
+                                <th>
                                     <a th:href="@{/desk/quiz(id=${quiz.id})}">
                                         <button class="btn-primary">Start quiz</button>
                                     </a>

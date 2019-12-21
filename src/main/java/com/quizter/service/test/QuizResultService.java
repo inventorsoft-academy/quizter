@@ -36,6 +36,67 @@ public class QuizResultService {
     private List<TestQuestionEvaluator> evaluators;
     private ResultAnswerRepository resultAnswerRepository;
 
+    public Optional<QuizResult> findById(String quizResultId) {
+        return quizResultRepository.findById(quizResultId);
+    }
+
+    private String createQuizResultId() {
+        String quizResultId = UUID.randomUUID().toString();
+        if (quizResultRepository.findById(quizResultId).isPresent()) {
+            createQuizResultId();
+        }
+        return quizResultId;
+    }
+
+    public String beginQuiz(Long testId) {
+        QuizResult quizResult = new QuizResult();
+        quizResult.setIsCompleted(false);
+        quizResult.setId(createQuizResultId());
+		User user = userService.getUserPrincipal();
+		quizResult.setApplicant(user);
+        quizResult.setStart(Instant.now());
+        Test test = testMapper.toTest(testService.findTestById(testId));
+        long minutes = test.getDuration();
+        quizResult.setFinished(Instant.now().plus(Duration.ofMinutes(minutes)));
+        quizResult.setTest(test);
+        return quizResultRepository.save(quizResult).getId();
+    }
+
+    public void updateQuiz(String quizResultId, List<QuizResultDto> quizResultDtos) {
+        QuizResult quizResult = quizResultRepository.findById(quizResultId).orElseThrow();
+        quizResult.setResultAnswers(getResultAnswers(quizResult, quizResultDtos));
+        quizResultRepository.save(quizResult);
+    }
+
+    private List<ResultAnswer> getResultAnswers(QuizResult quizResult, List<QuizResultDto> quizResultDtos){
+        final ResultAnswer[] resultAnswers = new ResultAnswer[1];
+        return quizResultDtos.stream()
+                .map(dto -> {
+                    resultAnswers[0] = resultMapper.quizResultDtoToAnswer(dto);
+                    resultAnswers[0].setQuizResult(quizResult);
+                    if (resultAnswerRepository.findByQuizResultIdAndQuestionId(quizResult.getId(),
+                            resultAnswers[0].getQuestion().getId()).isPresent()) {
+                        resultAnswers[0].setId(resultAnswerRepository.findByQuizResultIdAndQuestionId(quizResult.getId(),
+                                resultAnswers[0].getQuestion().getId()).orElseThrow().getId());
+                    }
+                    resultAnswerRepository.save(resultAnswers[0]);
+                    return resultAnswers[0];
+                }).collect(Collectors.toList());
+    }
+
+    public void finishQuiz(String quizResultId, List<QuizResultDto> quizResultDtos) {
+        QuizResult quizResult = quizResultRepository.findById(quizResultId).orElseThrow();
+        quizResult.setFinished(Instant.now());
+        quizResult.setResultAnswers(getResultAnswers(quizResult, quizResultDtos));
+        quizResult.setIsCompleted(true);
+        quizResultRepository.save(quizResult);
+    }
+
+    public Long getDuration(String quizResultId) {
+        QuizResult quizResult = findById(quizResultId).orElseThrow();
+        return (quizResult.getFinished().getEpochSecond() - Instant.now().getEpochSecond());
+    }
+
     public double evaluate(final Test test, Map<Long, String> answers) {
 //		List<AbstractQuestion> abstractQuestions = test.getQuestions();
 //		Map<Long, AbstractQuestion> questionById = abstractQuestions.stream().collect(Collectors.toMap(AbstractQuestion::getId, Function.identity()));
@@ -48,72 +109,6 @@ public class QuizResultService {
 //		});
 //		return awers.values().stream().mapToDouble(Double::doubleValue).sum();
         return 0;
-    }
-
-    public Optional<QuizResult> findById(String quizResultId) {
-        return quizResultRepository.findById(quizResultId);
-    }
-
-    private String getQuizResultId(){
-        String quizResultId = UUID.randomUUID().toString();
-        if(quizResultRepository.findById(quizResultId).isPresent()){
-            getQuizResultId();
-        }
-        return quizResultId;
-    }
-
-    public String beginQuiz(Long testId) {
-        QuizResult quizResult = new QuizResult();
-        quizResult.setId(getQuizResultId());
-//		User user = userService.getUserPrincipal();
-//		quizResult.setApplicant(user);
-        quizResult.setStart(Instant.now());
-        Test test = testMapper.toTest(testService.findTestById(testId));
-        long minutes = test.getDuration();
-        quizResult.setFinished(Instant.now().plus(Duration.ofMinutes(minutes)));
-        quizResult.setTest(test);
-        return quizResultRepository.save(quizResult).getId();
-    }
-
-    public void updateQuiz(String quizResultId, List<QuizResultDto> quizResultDtos) {
-        QuizResult quizResult = quizResultRepository.findById(quizResultId).orElseThrow();
-//		final ResultAnswer[] resultAnswer = new ResultAnswer[1];
-//		List<ResultAnswer> answers = quizResultDtos.stream()
-//				.map(dto -> {
-//					resultAnswer[0] = resultMapper.quizResultDtoToAnswer(dto);
-//					resultAnswer[0].setQuizResult(quizResult);
-//					resultAnswerRepository.save(resultAnswer[0]);
-//					return resultAnswer[0];
-//				})
-//				.collect(Collectors.toList());
-        List<ResultAnswer> answers = quizResultDtos.stream()
-                .map(dto -> resultMapper.quizResultDtoToAnswer(dto))
-                .collect(Collectors.toList());
-        answers.forEach(answer -> answer.setQuizResult(quizResult));
-
-        for (ResultAnswer answer : answers) {
-            if (resultAnswerRepository.findByQuizResultIdAndQuestionId(quizResult.getId(),
-                    answer.getQuestion().getId()).isPresent()) {
-                log.info("answer present");
-                answer.setId(resultAnswerRepository.findByQuizResultIdAndQuestionId(quizResult.getId(),
-                        answer.getQuestion().getId()).get().getId());
-            } else {
-                log.info("answer not present");
-            }
-
-        }
-
-        answers.forEach(answer -> resultAnswerRepository.save(answer));
-        log.info("Answers = " + answers);
-        quizResult.setResultAnswers(answers);
-        quizResultRepository.save(quizResult);
-    }
-
-    public void finishQuiz(String quizResultId, List<QuizResultDto> quizResultDtos) {
-        updateQuiz(quizResultId, quizResultDtos);
-        QuizResult quizResult = quizResultRepository.findById(quizResultId).orElseThrow();
-        quizResult.setIsCompleted(true);
-        quizResultRepository.save(quizResult);
     }
 
     @Component

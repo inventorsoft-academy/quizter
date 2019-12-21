@@ -29,6 +29,9 @@ public class QuizController {
         ModelAndView modelAndView = new ModelAndView("quiz-page");
         modelAndView.addObject("quiz",
                 testService.findTestById(quizResultService.findById(quizResultId).orElseThrow().getTest().getId()));
+        modelAndView.addObject("intermediate", quizResultService.findById(quizResultId).orElseThrow());
+        modelAndView.addObject("duration", quizResultService.getDuration(quizResultId));
+
         return modelAndView;
     }
 

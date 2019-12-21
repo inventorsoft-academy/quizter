@@ -124,7 +124,7 @@ function putToBack(data){
 var countdownTimer;
 
 function startTimer(){
-var duration = parseInt($('#time').text()) * 60;
+var duration = parseInt($('#duration').text());
 var timer = duration, minutes, seconds;
 countdownTimer = setInterval(function () {
             minutes = parseInt(timer / 60, 10)

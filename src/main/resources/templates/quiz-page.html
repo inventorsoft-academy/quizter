@@ -8,9 +8,9 @@
 </head>
 
 <body>
-
 <div class="right_col" role="main" data-layout-fragment="content">
 <div class="row" style="margin-right: 40px;">
+    <H6 id="duration" th:text="${duration}" hidden="hidden"></H6>
     <div class="" style="position: fixed;
                 z-index:100;
                 background: #EDEDED;
@@ -21,7 +21,7 @@
                 width: 13%;
                 box-shadow: 10px 10px 5px grey;">
         <h3>Time left</h3>
-        <h1 id="time" th:text="${quiz.duration}"></h1>
+        <h1 id="time"></h1>
         <button id="endId" style="width: 80%; height: 40px; margin: 15px"
                 class="btn-primary" onclick="endQuiz()">End quiz</button>
     </div>
