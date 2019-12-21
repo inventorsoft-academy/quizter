@@ -124,11 +124,12 @@ public class QuizResultService {
                     .count();
             if (quant == rightAnswers.size()) {
                 totalPrice += price;
-            } else if(quant < rightAnswers.size() && quant == answer.getStringAnswers().size()){
-                totalPrice +=price/2;
+            } else if (rightAnswers.size() > 1 && quant < rightAnswers.size()
+                    && quant == answer.getStringAnswers().size() && quant > 0) {
+                totalPrice += price / 2;
             }
         }
-        return totalPrice*100/maxPrice;
+        return totalPrice * 100 / maxPrice;
     }
 
 }
