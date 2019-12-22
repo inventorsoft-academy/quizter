@@ -1,5 +1,6 @@
 package com.quizter.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.quizter.dictionary.Role;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -33,6 +34,7 @@ public class User {
     @Column(unique = true)
     String email;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     Profile profile;
 

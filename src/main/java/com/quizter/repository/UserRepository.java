@@ -16,4 +16,5 @@ public interface UserRepository extends CrudRepository<User, Long> {
     void deleteById(Long id);
 
     List<User> findUserByRole(Role role);
+
 }

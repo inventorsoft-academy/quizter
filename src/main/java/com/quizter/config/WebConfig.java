@@ -12,7 +12,9 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addViewController("/cabinet/test-create").setViewName("test-creation-page");
         registry.addViewController("/cabinet/tests").setViewName("tests-page");
         registry.addViewController("/active-account-page").setViewName("active-account-page");
-        registry.addViewController("/admin").setViewName("default-page");
+        registry.addViewController("/admin").setViewName("admin-page");
         registry.addViewController("/cabinet").setViewName("cabinet-page");
+        registry.addViewController("/cabinet/students").setViewName("students-page");
+        registry.addViewController("/cabinet/student-groups").setViewName("student-groups-page");
     }
 }

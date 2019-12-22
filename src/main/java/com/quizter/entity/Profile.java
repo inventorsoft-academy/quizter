@@ -1,5 +1,6 @@
 package com.quizter.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +22,7 @@ public class Profile {
     @Id
     Long id;
 
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "user_id")
     User user;

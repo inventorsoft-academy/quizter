@@ -34,13 +34,14 @@
 
                         <p>Simple table with test listing </p>
 
-                        <table class="table table-striped table-bordered projects" id="testTable">
+                        <table class="table table-striped table-bordered" id="testTable">
                             <thead>
                             <tr>
                                 <th style="width: 1%">#</th>
                                 <th style="width: 20%">Subject</th>
                                 <th>Name</th>
                                 <th>Version</th>
+                                <th>Students</th>
                                 <th sec:authorize="hasAuthority('TEACHER')" style="width: 20%">#Edit</th>
                             </tr>
                             </thead>
@@ -56,6 +57,10 @@
                                     </td>
                                     <td>
                                         <a> {{version}} </a>
+                                    </td>
+                                    <td style="text-align:center">
+                                        <a id="inviteStudents" data-th-href="@{/cabinet/student-groups}"  type="button" class="btn btn-success btn-xs "><i
+                                                class="fa fa-child"></i> Invite</a>
                                     </td>
                                     <td sec:authorize="hasAuthority('TEACHER')">
                                         <a href="#" class="view btn btn-primary btn-xs" data-id={{id}}><i

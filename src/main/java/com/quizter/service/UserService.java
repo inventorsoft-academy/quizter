@@ -1,6 +1,7 @@
 package com.quizter.service;
 
 import com.quizter.dictionary.CacheType;
+import com.quizter.dictionary.Role;
 import com.quizter.dto.PasswordDto;
 import com.quizter.dto.ProfileDto;
 import com.quizter.dto.RegistrationUserDto;
@@ -25,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -128,6 +130,10 @@ public class UserService {
         } catch (ClassCastException o_0) {
             return new User();
         }
+    }
+
+    public List<User> getUsersByRole(Role role) {
+        return userRepository.findUserByRole(role);
     }
 
 }

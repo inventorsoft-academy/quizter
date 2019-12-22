@@ -39,7 +39,7 @@ function getAllTestsForEdit() {
             var j = 1;
 
             $.each(data.questions, function (index, question) {
-                if (question.answers !== null) {
+                if (question.questionType === "MULTIVARIANT") {
 
                     inputRowEdit = {
                         editCount: editCount

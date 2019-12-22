@@ -9,6 +9,7 @@
                 <ul class="nav child_menu">
                     <li sec:authorize="hasAuthority('TEACHER')"><a data-th-href="@{/cabinet}">Cabinet</a></li>
                     <li sec:authorize="hasAuthority('STUDENT')"><a data-th-href="@{/desk}">Desk</a></li>
+                    <li sec:authorize="hasAuthority('ADMIN')"><a data-th-href="@{/admin}">Admin</a></li>
                 </ul>
             </li>
             <li><a><i class="fa fa-edit"></i> Test <span class="fa fa-chevron-down"></span></a>
