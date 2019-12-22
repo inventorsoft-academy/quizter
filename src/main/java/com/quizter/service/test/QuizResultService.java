@@ -94,8 +94,10 @@ public class QuizResultService {
         quizResult.setFinished(Instant.now());
         quizResult.setResultAnswers(getResultAnswers(quizResult, quizResultDtos));
         quizResult.setIsCompleted(true);
+        double totalRating = evaluate(quizResult);
+        quizResult.setTotalRating(totalRating);
         quizResultRepository.save(quizResult);
-        return evaluate(quizResult);
+        return totalRating;
     }
 
     public Long getDuration(String quizResultId) {
@@ -119,17 +121,22 @@ public class QuizResultService {
                     .filter(qAnswer -> qAnswer.getValue().equals(true))
                     .map(Map.Entry::getKey)
                     .collect(Collectors.toList());
-            long quant = answer.getStringAnswers().stream()
+            long quantity = answer.getStringAnswers().stream()
                     .filter(rightAnswers::contains)
                     .count();
-            if (quant == rightAnswers.size()) {
-                totalPrice += price;
-            } else if (rightAnswers.size() > 1 && quant < rightAnswers.size()
-                    && quant == answer.getStringAnswers().size() && quant > 0) {
-                totalPrice += price / 2;
+            if (quantity == answer.getStringAnswers().size()) {
+                if (quantity == rightAnswers.size()) {
+                    totalPrice += price;
+                } else if (rightAnswers.size() > 1 && quantity < rightAnswers.size() && quantity > 0) {
+                    totalPrice += price * quantity / rightAnswers.size();
+                }
             }
         }
         return totalPrice * 100 / maxPrice;
     }
 
+    public List<QuizResult> findByApplicant() {
+        User applicant = userService.getUserPrincipal();
+        return quizResultRepository.findAllByApplicantAndIsCompleted(applicant, true);
+    }
 }

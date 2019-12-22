@@ -36,6 +36,36 @@
             </div>
         </div>
     </div>
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Passed quizzes</h3>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <table class="tile_info">
+                            <tr th:each="passedQuiz: ${passedQuizzes}">
+                                <th th:text="${passedQuiz.test.name}"></th>
+                                <th th:text="${passedQuiz.test.subject}"></th>
+                                <th th:text="${passedQuiz.test.description}"></th>
+                                <th><time th:text="${passedQuiz.finished}"></time></th>
+                                <th th:text="${passedQuiz.totalRating}"></th>
+                                <th>
+                                    <a th:href="@{/desk/quiz/result/{path}(path=${passedQuiz.id})}">
+                                        <button class="btn-primary">Preview</button>
+                                    </a>
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
