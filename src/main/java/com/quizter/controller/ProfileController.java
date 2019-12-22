@@ -2,6 +2,7 @@ package com.quizter.controller;
 
 import com.quizter.dto.ProfileDto;
 import com.quizter.dto.response.MessageResponse;
+import com.quizter.entity.Profile;
 import com.quizter.service.UserService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,21 +23,22 @@ public class ProfileController {
 
     @GetMapping("/edit")
     public ModelAndView editProfilePage() {
-        log.info("Profile controller getEdit");
-        return new ModelAndView("profile-edit-page");
+        ModelAndView modelAndView = new ModelAndView("profile-edit-page");
+        Profile profile = userService.getUserPrincipal().getProfile();
+        modelAndView.addObject("profile", profile);
+        return modelAndView;
     }
 
     @GetMapping
     public ModelAndView profilePage() {
         ModelAndView modelAndView = new ModelAndView("profile-page");
-//        modelAndView.addObject("profileDto", profileDto);
-        //TODO render profile page
+        Profile profile = userService.getUserPrincipal().getProfile();
+        modelAndView.addObject("profile", profile);
         return modelAndView;
     }
 
     @PostMapping("/edit")
     public ResponseEntity<MessageResponse> editProfile(@RequestBody ProfileDto profileDto) {
-        log.info("Profile controller postEdit, DTO = " + profileDto.getFirstName());
         userService.saveProfile(profileDto);
         return ResponseEntity.ok(new MessageResponse("ok"));
     }

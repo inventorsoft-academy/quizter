@@ -8,7 +8,7 @@ function saveProfile(){
        url: myUrl,
        data: JSON.stringify(data),
        success: function () {
-          window.location.replace("/");
+          window.location.replace("/profile");
        },
        error: function (xhr, status, errorThrown) {
        console.log(xhr.responseJSON.message);
