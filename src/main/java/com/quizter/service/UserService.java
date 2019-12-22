@@ -20,6 +20,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +61,7 @@ public class UserService {
                         + tokenService.generateToken(user.getEmail(), CacheType.ACTIVATION).getToken());
     }
 
-    public Optional<User> findUserByEmail(String email) {
+    private Optional<User> findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
@@ -120,11 +121,10 @@ public class UserService {
     }
 
     public User getUserPrincipal() {
-        log.info("Fignia = " + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         try {
             Credentials credentials = (Credentials) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            return userRepository.findByEmail(credentials.getUsername()).orElseThrow();
-
+            return userRepository.findByEmail(credentials.getUsername())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         } catch (ClassCastException o_0) {
             return new User();
         }

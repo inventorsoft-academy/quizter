@@ -30,6 +30,7 @@ public class ProfileController {
     public ModelAndView profilePage() {
         ModelAndView modelAndView = new ModelAndView("profile-page");
 //        modelAndView.addObject("profileDto", profileDto);
+        //TODO render profile page
         return modelAndView;
     }
 

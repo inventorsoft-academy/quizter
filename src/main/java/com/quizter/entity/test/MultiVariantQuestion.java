@@ -20,7 +20,7 @@ import java.util.Map;
 @Setter
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@DiscriminatorValue("multivariant")
+@DiscriminatorValue("MULTIVARIANT")
 public class MultiVariantQuestion extends Question {
 
     @ElementCollection

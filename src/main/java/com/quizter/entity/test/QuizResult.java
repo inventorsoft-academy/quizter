@@ -6,10 +6,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Table(name = "quiz_result")
@@ -19,22 +24,23 @@ import java.util.Map;
 public class QuizResult {
 
     @Id
-    @GeneratedValue
-    long id;
+    String id;
 
     Instant start;
 
     Instant finished;
 
-    @ManyToOne
+    Boolean isCompleted;
+
+    @ManyToOne(cascade = CascadeType.ALL)
     User applicant;
 
     @ManyToOne
     Test test;
 
     @Column(nullable = false)
-    double mark;
+    double totalRating;
 
-    @ElementCollection
-    List<Answer> answers;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "quizResult")
+    List<ResultAnswer> resultAnswers;
 }
