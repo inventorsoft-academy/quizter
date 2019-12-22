@@ -42,54 +42,66 @@
             <button style="width: 30%; height: 40px; margin: 15px" class="btn-primary" onclick="proceed()">No</button>
         </div>
     </div>
-
     <div class="">
-        <div class="page-title" id="rowId">
-            <div class="title_center">
-                <h3 th:text="${quiz.name}"></h3>
-            </div>
-            <div class="clearfix"></div>
-            <div class="x_panel">
+        <div class="x_panel">
+            <div class="page-title" id="rowId">
+                <div class="title_center">
+                    <h3 th:text="${quiz.name}"></h3>
+                </div>
+
+                <div class="clearfix"></div>
+
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
-                        <tr th:each="question: ${quiz.questions}">
-                            <h2>Question#<span th:text="${quiz.questions.indexOf(question) + 1}"></span></h2>
-                            <div class="x_panel">
-                                <table class="tile_info">
-                                    <th th:text="${question.name}"></th>
-                                    <div th:if="${question.questionType == T(com.quizter.dictionary.QuestionType).CODE}">
-                                        <tr>
-                                            <table class="tile_info" style="height: 200px;">
-                                        <textarea class="resultAnswer" style="width: 100%; height: 180px;"
-                                                  th:questionType="${question.questionType}"
-                                                  th:questionId="${question.id}"
-                                                  th:name="answersArray"
-                                                  th:text="${question.codeTask}"></textarea>
-                                            </table>
+                        <table class="tile_info">
+                            <tr th:each="question: ${quiz.questions}">
+                                <td>
+                                    <h4>Question#<span th:text="${quiz.questions.indexOf(question) + 1}"></span></h4>
+                                    <p><span th:text="${question.name}"></span></p>
+                                    <table class="tile_info">
+                                        <tr th:if="${question.questionType == T(com.quizter.dictionary.QuestionType).MULTIVARIANT}">
+                                            <td>
+                                                <table class="tile_info">
+                                                    <tr th:each="answer: ${question.answers}">
+                                                        <td style="padding: 8px; width: 6%;">
+                                                            <div class="radio pull-left">
+                                                                <label>
+                                                                    <input type="checkbox" class="resultAnswer"
+                                                                           th:questionType="${question.questionType}"
+                                                                           th:questionId="${question.id}"
+                                                                           th:name="answersArray"
+                                                                           th:value="${answer.key}">
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td style="padding: 8px; width: 94%;"
+                                                            th:text="${answer.key}">
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
                                         </tr>
-                                    </div>
-                                    <div th:if="${question.questionType ==
-                                T(com.quizter.dictionary.QuestionType).MULTIVARIANT}">
-                                        <table class="">
-                                            <tr th:each="answer: ${question.answers}">
-                                                <th style="padding: 8px">
-                                                    <div class="radio pull-left">
-                                                        <label>
-                                                            <input type="checkbox" class="resultAnswer"
-                                                                   th:questionType="${question.questionType}"
-                                                                   th:questionId="${question.id}"
-                                                                   th:name="answersArray"
-                                                                   th:value="${answer.key}">
-                                                        </label>
-                                                    </div>
-                                                </th>
-                                                <th th:text="${answer.key}"></th>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </table>
-                            </div>
-                        </tr>
+
+                                        <tr th:if="${question.questionType == T(com.quizter.dictionary.QuestionType).CODE}">
+                                            <td>
+                                                <!--                                                <table class="tile_info" style="height: 200px;">-->
+                                                <table class="tile_info">
+                                                    <tr>
+                                                        <td style="padding: 8px; width: 10%;">
+                                                            <textarea class="resultAnswer" style="width: 100%; height: 180px;"
+                                                                      th:questionType="${question.questionType}"
+                                                                      th:questionId="${question.id}"
+                                                                      th:name="answersArray"
+                                                                      th:text="${question.codeTask}"></textarea>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>

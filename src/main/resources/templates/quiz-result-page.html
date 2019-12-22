@@ -9,54 +9,72 @@
 <body>
 <div class="right_col" role="main" data-layout-fragment="content">
     <div class="">
-        <div class="page-title" id="rowId">
-            <div class="title_center">
-                <h3 th:text="${quiz.test.name}"></h3>
-            </div>
-            <div class="clearfix"></div>
-            <div class="x_panel">
+        <div class="x_panel">
+            <div class="page-title" id="rowId">
+                <div class="title_center">
+                    <h3 th:text="${quiz.test.name}"></h3>
+                </div>
+
+                <div class="clearfix"></div>
+
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
-                        <tr th:each="question: ${quiz.test.questions}">
-                            <h2>Question#<span th:text="${quiz.test.questions.indexOf(question) + 1}"></span></h2>
-                            <div class="x_panel">
-                                <table class="tile_info">
-                                    <th th:text="${question.name}"></th>
-                                    <div th:if="${question.questionType == T(com.quizter.dictionary.QuestionType).CODE}">
-                                        <tr>
-                                            <table class="tile_info" style="height: 200px;">
-                                        <text class="resultAnswer" style="width: 100%; height: 180px; white-space: pre-wrap;"
-                                                  th:questionType="${question.questionType}"
-                                                  th:questionId="${question.id}"
-                                                  th:name="answersArray"
-                                                  th:text="${question.codeTask}"></text>
-                                            </table>
+                        <table class="tile_info" border="1">
+                            <tr th:each="question: ${quiz.test.questions}">
+                                <td>
+                                    <h5>Question#<span
+                                            th:text="${quiz.test.questions.indexOf(question) + 1}"></span>
+                                    </h5>
+                                    <p><span th:text="${question.name}"></span></p>
+                                    <table class="tile_info" border="1">
+                                        <tr th:if="${question.questionType == T(com.quizter.dictionary.QuestionType).MULTIVARIANT}">
+                                            <td>
+                                                <table class="tile_info" border="1">
+                                                    <tr th:each="answer: ${question.answers}">
+                                                        <td style="padding: 8px; width: 6%;">
+                                                            <div th:text="${quiz.resultAnswers.get(quiz.test.questions.indexOf(question))}"></div>
+                                                                <div th:if="${#lists.contains(quiz.resultAnswers.get(quiz.test.questions.indexOf(question)).stringAnswers, answer.key)}">
+                                                                    <div th:if="${quiz.resultAnswers.get(quiz.test.questions.indexOf(question)).question.answers.get(answer.key)}">
+                                                                        <div class="fa-hover col-md-3 col-sm-4  "><i
+                                                                                class="fa fa-check"
+                                                                                style="color: green;"></i>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div th:unless="${quiz.resultAnswers.get(quiz.test.questions.indexOf(question)).question.answers.get(answer.key)}">
+                                                                        <div class="fa-hover col-md-3 col-sm-4  "><i
+                                                                                class="fa fa-close"
+                                                                                style="color: red;"></i>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                        </td>
+                                                        <td style="padding: 8px; width: 94%;"
+                                                            th:text="${answer.key}">
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
                                         </tr>
-                                    </div>
-                                    <div th:if="${question.questionType ==
-                                T(com.quizter.dictionary.QuestionType).MULTIVARIANT}">
-                                        <table class="">
-                                            <tr th:each="answer: ${question.answers}">
-                                                <th style="padding: 8px">
-                                                    <div th:if="${#lists.contains(quiz.resultAnswers.get(quiz.test.questions.indexOf(question)).stringAnswers, answer.key)}">
-                                                        <div th:if="${quiz.resultAnswers.get(quiz.test.questions.indexOf(question)).question.answers.get(answer.key)}">
-                                                            <div class="fa-hover col-md-3 col-sm-4  "><i class="fa fa-check" style="color: green;"></i>
-                                                            </div>
-                                                        </div>
-                                                        <div th:unless="${quiz.resultAnswers.get(quiz.test.questions.indexOf(question)).question.answers.get(answer.key)}">
-                                                        <div class="fa-hover col-md-3 col-sm-4  "><i class="fa fa-close" style="color: red;"></i>
-                                                        </div>
-                                                        </div>
-
-                                                    </div>
-                                                </th>
-                                                <th th:text="${answer.key}"></th>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </table>
-                            </div>
-                        </tr>
+                                        <tr th:if="${question.questionType == T(com.quizter.dictionary.QuestionType).CODE}">
+                                            <td>
+                                                <table class="tile_info" border="1">
+                                                    <tr>
+                                                        <td style="padding: 8px; width: 10%;">
+                                                            <text class="resultAnswer"
+                                                                  style="width: 100%; height: 180px; white-space: pre-wrap;"
+                                                                  th:questionType="${question.questionType}"
+                                                                  th:questionId="${question.id}"
+                                                                  th:name="answersArray"
+                                                                  th:text="${question.codeTask}"></text>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
