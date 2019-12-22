@@ -57,7 +57,7 @@
                             <tr th:each="question: ${quiz.questions}">
                                 <td>
                                     <h4>Question#<span th:text="${quiz.questions.indexOf(question) + 1}"></span></h4>
-                                    <p><span th:text="${question.name}"></span></p>
+                                    <p><b><span th:text="${question.name}"></span></b></p>
                                     <table class="tile_info">
                                         <tr th:if="${question.questionType == T(com.quizter.dictionary.QuestionType).MULTIVARIANT}">
                                             <td>
