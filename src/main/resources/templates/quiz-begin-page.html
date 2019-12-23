@@ -8,7 +8,6 @@
 </head>
 
 <body>
-
 <div class="right_col" role="main" data-layout-fragment="content">
     <div class="row" style="margin-right: 40px;">
         <div class="" style="position: fixed;
@@ -20,65 +19,14 @@
                 height: 150px;
                 width: 13%;
                 box-shadow: 10px 10px 5px grey;">
-<!--            <h3>Time left</h3>-->
-<!--            <h1 id="time" th:text="${duration}"></h1>-->
             <h3>Duration</h3>
             <h1 id="time"><span th:text="${duration}"></span> min</h1>
-            <button id="startId" style="width: 80%; height: 40px; margin: 15px" class="btn-primary" th:onclick="start()">Begin</button><br>
-<!--            <button id="endId" style="display: none; width: 100%; height: 40px" class="btn-primary" onclick="endQuiz()">End quiz</button>-->
+            <button id="startId" style="width: 80%; height: 40px; margin: 15px" class="btn-primary"
+                    th:onclick="start()">Begin
+            </button>
+            <br>
         </div>
     </div>
-
-<!--    <div class="">-->
-<!--        <div class="page-title" id="rowId" style="display: none;">-->
-<!--            <div class="title_center">-->
-<!--                <h3 th:text="${quiz.name}"></h3>-->
-<!--            </div>-->
-<!--            <div class="clearfix"></div>-->
-<!--            <div class="row">-->
-<!--                <div class="col-md-12 col-sm-12 col-xs-12">-->
-<!--                    <tr th:each="question: ${quiz.questions}">-->
-<!--                        <h2>Question#<span th:text="${quiz.questions.indexOf(question) + 1}"></span></h2>-->
-<!--                        <div class="x_panel">-->
-<!--                            <table class="tile_info">-->
-<!--                                <th th:text="${question.name}"></th>-->
-
-<!--                                <tr th:if="${question.questionType == T(com.quizter.dictionary.QuestionType).CODE}">-->
-<!--                                    <table class="" style="height: 200px;">-->
-<!--                                        <textarea class="resultAnswer" style="width: 100%; height: 180px;"-->
-<!--                                                  th:questionType="${question.questionType}"-->
-<!--                                                  th:questionId="${question.id}"-->
-<!--                                                  th:name="answersArray"-->
-<!--                                                  th:text="${question.codeTask}"></textarea>-->
-<!--                                    </table>-->
-<!--                                </tr>-->
-
-<!--                                <div th:if="${question.questionType ==-->
-<!--                                T(com.quizter.dictionary.QuestionType).MULTIVARIANT}">-->
-<!--                                    <table class="">-->
-<!--                                        <tr th:each="answer: ${question.answers}">-->
-<!--                                            <th style="padding: 8px">-->
-<!--                                                <div class="radio pull-left">-->
-<!--                                                    <label>-->
-<!--                                                        <input type="checkbox" class="resultAnswer"-->
-<!--                                                               th:questionType="${question.questionType}"-->
-<!--                                                               th:questionId="${question.id}"-->
-<!--                                                               th:name="answersArray"-->
-<!--                                                               th:value="${answer.key}">-->
-<!--                                                    </label>-->
-<!--                                                </div>-->
-<!--                                            </th>-->
-<!--                                            <th th:text="${answer.key}"></th>-->
-<!--                                        </tr>-->
-<!--                                    </table>-->
-<!--                                </div>-->
-<!--                            </table>-->
-<!--                        </div>-->
-<!--                    </tr>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
 </div>
 </body>
 </html>

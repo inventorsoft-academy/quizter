@@ -8,8 +8,10 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 @Slf4j
@@ -41,5 +43,12 @@ public class ProfileController {
     public ResponseEntity<MessageResponse> editProfile(@RequestBody ProfileDto profileDto) {
         userService.saveProfile(profileDto);
         return ResponseEntity.ok(new MessageResponse("ok"));
+    }
+
+    @PutMapping("/edit")
+    public ResponseEntity<MessageResponse> savePhoto(@RequestParam("file") MultipartFile file){
+        log.info("file = " + file);
+        userService.savePhoto(file);
+        return ResponseEntity.ok().build();
     }
 }

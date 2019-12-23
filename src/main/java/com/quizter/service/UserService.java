@@ -24,7 +24,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 @Slf4j
@@ -127,6 +132,19 @@ public class UserService {
                     .orElseThrow();
         } catch (ClassCastException o_0) {
             return new User();
+        }
+    }
+
+    public void savePhoto(MultipartFile file) {
+        byte[] bytes = new byte[0];
+        try {
+            bytes = file.getBytes();
+            Path path = Paths.get("src/main/resources/static/images/User"
+                    + getUserPrincipal().getId() + ".jpg");
+            Files.write(path, bytes);
+        } catch (IOException e) {
+            //todo Exception
+            e.printStackTrace();
         }
     }
 
