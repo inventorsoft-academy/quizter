@@ -26,11 +26,11 @@
                 <div class="col-md-5 col-sm-5">
                     <div class="input-group">
                         <div th:if="${profile.photoUrl != null}">
-                        <img th:src="${profile.photoUrl}" src="/images/no_user.jpg" alt="..."
-                             class="img-circle profile_img">
+                            <img th:src="${profile.photoUrl}" src="/images/no_user.jpg" alt="..."
+                                 class="img-circle profile_img">
                         </div>
                         <div th:if="${profile.photoUrl == null}">
-                            <img src="/images/no_user.jpg" alt="..."
+                            <img src="/images/img.jpg" alt="..."
                                  class="img-circle profile_img">
                         </div>
                     </div>
@@ -40,16 +40,16 @@
                 </div>
                 <div class="col-md-5 col-sm-5">
                     <div class="input-group">
-                        <h2 th:text="${profile.firstName}">User name</h2>
+                        <h2><b><span th:text="${profile.firstName + ' ' +profile.lastName}"></span></b></h2>
                     </div>
                     <div class="input-group">
-                        <h2 th:text="${profile.lastName}">User last name</h2>
+                        <h2><i>Specialization: </i><b><span th:text="${profile.sphere}"></span></b></h2>
                     </div>
                     <div class="input-group">
-                        <h2 th:text="${profile.sphere}">Sphere</h2>
+                        <h2><i>Tel: </i><b><span th:text="${profile.phoneNumber}"></span></b></h2>
                     </div>
                     <div class="input-group">
-                        <h2 th:text="${profile.phoneNumber}">User phone number</h2>
+                        <h2><i>Email: </i><b><span th:text="${profile.user.email}"></span></b></h2>
                     </div>
                 </div>
             </div>
