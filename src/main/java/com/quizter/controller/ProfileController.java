@@ -3,6 +3,7 @@ package com.quizter.controller;
 import com.quizter.dto.ProfileDto;
 import com.quizter.dto.response.MessageResponse;
 import com.quizter.entity.Profile;
+import com.quizter.service.ProfileService;
 import com.quizter.service.UserService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class ProfileController {
 
     UserService userService;
+    ProfileService profileService;
 
     @GetMapping("/edit")
     public ModelAndView editProfilePage() {
@@ -46,9 +48,7 @@ public class ProfileController {
     }
 
     @PutMapping("/edit")
-    public ResponseEntity<MessageResponse> savePhoto(@RequestParam("file") MultipartFile file){
-        log.info("file = " + file);
-        userService.savePhoto(file);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<MessageResponse> savePhoto(@RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok(new MessageResponse(profileService.savePhoto(file)));
     }
 }

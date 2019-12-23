@@ -20,26 +20,41 @@
     </div>
 
     <div class="clearfix"></div>
-
-    <div class="title_left">
-        <div class="col-md-5 col-sm-5">
-            <div class="input-group">
-                <h2 th:text="${profile.firstName}">User name</h2>
+    <div class="x_panel">
+        <div class="title_left">
+            <div class="row">
+                <div class="col-md-5 col-sm-5">
+                    <div class="input-group">
+                        <div th:if="${profile.photoUrl != null}">
+                        <img th:src="${profile.photoUrl}" src="/images/no_user.jpg" alt="..."
+                             class="img-circle profile_img">
+                        </div>
+                        <div th:if="${profile.photoUrl == null}">
+                            <img src="/images/no_user.jpg" alt="..."
+                                 class="img-circle profile_img">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <a href="/profile/edit">Edit</a>
+                    </div>
+                </div>
+                <div class="col-md-5 col-sm-5">
+                    <div class="input-group">
+                        <h2 th:text="${profile.firstName}">User name</h2>
+                    </div>
+                    <div class="input-group">
+                        <h2 th:text="${profile.lastName}">User last name</h2>
+                    </div>
+                    <div class="input-group">
+                        <h2 th:text="${profile.sphere}">Sphere</h2>
+                    </div>
+                    <div class="input-group">
+                        <h2 th:text="${profile.phoneNumber}">User phone number</h2>
+                    </div>
+                </div>
             </div>
-            <div class="input-group">
-                <h2 th:text="${profile.lastName}">User last name</h2>
-            </div>
-            <div class="input-group">
-                <h2 th:text="${profile.sphere}">Sphere</h2>
-            </div>
-            <div class="input-group">
-                <h2 th:text="${profile.phoneNumber}">User phone number</h2>
-            </div>
-            <a href="/profile/edit">Edit</a>
         </div>
     </div>
-</div>
-
 
 </body>
 </html>

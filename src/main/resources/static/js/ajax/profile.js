@@ -46,8 +46,10 @@ function fire_ajax_submit() {
         cache: false,
         timeout: 600000,
         success: function (data) {
-        //get file name
             document.getElementById('modal').style.display = "none";
+            document.getElementById('defaultPhoto').style.display = "none";
+            document.getElementById('userPhoto').setAttribute("th:src", data.message);
+            document.getElementById('userPhoto').style.display = "block";
         },
         error: function (e) {
             alert("ERROR");

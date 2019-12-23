@@ -115,13 +115,10 @@ public class UserService {
     public void saveProfile(ProfileDto profileDto) {
         ModelMapper modelMapper = new ModelMapper();
         Profile profile = modelMapper.map(profileDto, Profile.class);
-        log.info("ProfileDto = " + profileDto.getFirstName());
         User user = getUserPrincipal();
         user.setProfile(profile);
         profile.setUser(user);
         profile.setId(user.getId());
-        log.info("Profile = " + profile);
-        log.info("User = " + user);
         userRepository.save(user);
     }
 
@@ -132,19 +129,6 @@ public class UserService {
                     .orElseThrow();
         } catch (ClassCastException o_0) {
             return new User();
-        }
-    }
-
-    public void savePhoto(MultipartFile file) {
-        byte[] bytes = new byte[0];
-        try {
-            bytes = file.getBytes();
-            Path path = Paths.get("src/main/resources/static/images/User"
-                    + getUserPrincipal().getId() + ".jpg");
-            Files.write(path, bytes);
-        } catch (IOException e) {
-            //todo Exception
-            e.printStackTrace();
         }
     }
 
