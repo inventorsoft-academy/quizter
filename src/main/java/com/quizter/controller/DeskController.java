@@ -1,6 +1,9 @@
 package com.quizter.controller;
 
 import com.quizter.dto.test.TestDto;
+import com.quizter.entity.test.QuizResult;
+import com.quizter.mapper.test.TestMapper;
+import com.quizter.service.test.QuizResultService;
 import com.quizter.service.test.TestService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,12 +20,15 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DeskController {
 
-    TestService testService;
+    TestMapper testMapper;
+
+    QuizResultService quizResultService;
 
     @GetMapping("/desk")
     public ModelAndView deskPage() {
         ModelAndView modelAndView = new ModelAndView("desk-page");
-        List<TestDto> quizzes = testService.findAllTest();
+        List<TestDto> quizzes = testMapper.toTestListDto(quizResultService.getTestAccessibleTestsForStudent());
+
         modelAndView.addObject("quizzes", quizzes);
         return modelAndView;
     }

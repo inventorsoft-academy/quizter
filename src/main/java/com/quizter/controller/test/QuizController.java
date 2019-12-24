@@ -1,5 +1,6 @@
 package com.quizter.controller.test;
 
+import com.quizter.dto.test.InviteDto;
 import com.quizter.dto.test.QuizResultDto;
 import com.quizter.dto.response.MessageResponse;
 import com.quizter.service.test.QuizResultService;

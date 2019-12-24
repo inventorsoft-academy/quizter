@@ -52,6 +52,8 @@ public class UserService {
 
     SecurityService securityService;
 
+    GroupService groupService;
+
     public void registerUser(RegistrationUserDto registrationUserDto) {
         validationService.registrationValidation(registrationUserDto);
         User user = userMapper.toUser(registrationUserDto);
@@ -120,6 +122,8 @@ public class UserService {
         log.info("Profile = " + profile);
         log.info("User = " + user);
         userRepository.save(user);
+
+        groupService.setUserToGroup(user);
     }
 
     public User getUserPrincipal() {

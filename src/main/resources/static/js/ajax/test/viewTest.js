@@ -5,7 +5,7 @@ $(document).ready(function () {
 function getTest() {
     var dataId = $("#viewPage").attr("data_id");
 
-    $.getJSON("/cabinet/tests/" + dataId,
+    $.getJSON("/cabinet/rest-tests/" + dataId,
         function (data) {
             var testName = Mustache.render("{{name}}", data);
             $("#testName").html(testName);

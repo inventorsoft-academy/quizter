@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -52,18 +53,33 @@ public class QuizResultService {
         return quizResultId;
     }
 
-    public String beginQuiz(Long testId) {
+    public void addAccessToTest(User applicant, Long testId) {
         QuizResult quizResult = new QuizResult();
-        quizResult.setIsCompleted(false);
+
         quizResult.setId(createQuizResultId());
-		User user = userService.getUserPrincipal();
-		quizResult.setApplicant(user);
-        quizResult.setStart(Instant.now());
+        quizResult.setIsCompleted(false);
+        quizResult.setApplicant(applicant);
         Test test = testMapper.toTest(testService.findTestById(testId));
-        long minutes = test.getDuration();
-        quizResult.setFinished(Instant.now().plus(Duration.ofMinutes(minutes)));
         quizResult.setTest(test);
+
+        quizResultRepository.save(quizResult);
+    }
+
+    public String beginQuiz(Long testId) {
+        QuizResult quizResult = quizResultRepository.findQuizResultByTestId(testId);
+
+        quizResult.setStart(Instant.now());
+        long minutes = quizResult.getTest().getDuration();
+        quizResult.setFinished(Instant.now().plus(Duration.ofMinutes(minutes)));
+
         return quizResultRepository.save(quizResult).getId();
+    }
+
+    public List<Test> getTestAccessibleTestsForStudent() {
+        List<Test> tests = new ArrayList<>();
+        quizResultRepository.findAll().forEach(quizResult -> tests.add(quizResult.getTest()));
+
+        return tests;
     }
 
     public void updateQuiz(String quizResultId, List<QuizResultDto> quizResultDtos) {
@@ -72,7 +88,7 @@ public class QuizResultService {
         quizResultRepository.save(quizResult);
     }
 
-    private List<ResultAnswer> getResultAnswers(QuizResult quizResult, List<QuizResultDto> quizResultDtos){
+    private List<ResultAnswer> getResultAnswers(QuizResult quizResult, List<QuizResultDto> quizResultDtos) {
         final ResultAnswer[] resultAnswers = new ResultAnswer[1];
         return quizResultDtos.stream()
                 .map(dto -> {

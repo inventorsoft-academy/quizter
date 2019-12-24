@@ -59,7 +59,7 @@
                                         <a> {{version}} </a>
                                     </td>
                                     <td style="text-align:center">
-                                        <a id="inviteStudents" data-th-href="@{/cabinet/student-groups}"  type="button" class="btn btn-success btn-xs "><i
+                                        <a  type="button" class="btnInviteStudentsInTestTable btn btn-success btn-xs " data-id={{id}}><i
                                                 class="fa fa-child"></i> Invite</a>
                                     </td>
                                     <td sec:authorize="hasAuthority('TEACHER')">

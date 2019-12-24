@@ -123,7 +123,7 @@ function testDescriptionClick() {
 function createTest(name, subject, description, questions, duration) {
     if (window.confirm("Do you really want to create test?")) {
         $.ajax({
-            url: '/cabinet/tests/',
+            url: '/cabinet/rest-tests/',
             type: 'POST',
             enctype: 'multipart/form-data',
             data: JSON.stringify({
