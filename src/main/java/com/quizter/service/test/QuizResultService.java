@@ -23,10 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -42,6 +40,7 @@ public class QuizResultService {
     ResultMapper resultMapper;
     QuizResultRepository quizResultRepository;
     ResultAnswerRepository resultAnswerRepository;
+    List<TestQuestionEvaluator> evaluators;
 
     public Optional<QuizResult> findById(String quizResultId) {
         return quizResultRepository.findById(quizResultId);
@@ -142,18 +141,19 @@ public class QuizResultService {
         return quizResultRepository.findAllByApplicantAndIsCompleted(applicant, true);
     }
 
-    public double evaluate(final Test test, Map<Long, String> answers) {
-//		List<AbstractQuestion> abstractQuestions = test.getQuestions();
-//		Map<Long, AbstractQuestion> questionById = abstractQuestions.stream().collect(Collectors.toMap(AbstractQuestion::getId, Function.identity()));
-//		Map<Long, Double> awers = new HashMap<>();
-//		answers.forEach((questionId, answer) -> {
-//			AbstractQuestion abstractQuestion = questionById.get(questionId);
-//			TestQuestionEvaluator evaluator = evaluators.stream().filter(eval -> eval.isApplicable(abstractQuestion)).findFirst()
-//					.orElseThrow(() -> new IllegalStateException("Unsupported question type"));
-//			awers.put(questionId, evaluator.evaluate(abstractQuestion, answer));
-//		});
-//		return awers.values().stream().mapToDouble(Double::doubleValue).sum();
-        return 0;
+    public double evaluateResult(final QuizResult quizResult, Map<Long, String> answers) {
+		List<Question> questions = quizResult.getTest().getQuestions();
+		Map<Long, Question> questionById = questions.stream().collect(Collectors.toMap(Question::getId, Function.identity()));
+		Map<Long, Double> resultAnswers = new HashMap<>();
+		answers.forEach((questionId, answer) -> {
+			Question question = questionById.get(questionId);
+			TestQuestionEvaluator evaluator = evaluators.stream()
+                    .filter(eval -> eval.isApplicable(question))
+                    .findFirst()
+					.orElseThrow(() -> new IllegalStateException("Unsupported question type"));
+			resultAnswers.put(questionId, evaluator.evaluate(question, answer));
+		});
+		return resultAnswers.values().stream().mapToDouble(Double::doubleValue).sum();
     }
 
     @Component
