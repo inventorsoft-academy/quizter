@@ -18,6 +18,13 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,7 +63,10 @@ public class TestService<T extends Question> {
 		test.setDescription(testDto.getDescription());
 		test.setSubject(testDto.getSubject());
 		test.setQuestions(new ArrayList<>(createQuestions(testDto.getQuestions())));
-
+		test.getQuestions().
+				stream().
+				filter(question -> question instanceof CodeQuestion).
+				forEach(question -> writeCodingQuestionIntoClass((CodeQuestion) question));
 		testRepository.save(test);
 	}
 
@@ -73,7 +83,10 @@ public class TestService<T extends Question> {
 		test.setDescription(testDto.getDescription());
 		test.setQuestions(new ArrayList<>(createQuestions(testDto.getQuestions())));
 		test.setDescription(testDto.getDescription());
-
+		test.getQuestions().
+				stream().
+				filter(question -> question instanceof CodeQuestion).
+				forEach(question -> writeCodingQuestionIntoClass((CodeQuestion) question));
 		testRepository.save(test);
 	}
 
@@ -98,6 +111,17 @@ public class TestService<T extends Question> {
 			}
 
 		}).collect(Collectors.toList());
+
+	}
+
+	private void writeCodingQuestionIntoClass(CodeQuestion codeQuestion) {
+		try {
+
+			Files.write(Paths.get("/home/intern/chorney/backet/project/src/main/java/Foo.java"), codeQuestion.getCodeTask().getBytes());
+			Files.write(Paths.get("/home/intern/chorney/backet/project/src/test/java/FooTest.java"), codeQuestion.getUnitTest().getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
 
