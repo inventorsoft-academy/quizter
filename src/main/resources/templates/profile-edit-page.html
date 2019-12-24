@@ -73,8 +73,11 @@
             </div>
             <div class="col-md-5 col-sm-5">
                 <div class="input-group">
-                    <img th:src="${profile.photoUrl}" src="/images/img.jpg" alt="..."
-                         class="img-circle profile_img" onclick="addPhoto()" id="userPhoto">
+                    <img th:src="${(profile.photoUrl != null &&
+                     !#strings.isEmpty(profile.photoUrl) &&
+                     !#strings.equals(profile.photoUrl, 'none')) ? profile.photoUrl : '/images/img.jpg'}"
+                         alt="o_O"
+                         class="img-circle profile_img" onclick="addPhoto()" id="userPhoto"/>
                 </div>
             </div>
         </div>
