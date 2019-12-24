@@ -41,5 +41,4 @@ public class GroupMapper {
         return mapper.map(students, targetListType);
     }
 
-
 }

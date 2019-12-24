@@ -30,19 +30,20 @@
                                 <p>
                                     <a aria-controls="collapseExample" aria-expanded="false" class="btn btn-primary"
                                        data-toggle="collapse"
-                                       href="#setSphere" role="button">
-                                        Create Sphere
+                                       href="#setSubject" role="button">
+                                        Create Subject
                                     </a>
                                 </p>
-                                <div class="collapse" id="setSphere">
+                                <div class="collapse" id="setSubject">
                                     <div class="card card-body col-md-6">
-                                        <input class="form-control" id="inputSphere"
+                                        <input class="form-control" id="inputSubject"
                                                placeholder="Set some name"
                                                required="required" type="text"/>
                                     </div>
-                                    <button class="btn btn-success" type="submit">Submit</button>
+                                    <button id="btnSubjectCreation" class="btn btn-success" type="submit">Submit</button>
                                 </div>
                             </div>
+
                             <div class="form-group">
                                 <p>
                                     <a aria-controls="collapseExample" aria-expanded="false" class="btn btn-primary"
@@ -51,16 +52,25 @@
                                         Create Group
                                     </a>
                                 </p>
+
                                 <div class="collapse" id="setGroup">
-                                    <div class="card card-body col-md-6">
-                                        <select class="custom-select form-control" id="inputGroupSelect" required>
-                                            <option value=""></option>
-                                            <option value="1">Java</option>
-                                        </select>
-                                    </div>
-                                    <a class="btn btn-success" id="btnCreateGroup"
-                                       type="button"> Submit
-                                    </a>
+                                    <form class="form-inline" id="setTestDescription">
+                                        <div class="form-group">
+                                            <label class="control-label">Name*</label>
+                                            <input class="form-control" id="inputGroupName"
+                                                   placeholder="Set some name" required="required" type="text"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="card card-body col-md-6">
+                                                <select class="custom-select form-control" id="inputGroupSelect"
+                                                        required>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <a class="btn btn-success" id="btnCreateGroup"
+                                           type="button"> Submit
+                                        </a>
                                 </div>
                             </div>
                         </form>
@@ -70,7 +80,6 @@
         </div>
     </div>
 </div>
-
 
 
 </body>

@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.List;
 
@@ -27,6 +28,9 @@ public class Group {
 
     @Column(unique = true, nullable = false)
     String name;
+
+    @OneToOne
+    Subject subject;
 
     @OneToMany
     List<User> students;
