@@ -2,11 +2,9 @@ package com.quizter.service;
 
 import com.quizter.dictionary.CacheType;
 import com.quizter.dto.PasswordDto;
-import com.quizter.dto.ProfileDto;
 import com.quizter.dto.RegistrationUserDto;
 import com.quizter.dto.UserEmailDto;
 import com.quizter.entity.Credentials;
-import com.quizter.entity.Profile;
 import com.quizter.entity.User;
 import com.quizter.exception.NoUserWithThatIDException;
 import com.quizter.exception.TokenException;
@@ -18,18 +16,11 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Optional;
 
 @Slf4j
@@ -109,21 +100,6 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow();
         user.setPassword(passwordEncoder.encode(passwordDto.getPassword()));
         tokenService.removeToken(user.getEmail(), CacheType.RECOVERY);
-        userRepository.save(user);
-    }
-
-    public void saveProfile(ProfileDto profileDto) {
-        ModelMapper modelMapper = new ModelMapper();
-        User user = getUserPrincipal();
-        String photoUrl = "none";
-        if (user.getProfile() != null) {
-            photoUrl = "/images/user" + user.getId() + ".jpg";
-        }
-        Profile profile = modelMapper.map(profileDto, Profile.class);
-        profile.setPhotoUrl(photoUrl);
-        user.setProfile(profile);
-        profile.setUser(user);
-        profile.setId(user.getId());
         userRepository.save(user);
     }
 

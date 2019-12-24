@@ -4,6 +4,7 @@ import com.quizter.dictionary.QuestionType;
 import com.quizter.dto.test.QuizResultDto;
 import com.quizter.entity.User;
 import com.quizter.entity.test.MultiVariantQuestion;
+import com.quizter.entity.test.Question;
 import com.quizter.entity.test.QuizResult;
 import com.quizter.entity.test.ResultAnswer;
 import com.quizter.entity.test.Test;
@@ -16,6 +17,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -105,7 +107,7 @@ public class QuizResultService {
         return (quizResult.getFinished().getEpochSecond() - Instant.now().getEpochSecond());
     }
 
-    private double evaluate(QuizResult quizResult) {
+    public double evaluate(QuizResult quizResult) {
         final Double maxPrice = quizResult.getResultAnswers().stream()
                 .filter(answer -> QuestionType.MULTIVARIANT.equals(answer.getQuestion().getQuestionType()))
                 .map(answer -> answer.getQuestion().getPrice())
@@ -138,5 +140,32 @@ public class QuizResultService {
     public List<QuizResult> findByApplicant() {
         User applicant = userService.getUserPrincipal();
         return quizResultRepository.findAllByApplicantAndIsCompleted(applicant, true);
+    }
+
+    public double evaluate(final Test test, Map<Long, String> answers) {
+//		List<AbstractQuestion> abstractQuestions = test.getQuestions();
+//		Map<Long, AbstractQuestion> questionById = abstractQuestions.stream().collect(Collectors.toMap(AbstractQuestion::getId, Function.identity()));
+//		Map<Long, Double> awers = new HashMap<>();
+//		answers.forEach((questionId, answer) -> {
+//			AbstractQuestion abstractQuestion = questionById.get(questionId);
+//			TestQuestionEvaluator evaluator = evaluators.stream().filter(eval -> eval.isApplicable(abstractQuestion)).findFirst()
+//					.orElseThrow(() -> new IllegalStateException("Unsupported question type"));
+//			awers.put(questionId, evaluator.evaluate(abstractQuestion, answer));
+//		});
+//		return awers.values().stream().mapToDouble(Double::doubleValue).sum();
+        return 0;
+    }
+
+    @Component
+    private static final class StandardEvaluator implements TestQuestionEvaluator {
+        @Override
+        public boolean isApplicable(Question question) {
+            return question instanceof MultiVariantQuestion;
+        }
+
+        @Override
+        public double evaluate(Question question, String answer) {
+            return MultiVariantQuestion.class.cast(question).getAnswers().get(answer) ? question.getPrice() : 0.0;
+        }
     }
 }

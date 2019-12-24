@@ -33,7 +33,7 @@ public class ProfileController {
     @GetMapping("/edit")
     public ModelAndView editProfilePage() {
         ModelAndView modelAndView = new ModelAndView("profile-edit-page");
-        Profile profile = userService.getUserPrincipal().getProfile();
+        Profile profile = profileService.getCurrentUserProfile();
         modelAndView.addObject("profile", profile);
         return modelAndView;
     }
@@ -41,14 +41,14 @@ public class ProfileController {
     @GetMapping
     public ModelAndView profilePage() {
         ModelAndView modelAndView = new ModelAndView("profile-page");
-        Profile profile = userService.getUserPrincipal().getProfile();
+        Profile profile = profileService.getCurrentUserProfile();
         modelAndView.addObject("profile", profile);
         return modelAndView;
     }
 
     @PostMapping("/edit")
     public ResponseEntity<MessageResponse> editProfile(@RequestBody ProfileDto profileDto) {
-        userService.saveProfile(profileDto);
+        profileService.saveProfile(profileDto);
         return ResponseEntity.ok(new MessageResponse("ok"));
     }
 

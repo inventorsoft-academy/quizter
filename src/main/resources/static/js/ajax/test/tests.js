@@ -1,8 +1,5 @@
 $(document).ready(function () {
-    window.onload = function () {
         getAllTests()
-    };
-
     $('#delete').click(function (event) {
         event.preventDefault();
         deleteTest();
