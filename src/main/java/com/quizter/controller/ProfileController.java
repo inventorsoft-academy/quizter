@@ -27,7 +27,6 @@ import org.springframework.web.servlet.ModelAndView;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProfileController {
 
-    UserService userService;
     ProfileService profileService;
 
     @GetMapping("/edit")

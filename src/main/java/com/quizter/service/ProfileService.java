@@ -66,7 +66,7 @@ public class ProfileService {
 
     public Profile getCurrentUserProfile() {
         User user = userService.getUserPrincipal();
-        if(user.getProfile() == null){
+        if (user.getProfile() == null) {
             Profile profile = new Profile();
             user.setProfile(profile);
             profile.setUser(user);
