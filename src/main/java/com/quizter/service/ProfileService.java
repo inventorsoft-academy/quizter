@@ -33,14 +33,14 @@ public class ProfileService {
             bytes = file.getBytes();
             Path path = Paths.get("src/main/resources/static/images/user" + user.getId() + ".jpg");
             Files.write(path, bytes);
+            path = Paths.get("target/classes/static/images/user" + user.getId() + ".jpg");
+            Files.write(path, bytes);
         } catch (IOException e) {
             log.info("Image not saved, " + e);
         }
         Profile profile = user.getProfile();
         profile.setPhotoUrl("/images/user" + user.getId() + ".jpg");
-        log.info("URL = " + "/images/user" + user.getId() + ".jpg");
         profileRepository.save(profile);
-        log.info("Profile = " + profileRepository.findById(profile.getId()).orElseThrow().getPhotoUrl());
         return profileRepository.findById(profile.getId()).orElseThrow().getPhotoUrl();
     }
 

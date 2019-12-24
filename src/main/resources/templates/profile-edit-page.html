@@ -19,16 +19,16 @@
         </div>
     </div>
 
-    <div id="modal" style="position: fixed;
+    <div id="modal" style="position: absolute;
                 display: none;
                 z-index:100;
-                background: #EDEDED;
                 padding: 12px;
                 text-align: center;
-                margin-top: 100px;
-                margin-left: 20%;
-                height: 150px;
+                margin-top: 6%;
+                margin-left: 14%;
                 width: 25%;
+                background-color: #2A3F54;
+                border-radius: 5px;
                 box-shadow: 10px 10px 5px grey;">
         <form method="POST" enctype="multipart/form-data" id="fileUploadForm">
             <label><H2>Choose the photo</H2></label>
@@ -36,12 +36,12 @@
                 <input id="file" type="file" name="file"/>
             </div>
             <div style="margin: 6px;">
-                <input class="btn-primary" type="submit" value="Submit" id="btnSubmit"/>
-            </div>
-            <div style="margin: 6px;">
-                <button onclick="cancelPhoto()">Close<i class="fa fa-close"></i></button>
+                <input class="btn btn-primary" type="submit" value="Submit" id="btnSubmit"/>
             </div>
         </form>
+        <div style="margin: 6px;">
+            <button class="btn btn-secondary" onclick="cancelPhoto()">Close<i class="fa fa-close"></i></button>
+        </div>
     </div>
 
     <div class="clearfix"></div>
@@ -62,24 +62,19 @@
                            id="sphere" class="form-control" placeholder="sphere">
                 </div>
                 <div class="input-group">
-                    <input type="text" th:value="${profile.phoneNumber}"
-                           id="phoneNumber" class="form-control" placeholder="phone number">
-                </div>
-                <div class="input-group">
-                    <button class="btn-primary" onclick="saveProfile()">Save</button>
+                    <div class="input-group">
+                        <input type="text" th:value="${profile.phoneNumber}"
+                               id="phoneNumber" class="form-control" placeholder="phone number">
+                    </div>
+                    <div class="input-group">
+                        <button class="btn btn-primary" onclick="saveProfile()">Save <i class="fa fa-save"></i></button>
+                    </div>
                 </div>
             </div>
-
             <div class="col-md-5 col-sm-5">
                 <div class="input-group">
-                    <div th:if="${profile.photoUrl != null}">
-                        <img th:src="${profile.photoUrl}" alt="..."
-                             class="img-circle profile_img" onclick="addPhoto()" id="userPhoto">
-                    </div>
-                    <div th:if="${profile.photoUrl == null}">
-                        <img src="/images/img.jpg" alt="..."
-                             class="img-circle profile_img" onclick="addPhoto()" id="defaultPhoto">
-                    </div>
+                    <img th:src="${profile.photoUrl}" src="/images/img.jpg" alt="..."
+                         class="img-circle profile_img" onclick="addPhoto()" id="userPhoto">
                 </div>
             </div>
         </div>

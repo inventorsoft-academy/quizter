@@ -25,17 +25,11 @@
             <div class="row">
                 <div class="col-md-5 col-sm-5">
                     <div class="input-group">
-                        <div th:if="${profile.photoUrl != null}">
-                            <img th:src="${profile.photoUrl}" src="/images/no_user.jpg" alt="..."
-                                 class="img-circle profile_img">
-                        </div>
-                        <div th:if="${profile.photoUrl == null}">
-                            <img src="/images/img.jpg" alt="..."
-                                 class="img-circle profile_img">
-                        </div>
+                        <img th:src="${profile.photoUrl}" src="/images/img.jpg" alt="..."
+                             class="img-circle profile_img" onclick="addPhoto()" id="userPhoto">
                     </div>
                     <div class="input-group">
-                        <a href="/profile/edit">Edit</a>
+                        <a href="/profile/edit"><button class="btn btn-primary">Edit <i class="fa fa-edit"></i></button></a>
                     </div>
                 </div>
                 <div class="col-md-5 col-sm-5">
@@ -55,6 +49,6 @@
             </div>
         </div>
     </div>
-
+</div>
 </body>
 </html>

@@ -12,18 +12,16 @@
     <div class="row" style="margin-right: 40px;">
         <div class="" style="position: fixed;
                 z-index:100;
-                background: #EDEDED;
                 text-align: center;
                 margin-top: 55px;
                 margin-left: 55%;
-                height: 150px;
                 width: 13%;
+                background-color: #2A3F54;
+                border-radius: 5px;
                 box-shadow: 10px 10px 5px grey;">
-            <h3>Duration</h3>
-            <h1 id="time"><span th:text="${duration}"></span> min</h1>
-            <button id="startId" style="width: 80%; height: 40px; margin: 15px" class="btn-primary"
-                    th:onclick="start()">Begin
-            </button>
+            <h3 style="color: white;">Duration</h3>
+            <h1 style="color: white;" id="time"><span th:text="${duration}"></span> min</h1>
+            <button id="startId" class="btn btn-primary" th:onclick="start()">Begin</button>
             <br>
         </div>
     </div>

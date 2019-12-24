@@ -22,7 +22,7 @@ function addPhoto(){
 }
 
 function cancelPhoto(){
-document.getElementById('modal').style.display = "none";
+    document.getElementById('modal').style.display = "none";
 }
 
 $(document).ready(function () {
@@ -46,13 +46,10 @@ function fire_ajax_submit() {
         cache: false,
         timeout: 600000,
         success: function (data) {
-            document.getElementById('modal').style.display = "none";
-            document.getElementById('defaultPhoto').style.display = "none";
-            document.getElementById('userPhoto').setAttribute("th:src", data.message);
-            document.getElementById('userPhoto').style.display = "block";
+            window.location.reload();
         },
         error: function (e) {
-            alert("ERROR");
+            alert("photo upload error!");
         }
     });
 

@@ -13,33 +13,30 @@
         <H6 id="duration" th:text="${duration}" hidden="hidden"></H6>
         <div class="" style="position: fixed;
                 z-index:100;
-                background: #EDEDED;
                 text-align: center;
                 margin-top: 55px;
                 margin-left: 55%;
-                height: 150px;
                 width: 13%;
+                background-color: #2A3F54;
+                border-radius: 5px;
                 box-shadow: 10px 10px 5px grey;">
-            <h3>Time left</h3>
-            <h1 id="time"></h1>
-            <button id="endId" style="width: 80%; height: 40px; margin: 15px"
-                    class="btn-primary" onclick="endQuiz()">End quiz
-            </button>
+            <h3 style="color: white;">Time left</h3>
+            <h1 style="color: white;" id="time"></h1>
+            <button id="endId" class="btn btn-primary" onclick="endQuiz()">Finish quiz</button>
         </div>
         <div class="" id="modal" style="position: fixed;
                 display: none;
                 z-index:100;
-                background: #EDEDED;
                 text-align: center;
                 margin-top: 100px;
                 margin-left: 20%;
-                height: 150px;
                 width: 25%;
+                background-color: #2A3F54;
+                border-radius: 5px;
                 box-shadow: 10px 10px 5px grey;">
-            <h4>Are You sure you want to end quiz?</h4>
-            <button style="width: 30%; height: 40px; margin: 15px" class="btn-primary" onclick="finishQuiz()">Yes
-            </button>
-            <button style="width: 30%; height: 40px; margin: 15px" class="btn-primary" onclick="proceed()">No</button>
+            <h4 style="color: white;">Are You sure you want to end quiz?</h4>
+            <button class="btn btn-primary" onclick="finishQuiz()">Yes</button>
+            <button class="btn btn-primary" onclick="proceed()">No</button>
         </div>
     </div>
     <div class="">
@@ -84,7 +81,6 @@
 
                                         <tr th:if="${question.questionType == T(com.quizter.dictionary.QuestionType).CODE}">
                                             <td>
-                                                <!--                                                <table class="tile_info" style="height: 200px;">-->
                                                 <table class="tile_info">
                                                     <tr>
                                                         <td style="padding: 8px; width: 10%;">

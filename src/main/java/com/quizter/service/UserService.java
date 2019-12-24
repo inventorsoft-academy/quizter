@@ -114,8 +114,13 @@ public class UserService {
 
     public void saveProfile(ProfileDto profileDto) {
         ModelMapper modelMapper = new ModelMapper();
-        Profile profile = modelMapper.map(profileDto, Profile.class);
         User user = getUserPrincipal();
+        String photoUrl = "none";
+        if (user.getProfile() != null) {
+            photoUrl = "/images/user" + user.getId() + ".jpg";
+        }
+        Profile profile = modelMapper.map(profileDto, Profile.class);
+        profile.setPhotoUrl(photoUrl);
         user.setProfile(profile);
         profile.setUser(user);
         profile.setId(user.getId());
