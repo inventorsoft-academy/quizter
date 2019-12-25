@@ -11,15 +11,10 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Base64;
 
 @Slf4j
@@ -41,7 +36,7 @@ public class ProfileService {
     UserService userService;
     UserRepository userRepository;
     ProfileRepository profileRepository;
-    PhotoService photoService;
+    ImageService imageService;
     PhotoRepository photoRepository;
     ValidationService validationService;
 
@@ -66,7 +61,7 @@ public class ProfileService {
             Profile profile = new Profile();
             Photo photo = null;
             try {
-                photo = photoService.getDefaultPhoto(user);
+                photo = imageService.getDefaultPhoto(user);
             } catch (IOException e) {
                 e.printStackTrace();
             }

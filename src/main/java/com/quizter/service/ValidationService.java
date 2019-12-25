@@ -1,5 +1,6 @@
 package com.quizter.service;
 
+import com.quizter.dto.AvatarDto;
 import com.quizter.dto.PasswordDto;
 import com.quizter.dto.ProfileDto;
 import com.quizter.dto.RegistrationUserDto;
@@ -13,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -127,6 +129,11 @@ public class ValidationService {
 
     public void validateProfile(ProfileDto profileDto){
         Map<String, String> validationResult = validate(profileDto);
+        handle(validationResult);
+    }
+
+    public void validateImage(AvatarDto avatarDto){
+        Map<String, String> validationResult = validate(avatarDto);
         handle(validationResult);
     }
 

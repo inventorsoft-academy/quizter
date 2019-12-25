@@ -1,10 +1,11 @@
 package com.quizter.controller;
 
+import com.quizter.annotation.ValidImage;
 import com.quizter.dto.ProfileDto;
 import com.quizter.dto.response.MessageResponse;
 import com.quizter.entity.Photo;
 import com.quizter.entity.Profile;
-import com.quizter.service.PhotoService;
+import com.quizter.service.ImageService;
 import com.quizter.service.ProfileService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -31,7 +32,7 @@ import java.util.Base64;
 public class ProfileController {
 
     ProfileService profileService;
-    PhotoService photoService;
+    ImageService imageService;
 
     @GetMapping("/edit")
     public ModelAndView editProfilePage() {
@@ -57,7 +58,7 @@ public class ProfileController {
 
     @PutMapping(value = "/edit")
     public ResponseEntity<String> savePhoto(@RequestParam("file") MultipartFile file) {
-        Photo photo = photoService.savePhoto(file);
+        Photo photo = imageService.savePhoto(file);
         byte[] data = photo.getData();
         String base64data = Base64.getEncoder().encodeToString(data);
         return ResponseEntity.ok(base64data);

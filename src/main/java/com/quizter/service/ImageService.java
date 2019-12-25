@@ -1,5 +1,6 @@
 package com.quizter.service;
 
+import com.quizter.dto.AvatarDto;
 import com.quizter.entity.Photo;
 import com.quizter.entity.User;
 import com.quizter.exception.FileUploadException;
@@ -23,17 +24,20 @@ import java.io.IOException;
 @Transactional
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PhotoService {
+public class ImageService {
 
     UserService userService;
     PhotoRepository photoRepository;
+    ValidationService validationService;
 
-    public Photo savePhoto(MultipartFile file) {
+    public Photo savePhoto(MultipartFile multipartFile) {
+        AvatarDto avatarDto = new AvatarDto(multipartFile);
+        validationService.validateImage(avatarDto);
+        MultipartFile file = avatarDto.getFile();
         User user = userService.getUserPrincipal();
         String fileName = "user" + user.getId();
         try {
             if (fileName.contains("..")) {
-                //todo https://stackoverflow.com/questions/40355743/file-upload-in-spring-boot-uploading-validation-and-exception-handling
                 throw new IOException("Sorry! Filename contains invalid path sequence " + fileName);
             }
 

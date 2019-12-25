@@ -57,8 +57,12 @@ function fire_ajax_submit() {
             document.getElementById("userPhoto").src = "data:image/jpg;base64," + avatar;
             document.getElementById('modal').style.display = "none";
         },
-        error: function (data, textStatus, xhr) {
-        console.log('photo upload error');
+        error: function (xhr, status, errorThrown) {
+        console.log(JSON.stringify(xhr));
+            if(xhr.responseJSON.message === "Validation error") {
+                var data = xhr.responseJSON.fieldErrors;
+                $('#uploadError').text(data['file.uploadError']);
+            }
         }
     });
 
