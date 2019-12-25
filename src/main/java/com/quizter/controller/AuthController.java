@@ -31,7 +31,7 @@ public class AuthController {
 			case ADMIN:
 				return "redirect:/admin";
 			case TEACHER:
-				return "redirect:/teacher";
+				return "redirect:/cabinet";
 			case STUDENT:
 				return "redirect:/desk";
 			default:

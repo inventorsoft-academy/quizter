@@ -1,8 +1,6 @@
 package com.quizter;
 
 import com.quizter.util.AppConstants;
-import com.quizter.util.ProjReader;
-import com.quizter.util.UnZipUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

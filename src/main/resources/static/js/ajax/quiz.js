@@ -1,87 +1,153 @@
-function endQuiz() {
-    confirm("Are You sure you want to end quiz?");
-    var data = new Map();
-    var answers = [];
-    var previous_question = 'empty';
-    $('input[name="answersArray"]:checked').each(function () {
 
-        var question = $(this).attr("question");
-        if (question === previous_question) {
-            answers.push($(this).val());
-        } else if (previous_question === 'empty') {
-            answers.push(JSON.stringify({
-                id : $("#question-id").text(),
-                name: $("#question-name").text(),
-                answer:$(this).val(),
-                answerType : "MULTIVARIANT"
-            }));
-            previous_question = question;
-        } else if (question !== previous_question) {
-            console.log(JSON.stringify(data));
-            answers.push(JSON.stringify({
-                id : $("#question-id").text(),
-                name: $("#question-name").text(),
-                answer:$(this).val(),
-                answerType : "MULTIVARIANT"
-            }));
-            previous_question = question;
-        }
-    });
-    console.log(answers);
-    $("textarea").each(function () {
-        console.log($("#coding-id").val());
-        var question = $(this).attr("question");
-        if (question === previous_question) {
-            answers.push($(this).val());
-        } else if (previous_question === 'empty') {
-            answers.push(JSON.stringify({
-                id : $("#coding-id").text(),
-                name: $("#coding-name").text(),
-                answer:$(this).val(),
-                answerType : "CODE"
-            }));
-            previous_question = question;
-        } else if (question !== previous_question) {
-            answers.push(JSON.stringify({
-                id : $("#coding-id").text(),
-                name: $("#coding-name").text(),
-                answer:$(this).val(),
-                answerType : "CODE"
-            }));
-            previous_question = question;
-        }
+function endQuiz(){
+    document.getElementById('modal').style.display = "block";
+}
 
+function proceed(){
+    document.getElementById('modal').style.display = "none";
+}
+
+function finishQuiz(){
+    document.getElementById('modal').style.display = "none";
+   var questionType;
+   var questionId;
+   var answers = [];
+   var result = [];
+   var previousQuestionId = 'empty';
+
+   $('.resultAnswer').each(function() {
+       questionType = $(this).attr("questionType");
+
+   if("MULTIVARIANT" === questionType) {
+   questionId =$(this).attr("questionId");
+   if (questionId !== previousQuestionId){
+   previousQuestionId = questionId;
+   $('input[questionId='+questionId+']:checked').each(function() {
+        answers.push($(this).val());
     });
-    data.set($("#id-test").text(),answers);
-    console.log(Object.fromEntries(data));
+    var data ={};
+    data.questionType = questionType;
+    data.questionId = questionId;
+    data.answers = answers;
+    result.push(data);
+    answers = [];
+    }
+   }
+
+   if("CODE" === questionType) {
+       questionId =$(this).attr("questionId");
+       answers = [];
+       answers.push($(this).val());
+       data ={};
+       data.questionType = questionType;
+       data.questionId = questionId;
+       data.answers = answers;
+       result.push(data);
+   }
+
+  });
+
     var myUrl = document.URL;
-    $.ajax({
-        contentType: "application/json; charset=utf-8",
-        type: "POST",
-        url: myUrl,
-        data: JSON.stringify({
-            testId: $("#id-test"),
-            answers: JSON.stringify(mapToObj(data))
-        }),
-        success: function (response) {
-            alert("Quiz finished with rating " + response.message);
-        },
-        error: function (xhr, status, errorThrown) {
-            console.log(xhr.responseJSON.message);
-            alert("ERROR");
+       $.ajax({
+           contentType:"application/json; charset=utf-8",
+           type: "POST",
+           url: myUrl,
+           data: JSON.stringify(result),
+           success: function (response) {
+              clearInterval(countdownTimer);
+              document.getElementById('endId').style.display = "none";
+              document.getElementById('rowId').style.display = "none";
+              document.getElementById('time').style.display = "none";
+              alert("Quiz finished with rating " + response.message);
+              window.location.href = "/desk/";
+           },
+           error: function (xhr, status, errorThrown) {
+           console.log(xhr.responseJSON.message);
+             alert("ERROR");
+           }
+       })
+}
+
+$(document).ready(function () {
+    duration = parseInt($('#duration').text());
+    startTimer();
+    var ckbox = $('#checkbox');
+
+    $('input[name="answersArray"]').on('click',function () {
+       var answers = [];
+       var questionType;
+       var questionId;
+       questionId =$(this).attr("questionId");
+       questionType =$(this).attr("questionType");
+        if (this.checked) {
+            $('input[questionId='+questionId+']').each(function(){
+            if(this.checked) {
+                answers.push($(this).val());
+            }
+            });
+            saveResult(questionId, questionType, answers);
+        } else {
+            $('input[questionId='+questionId+']').each(function(){
+                        if(this.checked) {
+                            answers.push($(this).val());
+                        }
+                        });
+            saveResult(questionId, questionType, answers);
         }
-    })
-}
-function mapToObj(inputMap) {
-    let obj = {};
-
-    inputMap.forEach(function(value, key){
-        obj[key] = value
     });
+});
 
-    return obj;
+function saveResult(questionId, questionType, answers){
+   var result = [];
+   var data = {};
+   data.questionType = questionType;
+   data.questionId = questionId;
+   data.answers = answers;
+   result.push(data);
+   putToBack(result);
+
 }
 
-function startQuiz() {
+function putToBack(data){
+ var myUrl = document.URL;
+   $.ajax({
+       contentType:"application/json; charset=utf-8",
+       type: "PUT",
+       url: myUrl,
+       data: JSON.stringify(data),
+       success: function (response) {
+            clearInterval(countdownTimer);
+            duration = parseInt(response.message);
+            startTimer();
+       },
+       error: function (xhr, status, errorThrown) {
+       console.log(xhr.responseJSON.message);
+         alert("ERROR");
+       }
+   })
+}
 
+var countdownTimer;
+var duration;
+
+function startTimer(){
+var timer = duration, minutes, seconds;
+countdownTimer = setInterval(function () {
+            minutes = parseInt(timer / 60, 10)
+            seconds = parseInt(timer % 60, 10);
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            document.getElementById('time').textContent = minutes + ":" + seconds;
+
+            if (--timer < 60) {
+                $('#time').css({"color": "red"})
+            }
+            if (timer <= 0) {
+            document.getElementById('time').textContent = "00:00";
+            clearInterval(countdownTimer);
+            finishQuiz();
+            }
+        }, 1000);
 }

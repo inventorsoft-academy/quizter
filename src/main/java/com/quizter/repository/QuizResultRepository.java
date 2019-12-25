@@ -1,13 +1,15 @@
 package com.quizter.repository;
 
 import com.quizter.entity.test.QuizResult;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface QuizResultRepository extends CrudRepository<QuizResult, Long> {
+public interface QuizResultRepository extends CrudRepository<QuizResult, String> {
 
+    @EntityGraph(attributePaths = "applicant")
     Optional<QuizResult> findByTestName(String testName);
 }

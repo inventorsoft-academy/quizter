@@ -5,7 +5,7 @@ import com.quizter.dto.test.QuizResultDto;
 import com.quizter.dto.response.MessageResponse;
 import com.quizter.dto.test.QuestionDto;
 import com.quizter.dto.test.TestDto;
-import com.quizter.service.test.QuizService;
+import com.quizter.service.test.QuizResultService;
 import com.quizter.service.test.TestService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class QuizController {
 
 	TestService testService;
-	QuizService quizService;
+	QuizResultService quizService;
 
 	@GetMapping("{id}")
 	public ModelAndView quizPage(@PathVariable Long id) {

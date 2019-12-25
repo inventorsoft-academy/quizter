@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-layout-decorate="~{layout/home-layout}" lang="en">
+<html data-layout-decorate="~{layout/home-layout}" lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Tests</title>
@@ -40,30 +40,33 @@
                                 <th style="width: 1%">#</th>
                                 <th style="width: 20%">Subject</th>
                                 <th>Name</th>
-                                <th>Status</th>
-                                <th style="width: 20%">#Edit</th>
+                                <th>Version</th>
+                                <th sec:authorize="hasAuthority('TEACHER')" style="width: 20%">#Edit</th>
                             </tr>
                             </thead>
                             <tbody id="tBody">
-                                <script id="tBodyScript" type="text/x-mustache-template">
-                                    <tr>
-                                        <td> #</td>
-                                        <td>
-                                            <a> {{subject}} </a>
-                                        </td>
-                                        <td>
-                                            <a> {{name}} </a>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-success btn-xs" type="button">Success</button>
-                                        </td>
-                                        <td >
-                                            <a href="#" class="view btn btn-primary btn-xs" data-id ={{id}}><i class="fa fa-folder"></i> View </a>
-                                            <a href="#" class="edit btn btn-info btn-xs" data-id = {{id}}><i class="fa fa-pencil"></i> Edit </a>
-                                            <a href ="#" class="delete btn btn-danger btn-xs" data-id = {{id}}> <i class="fa fa-trash-o"></i> Delete </a>
-                                        </td>
-                                    </tr>
-                                </script>
+                            <script id="tBodyScript" type="text/x-mustache-template">
+                                <tr>
+                                    <td> #</td>
+                                    <td>
+                                        <a> {{subject}} </a>
+                                    </td>
+                                    <td>
+                                        <a> {{name}} </a>
+                                    </td>
+                                    <td>
+                                        <a> {{version}} </a>
+                                    </td>
+                                    <td sec:authorize="hasAuthority('TEACHER')">
+                                        <a href="#" class="view btn btn-primary btn-xs" data-id={{id}}><i
+                                                class="fa fa-folder"></i> View </a>
+                                        <a href="#" class="edit btn btn-info btn-xs" data-id={{id}}><i
+                                                class="fa fa-pencil"></i> Edit </a>
+                                        <a href="#" class="delete btn btn-danger btn-xs" data-id={{id}}> <i
+                                                class="fa fa-trash-o"></i> Delete </a>
+                                    </td>
+                                </tr>
+                            </script>
                             </tbody>
                         </table>
                     </div>
