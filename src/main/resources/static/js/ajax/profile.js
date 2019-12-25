@@ -12,7 +12,13 @@ function saveProfile(){
           window.location.replace("/profile");
        },
        error: function (xhr, status, errorThrown) {
-       console.log(xhr.responseJSON.message);
+       console.log(JSON.stringify(xhr));
+       if(xhr.responseJSON.message === "Validation error"){
+           $('#firstNameError').text(xhr.responseJSON.fieldErrors.firstNameError);
+           $('#lastNameError').text(xhr.responseJSON.fieldErrors.lastNameError);
+           $('#phoneNumberError').text(xhr.responseJSON.fieldErrors.phoneNumberError);
+           $('#sphereError').text(xhr.responseJSON.fieldErrors.sphereError);
+       }
        }
    })
 }

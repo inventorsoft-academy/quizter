@@ -10,8 +10,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,8 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.util.Base64;
 
 @Slf4j
@@ -64,27 +61,6 @@ public class ProfileController {
         byte[] data = photo.getData();
         String base64data = Base64.getEncoder().encodeToString(data);
         return ResponseEntity.ok(base64data);
-
-
-//        Photo photo = photoService.savePhoto(file);
-//
-//        byte[] data = photo.getData();
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-//
-//        //TODO render saved photo
-//        log.info("file = " + file);
-//
-//        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-//        headers.add("Pragma", "no-cache");
-//        headers.add("Expires", "0");
-//        InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(photo.getData()));
-//        log.info("resource = " + resource);
-//        return ResponseEntity.ok()
-//                .header(String.valueOf(headers))
-//                .contentLength(photo.getData().length)
-//                .contentType(MediaType.parseMediaType("application/octet-stream"))
-//                .body(resource);
     }
 
 }

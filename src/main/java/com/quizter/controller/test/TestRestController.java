@@ -1,8 +1,10 @@
 package com.quizter.controller.test;
 
+import com.quizter.dto.InviteDto;
 import com.quizter.dto.response.MessageResponse;
 import com.quizter.dto.test.QuestionDto;
 import com.quizter.dto.test.TestDto;
+import com.quizter.service.test.QuizResultService;
 import com.quizter.service.test.TestService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,12 +24,14 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cabinet/tests/")
+@RequestMapping("/cabinet/rest-tests/")
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class TestRestController {
 
 	TestService testService;
+
+	QuizResultService quizResultService;
 
 	@GetMapping
 	public ResponseEntity<List<TestDto>> getAllTest() {
@@ -58,6 +62,14 @@ public class TestRestController {
 		testService.deleteTest(id);
 
 		return ResponseEntity.noContent().build();
+	}
+
+	@PostMapping("/invite-group")
+	public ResponseEntity<MessageResponse> inviteStudentsToTest(@RequestBody InviteDto inviteDto) {
+		inviteDto.getStudents().forEach(e ->
+				quizResultService.addAccessToTest(e, inviteDto.getTestId()));
+
+		return ResponseEntity.ok(new MessageResponse("Group was invited successfully"));
 	}
 
 }

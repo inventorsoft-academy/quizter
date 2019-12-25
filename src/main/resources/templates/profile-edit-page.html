@@ -50,19 +50,23 @@
         <div class="row" style="text-align: center;">
             <div class="col-md-5 col-sm-5">
                 <div class="input-group">
+                    <p id="firstNameError" style="color: red"></p>
                     <input type="text" th:value="${profile.firstName}"
                            id="firstName" class="form-control" placeholder="first name">
                 </div>
                 <div class="input-group">
+                    <p id="lastNameError" style="color: red"></p>
                     <input type="text" th:value="${profile.lastName}"
                            id="lastName" class="form-control" placeholder="last name">
                 </div>
                 <div class="input-group">
+                    <p id="sphereError" style="color: red"></p>
                     <input type="text" th:value="${profile.sphere}"
                            id="sphere" class="form-control" placeholder="sphere">
                 </div>
                 <div class="input-group">
                     <div class="input-group">
+                        <p id="phoneNumberError" style="color: red"></p>
                         <input type="text" th:value="${profile.phoneNumber}"
                                id="phoneNumber" class="form-control" placeholder="phone number">
                     </div>

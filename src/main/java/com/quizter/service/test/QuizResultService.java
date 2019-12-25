@@ -23,7 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -54,22 +59,39 @@ public class QuizResultService {
         return quizResultId;
     }
 
-    public String beginQuiz(Long testId) {
+
+    public void addAccessToTest(User applicant, Long testId) {
         QuizResult quizResult = new QuizResult();
-        quizResult.setIsCompleted(false);
+
         quizResult.setId(createQuizResultId());
-        User user = userService.getUserPrincipal();
-        quizResult.setApplicant(user);
-        quizResult.setStart(Instant.now());
+        quizResult.setIsCompleted(false);
+        quizResult.setApplicant(applicant);
         Test test = testMapper.toTest(testService.findTestById(testId));
-        long minutes = test.getDuration();
-        quizResult.setFinished(Instant.now().plus(Duration.ofMinutes(minutes)));
         quizResult.setTest(test);
+
+        quizResultRepository.save(quizResult);
+    }
+
+    public String beginQuiz(Long testId) {
+        QuizResult quizResult = quizResultRepository.findQuizResultByTestId(testId);
+
+        quizResult.setStart(Instant.now());
+        long minutes = quizResult.getTest().getDuration();
+        quizResult.setFinished(Instant.now().plus(Duration.ofMinutes(minutes)));
+
         return quizResultRepository.save(quizResult).getId();
     }
 
+    public List<Test> getTestAccessibleTestsForStudent() {
+        List<Test> tests = new ArrayList<>();
+        quizResultRepository.findAll().forEach(quizResult -> tests.add(quizResult.getTest()));
+
+        return tests;
+    }
+
     public void updateQuiz(String quizResultId, List<QuizResultDto> quizResultDtos) {
-        QuizResult quizResult = quizResultRepository.findById(quizResultId).orElseThrow();
+        QuizResult quizResult = quizResultRepository.findById(quizResultId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid QuizResult Id:" + quizResultId));
         quizResult.setResultAnswers(getResultAnswers(quizResult, quizResultDtos));
         quizResultRepository.save(quizResult);
     }

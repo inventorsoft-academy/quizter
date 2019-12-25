@@ -1,5 +1,6 @@
 $(document).ready(function () {
-        getAllTests()
+    getAllTests()
+
     $('#delete').click(function (event) {
         event.preventDefault();
         deleteTest();
@@ -8,7 +9,7 @@ $(document).ready(function () {
 });
 
 function getAllTests() {
-    $.getJSON("/cabinet/tests/",
+    $.getJSON("/cabinet/rest-tests/",
         function (data) {
             var tBodyScript = $('#tBodyScript').html();
             $.each(data, function (index, test) {
@@ -19,6 +20,7 @@ function getAllTests() {
                 $("a.delete").unbind("click", deleteTest).bind("click", deleteTest);
                 $("a.view").unbind("click", viewTest).bind("click", viewTest);
                 $("a.edit").unbind("click", editTest).bind("click", editTest);
+                $("a.btnInviteStudentsInTestTable").unbind("click", inviteStudentInTestTable).bind("click", inviteStudentInTestTable);
             });
         }
     );
@@ -62,6 +64,19 @@ function editTest(clickedElement) {
         data: JSON.stringify(dataId),
         success: function () {
             location.href = "/cabinet/test-edit/" + dataId
+        }
+    })
+}
+
+function inviteStudentInTestTable(clickedElement) {
+    var dataId = $(clickedElement.target).attr("data-id");
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        type: "GET",
+        url: '/cabinet/tests/student-groups',
+        data: JSON.stringify(dataId),
+        success: function () {
+            location.href = "/cabinet/tests/student-groups/" + dataId
         }
     })
 }

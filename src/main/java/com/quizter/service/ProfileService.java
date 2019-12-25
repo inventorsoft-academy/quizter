@@ -43,8 +43,12 @@ public class ProfileService {
     ProfileRepository profileRepository;
     PhotoService photoService;
     PhotoRepository photoRepository;
+    ValidationService validationService;
+
 
     public void saveProfile(ProfileDto profileDto) {
+        log.info("profileDto = " + profileDto);
+        validationService.validateProfile(profileDto);
         Profile profile = getCurrentUserProfile();
         Photo photo = profile.getPhoto();
         profile.setFirstName(profileDto.getFirstName());

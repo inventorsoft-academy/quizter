@@ -34,14 +34,15 @@
 
                         <p>Simple table with test listing </p>
 
-                        <table class="table table-striped table-bordered projects" id="testTable">
+                        <table class="table table-striped table-bordered" id="testTable">
                             <thead>
                             <tr>
                                 <th style="width: 1%">#</th>
                                 <th style="width: 20%">Subject</th>
                                 <th>Name</th>
                                 <th>Version</th>
-                                <th sec:authorize="hasAuthority('TEACHER')" style="width: 20%">#Edit</th>
+                                <th>Students</th>
+                                <th style="width: 20%">#Edit</th>
                             </tr>
                             </thead>
                             <tbody id="tBody">
@@ -57,12 +58,20 @@
                                     <td>
                                         <a> {{version}} </a>
                                     </td>
-                                    <td sec:authorize="hasAuthority('TEACHER')">
-                                        <a href="#" class="view btn btn-primary btn-xs" data-id={{id}}><i
+                                    <td style="text-align:center">
+                                        <a type="button" class="btnInviteStudentsInTestTable btn btn-success btn-xs "
+                                           data-id={{id}}><i
+                                                class="fa fa-child"></i> Invite</a>
+                                    </td>
+                                    <td>
+                                        <a sec:authorize="hasAuthority('TEACHER')" href="#"
+                                           class="view btn btn-primary btn-xs" data-id={{id}}><i
                                                 class="fa fa-folder"></i> View </a>
-                                        <a href="#" class="edit btn btn-info btn-xs" data-id={{id}}><i
+                                        <a sec:authorize="hasAuthority('TEACHER')" href="#"
+                                           class="edit btn btn-info btn-xs" data-id={{id}}><i
                                                 class="fa fa-pencil"></i> Edit </a>
-                                        <a href="#" class="delete btn btn-danger btn-xs" data-id={{id}}> <i
+                                        <a sec:authorize="hasAuthority('ADMIN')" href="#"
+                                           class="delete btn btn-danger btn-xs" data-id={{id}}> <i
                                                 class="fa fa-trash-o"></i> Delete </a>
                                     </td>
                                 </tr>

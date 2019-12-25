@@ -1,6 +1,7 @@
 package com.quizter.service;
 
 import com.quizter.dto.PasswordDto;
+import com.quizter.dto.ProfileDto;
 import com.quizter.dto.RegistrationUserDto;
 import com.quizter.dto.test.QuestionDto;
 import com.quizter.dto.test.TestDto;
@@ -121,6 +122,11 @@ public class ValidationService {
             validationResult.put("TestCreationFormError", "Please set new version");
         }
 
+        handle(validationResult);
+    }
+
+    public void validateProfile(ProfileDto profileDto){
+        Map<String, String> validationResult = validate(profileDto);
         handle(validationResult);
     }
 
