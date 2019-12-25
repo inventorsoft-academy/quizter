@@ -5,11 +5,13 @@ $(document).ready(function () {
            type: 'GET',
            url: '/profile/bar',
            success: function (response) {
-           console.log('response ===' + JSON.stringify(response));
-//           if (response.photoUrl !== null && response.photoUrl !== 'none'){
-//                document.getElementById('photoHeader').setAttribute('src', response.photoUrl);
-//                document.getElementById('photoSideBar').setAttribute('src', response.photoUrl);
-//           }
+
+
+           if (localStorage.getItem('avatar') !== null && localStorage.getItem('avatar') !== 'undefined'){
+                var avatar = localStorage.getItem('avatar');
+                document.getElementById('photoHeader').src = "data:image/jpg;base64," + avatar;
+                document.getElementById('photoSideBar').src = "data:image/jpg;base64," + avatar;
+           }
            if (response.firstName !== null && response.lastName !== null) {
                 document.getElementById('userMailSideBar').innerHTML  = response.firstName + ' ' + response.lastName;
                 document.getElementById('userMailHeader').innerHTML  = response.firstName + ' ' + response.lastName;

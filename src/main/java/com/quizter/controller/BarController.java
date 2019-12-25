@@ -1,6 +1,6 @@
 package com.quizter.controller;
 
-import com.quizter.entity.Profile;
+import com.quizter.dto.ProfileDto;
 import com.quizter.service.ProfileService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ public class BarController {
     ProfileService profileService;
 
     @GetMapping("/profile/bar")
-    public ResponseEntity<Profile> getData(){
-        return ResponseEntity.ok(profileService.getCurrentUserProfile());
+    public ResponseEntity<ProfileDto> getData(){
+        return ResponseEntity.ok(profileService.getProfileDto());
     }
 }

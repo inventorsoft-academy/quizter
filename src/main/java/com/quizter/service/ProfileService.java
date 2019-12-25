@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Base64;
 
 @Slf4j
 @Service
@@ -76,5 +77,14 @@ public class ProfileService {
             return profile;
         }
         return user.getProfile();
+    }
+
+    public ProfileDto getProfileDto() {
+        ProfileDto profileDto = new ProfileDto();
+        User user = userService.getUserPrincipal();
+        profileDto.setFirstName(user.getProfile().getFirstName());
+        profileDto.setLastName(user.getProfile().getLastName());
+        profileDto.setPhoto(Base64.getEncoder().encodeToString(user.getProfile().getPhoto().getData()));
+        return profileDto;
     }
 }

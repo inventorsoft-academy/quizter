@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
+import java.util.Base64;
 
 @Slf4j
 @RestController
@@ -57,33 +58,33 @@ public class ProfileController {
         return ResponseEntity.ok(new MessageResponse("ok"));
     }
 
-    @PutMapping("/edit")
-    public ResponseEntity<InputStreamResource> savePhoto(@RequestParam("file") MultipartFile file) {
+    @PutMapping(value = "/edit")
+    public ResponseEntity<String> savePhoto(@RequestParam("file") MultipartFile file) {
+        Photo photo = photoService.savePhoto(file);
+        byte[] data = photo.getData();
+        String base64data = Base64.getEncoder().encodeToString(data);
+        return ResponseEntity.ok(base64data);
+
+
 //        Photo photo = photoService.savePhoto(file);
+//
 //        byte[] data = photo.getData();
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-//        return new ResponseEntity<>(data, headers, HttpStatus.OK);
-
-
-        Photo photo = photoService.savePhoto(file);
-
-        byte[] data = photo.getData();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-
-        //TODO render saved photo
-        log.info("file = " + file);
-
-        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        headers.add("Pragma", "no-cache");
-        headers.add("Expires", "0");
-        InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(photo.getData()));
-        log.info("resource = " + resource);
-        return ResponseEntity.ok()
-                .header(String.valueOf(headers))
-                .contentLength(photo.getData().length)
-                .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .body(resource);
+//
+//        //TODO render saved photo
+//        log.info("file = " + file);
+//
+//        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+//        headers.add("Pragma", "no-cache");
+//        headers.add("Expires", "0");
+//        InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(photo.getData()));
+//        log.info("resource = " + resource);
+//        return ResponseEntity.ok()
+//                .header(String.valueOf(headers))
+//                .contentLength(photo.getData().length)
+//                .contentType(MediaType.parseMediaType("application/octet-stream"))
+//                .body(resource);
     }
+
 }

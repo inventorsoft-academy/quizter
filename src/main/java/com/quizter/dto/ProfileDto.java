@@ -19,5 +19,5 @@ public class ProfileDto {
 
     String phoneNumber;
 
-    MultipartFile file;
+    String photo;
 }
