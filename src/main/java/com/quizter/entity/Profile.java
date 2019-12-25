@@ -28,7 +28,7 @@ public class Profile {
     User user;
 
     String firstName;
-
++
     String lastName;
 
     String photoUrl;
