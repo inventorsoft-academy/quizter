@@ -9,7 +9,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,9 +25,13 @@ import java.nio.file.Paths;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProfileService {
 
-    UserService userService;
     UserRepository userRepository;
+
     ProfileRepository profileRepository;
+
+    UserService userService;
+
+    GroupService groupService;
 
     public void saveProfile(ProfileDto profileDto) {
         Profile profile = getCurrentUserProfile();
@@ -43,6 +46,8 @@ public class ProfileService {
         profile.setPhotoUrl(photoUrl);
         profile.setId(profile.getUser().getId());
         profileRepository.save(profile);
+
+        groupService.setUserToGroup(profile.getUser());
     }
 
     public String savePhoto(MultipartFile file) {
@@ -66,7 +71,7 @@ public class ProfileService {
 
     public Profile getCurrentUserProfile() {
         User user = userService.getUserPrincipal();
-        if(user.getProfile() == null){
+        if (user.getProfile() == null) {
             Profile profile = new Profile();
             user.setProfile(profile);
             profile.setUser(user);

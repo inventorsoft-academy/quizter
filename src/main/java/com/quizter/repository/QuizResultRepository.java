@@ -16,4 +16,7 @@ public interface QuizResultRepository extends CrudRepository<QuizResult, String>
     Optional<QuizResult> findByTestName(String testName);
 
     List<QuizResult> findAllByApplicantAndIsCompleted(User applicant, Boolean complited);
+
+    QuizResult findQuizResultByTestId(Long id);
+
 }
