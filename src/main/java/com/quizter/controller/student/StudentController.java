@@ -1,7 +1,9 @@
 package com.quizter.controller.student;
 
 import com.quizter.dto.test.TestDto;
-import com.quizter.service.test.TestService;
+import com.quizter.entity.test.QuizResult;
+import com.quizter.mapper.test.TestMapper;
+import com.quizter.service.test.QuizResultService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -10,20 +12,26 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StudentController {
 
-    TestService testService;
+    TestMapper testMapper;
+
+    QuizResultService quizResultService;
 
     @GetMapping("/desk")
     public ModelAndView deskPage() {
         ModelAndView modelAndView = new ModelAndView("desk-page");
-        List<TestDto> quizzes = testService.findAllTest();
+
+        List<TestDto> quizzes = testMapper.toTestListDto(quizResultService.getTestAccessibleTestsForStudent());
+        List<QuizResult> passedQuizzes = quizResultService.findByApplicant();
+
         modelAndView.addObject("quizzes", quizzes);
+        modelAndView.addObject("passedQuizzes", passedQuizzes);
+
         return modelAndView;
     }
 }

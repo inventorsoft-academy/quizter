@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
         <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta content="IE=edge" http-equiv="X-UA-Compatible">
+        <meta content="width=device-width, initial-scale=1" name="viewport">
 
         <title data-layout-title-pattern="$LAYOUT_TITLE | $CONTENT_TITLE">Quizter</title>
 
@@ -32,7 +32,10 @@
                 <div class="col-md-3 left_col">
                     <div class="left_col scroll-view">
                         <div class="navbar nav_title" style="border: 0;">
-                            <a data-th-href="@{/}" class="site_title"><i class="fa fa-space-shuttle"></i> <span>Quizter</span></a>
+                            <a class="site_title" data-th-href="@{/}">
+                                <i class="fa fa-space-shuttle"></i>
+                                <span>Quizter</span>
+                            </a>
                         </div>
 
                         <div class="clearfix"></div>
@@ -90,6 +93,16 @@
 
         <!-- Custom Theme Scripts -->
         <script src="/js/custom.min.js"></script>
+
+        <!-- Admin page -->
+        <script src="/js/ajax/admin.js"></script>
+
+        <!-- Get groups -->
+        <script src="/js/ajax/student-groups.js"></script>
+
+        <!-- Get students from group -->
+        <script src="/js/ajax/students.js"></script>
+
         <script src="/js/model/error-response.js">
 
         </script>

@@ -9,15 +9,22 @@
                 <ul class="nav child_menu">
                     <li sec:authorize="hasAuthority('TEACHER')"><a data-th-href="@{/cabinet}">Cabinet</a></li>
                     <li sec:authorize="hasAuthority('STUDENT')"><a data-th-href="@{/desk}">Desk</a></li>
+                    <li sec:authorize="hasAuthority('ADMIN')"><a data-th-href="@{/admin}">Admin</a></li>
                 </ul>
             </li>
-            <li><a><i class="fa fa-edit"></i> Test <span class="fa fa-chevron-down"></span></a>
-                <ul class="nav child_menu">
+            <li sec:authorize="hasAuthority('TEACHER')"><a><i class="fa fa-edit"></i> Test <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu" >
                     <li><a data-th-href="@{/cabinet/tests}">Tests</a></li>
-                    <li sec:authorize="hasAuthority('TEACHER')"><a data-th-href="@{/cabinet/test-create}">TestCreationForm</a>
+                    <li ><a data-th-href="@{/cabinet/test-create}">TestCreationForm</a>
                     </li>
                 </ul>
             </li>
+            <li sec:authorize="hasAuthority('ADMIN')"><a><i class="fa fa-edit"></i> Test <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu" >
+                    <li><a data-th-href="@{/cabinet/tests}">Tests</a></li>
+                </ul>
+            </li>
+
             <li><a><i class="fa fa-cog"></i> Settings <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
                     <li><a data-th-href="@{/profile/edit}">Edit profile</a></li>

@@ -1,6 +1,7 @@
 package com.quizter.service;
 
 import com.quizter.dictionary.CacheType;
+import com.quizter.dictionary.Role;
 import com.quizter.dto.PasswordDto;
 import com.quizter.dto.ProfileDto;
 import com.quizter.dto.RegistrationUserDto;
@@ -21,11 +22,11 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -130,5 +131,9 @@ public class UserService {
 			return Optional.empty();
 		}
 	}
+
+    public List<User> getUsersByRole(Role role) {
+        return userRepository.findUserByRole(role);
+    }
 
 }

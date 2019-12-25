@@ -1,6 +1,7 @@
 package com.quizter;
 
 import com.quizter.util.AppConstants;
+import com.quizter.util.UnZipUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -17,8 +18,7 @@ import java.util.concurrent.TimeoutException;
 public class QuizterApplication {
 
 	public static void main(String[] args) throws InterruptedException, IOException, TimeoutException {
-//		UnZipUtil.unZip();
-//		ProjReader.reader();
+		UnZipUtil.unZip();
 		SpringApplication.run(QuizterApplication.class, args);
 	}
 

@@ -40,6 +40,14 @@ public class QuizController {
         return modelAndView;
     }
 
+    @GetMapping("/result/{quizResultId}")
+    public ModelAndView resultPage(@PathVariable String quizResultId) {
+        ModelAndView modelAndView = new ModelAndView("quiz-result-page");
+        modelAndView.addObject("quiz",
+                (quizResultService.findById(quizResultId).orElseThrow()));
+        return modelAndView;
+    }
+
     @GetMapping
     public ModelAndView quizBeginPage(@RequestParam Long id) {
         ModelAndView modelAndView = new ModelAndView("quiz-begin-page");
@@ -62,9 +70,8 @@ public class QuizController {
 
     @PostMapping("{quizResultId}")
     public ResponseEntity<MessageResponse> finishQuiz(@PathVariable String quizResultId,
-                                                      @RequestBody List<QuizResultDto> quizResultDtos){
-        log.info("Post Request = " + quizResultDtos);
-        quizResultService.finishQuiz(quizResultId, quizResultDtos);
-        return ResponseEntity.ok().build();
+                                                      @RequestBody List<QuizResultDto> quizResultDtos) {
+        return ResponseEntity.ok(
+                new MessageResponse(String.valueOf(quizResultService.finishQuiz(quizResultId, quizResultDtos))));
     }
 }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" data-layout-decorate="~{layout/home-layout}"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>profile</title>
+    <script th:src="@{/js/ajax/profile.js}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+
+<div class="right_col" role="main" data-layout-fragment="content">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Profile</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+    <div class="x_panel">
+        <div class="title_left">
+            <div class="row">
+                <div class="col-md-5 col-sm-5">
+                    <div class="input-group">
+                        <img th:src="${(profile.photoUrl != null &&
+                     !#strings.isEmpty(profile.photoUrl) &&
+                     !#strings.equals(profile.photoUrl, 'none')) ? profile.photoUrl : '/images/img.jpg'}"
+                             alt="o_O"
+                             class="img-circle profile_img" id="userPhoto"/>
+                    </div>
+                    <div class="input-group">
+                        <a href="/profile/edit"><button class="btn btn-primary">Edit <i class="fa fa-edit"></i></button></a>
+                    </div>
+                </div>
+                <div class="col-md-5 col-sm-5">
+                    <div class="input-group">
+                        <h2><b><span th:text="${profile.firstName + ' ' +profile.lastName}"></span></b></h2>
+                    </div>
+                    <div class="input-group">
+                        <h2><i>Specialization: </i><b><span th:text="${profile.sphere}"></span></b></h2>
+                    </div>
+                    <div class="input-group">
+                        <h2><i>Tel: </i><b><span th:text="${profile.phoneNumber}"></span></b></h2>
+                    </div>
+                    <div class="input-group">
+                        <h2><i>Email: </i><b><span th:text="${profile.user.email}"></span></b></h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

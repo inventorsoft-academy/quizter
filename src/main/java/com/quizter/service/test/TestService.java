@@ -73,10 +73,6 @@ public class TestService<T extends Question> {
 		test.setVersion(YearMonth.now().getMonth().toString());
 		test.setQuestions(new ArrayList<>(createQuestions(testDto.getQuestions())));
 		test.setAuthor(userService.getUserPrincipal().orElseThrow(UserIsNotAuthorizedException::new));
-		test.getQuestions().
-				stream().
-				filter(question -> question instanceof CodeQuestion).
-				forEach(question -> writeCodingQuestionIntoClass((CodeQuestion) question));
 		testRepository.save(test);
 	}
 
@@ -97,10 +93,6 @@ public class TestService<T extends Question> {
 		test.setVersion(testDto.getVersion());
 		test.setQuestions(new ArrayList<>(createQuestions(testDto.getQuestions())));
 		test.setAuthor(testFromDB.getAuthor());
-		test.getQuestions().
-				stream().
-				filter(question -> question instanceof CodeQuestion).
-				forEach(question -> writeCodingQuestionIntoClass((CodeQuestion) question));
 		testRepository.save(test);
 	}
 
@@ -128,16 +120,4 @@ public class TestService<T extends Question> {
 			}
 		}).collect(Collectors.toList());
 	}
-
-	private void writeCodingQuestionIntoClass(CodeQuestion codeQuestion) {
-		try {
-
-			Files.write(Paths.get("/home/intern/chorney/backet/project/src/main/java/Foo.java"), codeQuestion.getCodeTask().getBytes());
-			Files.write(Paths.get("/home/intern/chorney/backet/project/src/test/java/FooTest.java"), codeQuestion.getUnitTest().getBytes());
-		} catch (IOException e) {
-			log.debug(e.getMessage());
-		}
-
-	}
-
 }
