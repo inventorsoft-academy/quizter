@@ -10,17 +10,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "groups")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Group {
+public class Subject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,11 +23,5 @@ public class Group {
 
     @Column(unique = true, nullable = false)
     String name;
-
-    @OneToOne
-    Subject subject;
-
-    @OneToMany
-    List<User> students;
 
 }

@@ -1,7 +1,7 @@
 package com.quizter.service;
 
-import com.quizter.dictionary.Role;
 import com.quizter.dto.GroupDto;
+import com.quizter.dto.StudentDto;
 import com.quizter.entity.Group;
 import com.quizter.entity.User;
 import com.quizter.exception.ResourceNotFoundException;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -24,32 +23,28 @@ public class GroupService {
 
     GroupRepository groupRepository;
 
-    UserService userService;
-
     GroupMapper groupMapper;
 
     public List<GroupDto> findAllGroup() {
         return groupMapper.toGroupListDto(groupRepository.findAll());
     }
 
+    public List<StudentDto> findAllStudentsFromGroupByGroupId(Long id) {
+        Group group = groupRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Group", "id", id));
+
+        return groupMapper.toStudentListDto(group.getStudents());
+    }
+
     public void createGroup(GroupDto groupDto) {
-        List<User> students = userService.getUsersByRole(Role.STUDENT);
-
         Group group = new Group();
-
         group.setName(groupDto.getName());
-        group.setStudents(students
-                .stream()
-                .filter(sphere -> sphere.getProfile().getSphere().equals(groupDto.getName()))
-                .collect(Collectors.toList())
-        );
 
         groupRepository.save(group);
     }
 
     public void setUserToGroup(User user) {
         Group group = groupRepository.findGroupByName(user.getProfile().getSphere())
-                .orElseThrow(()-> new ResourceNotFoundException("Group", "Sphere", user.getProfile().getSphere()));
+                .orElseThrow(() -> new ResourceNotFoundException("Group", "Sphere", user.getProfile().getSphere()));
 
         List<User> studentsFromDB = group.getStudents();
         studentsFromDB.add(user);

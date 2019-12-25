@@ -16,7 +16,7 @@ function newTestDescriptionClick() {
 
 function getAllTestsForEdit() {
     var testId = $("#testEditPage").attr("dataEdit_id");
-    $.getJSON("/cabinet/tests/" + testId,
+    $.getJSON("/cabinet/rest-tests/" + testId,
         function (data) {
             $("#editTestDuration").val(
                 data.duration
@@ -184,7 +184,7 @@ function getAllTestsForEdit() {
 function editTestFunc(id, name, subject, duration, version, description, questions) {
     if (window.confirm("Do you really want to change test?")) {
         $.ajax({
-            url: '/cabinet/tests/' + id,
+            url: '/cabinet/rest-tests/' + id,
             type: 'PUT',
             enctype: 'multipart/form-data',
             data: JSON.stringify({

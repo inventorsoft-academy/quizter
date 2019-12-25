@@ -1,7 +1,9 @@
 package com.quizter.mapper;
 
 import com.quizter.dto.GroupDto;
+import com.quizter.dto.StudentDto;
 import com.quizter.entity.Group;
+import com.quizter.entity.User;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
@@ -30,6 +32,13 @@ public class GroupMapper {
         }.getType();
 
         return mapper.map(groups, targetListType);
+    }
+
+    public List<StudentDto> toStudentListDto(List<User> students) {
+        Type targetListType = new TypeToken<List<StudentDto>>() {
+        }.getType();
+
+        return mapper.map(students, targetListType);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.quizter.service.test;
 
+import com.quizter.dictionary.QuestionType;
 import com.quizter.dto.test.QuizResultDto;
 import com.quizter.entity.User;
 import com.quizter.entity.test.MultiVariantQuestion;
@@ -12,7 +13,9 @@ import com.quizter.mapper.test.TestMapper;
 import com.quizter.repository.QuizResultRepository;
 import com.quizter.repository.ResultAnswerRepository;
 import com.quizter.service.UserService;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -20,25 +23,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
 @Transactional
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuizResultService {
 
-    private UserService userService;
-    private TestService testService;
-    private TestMapper testMapper;
-    private ResultMapper resultMapper;
-    private QuizResultRepository quizResultRepository;
-    private List<TestQuestionEvaluator> evaluators;
-    private ResultAnswerRepository resultAnswerRepository;
+    UserService userService;
+    TestService testService;
+    TestMapper testMapper;
+    ResultMapper resultMapper;
+    QuizResultRepository quizResultRepository;
+    ResultAnswerRepository resultAnswerRepository;
+    List<TestQuestionEvaluator> evaluators;
 
     public Optional<QuizResult> findById(String quizResultId) {
         return quizResultRepository.findById(quizResultId);
@@ -52,18 +54,34 @@ public class QuizResultService {
         return quizResultId;
     }
 
-    public String beginQuiz(Long testId) {
+
+    public void addAccessToTest(User applicant, Long testId) {
         QuizResult quizResult = new QuizResult();
-        quizResult.setIsCompleted(false);
+
         quizResult.setId(createQuizResultId());
-		User user = userService.getUserPrincipal();
-		quizResult.setApplicant(user);
-        quizResult.setStart(Instant.now());
+        quizResult.setIsCompleted(false);
+        quizResult.setApplicant(applicant);
         Test test = testMapper.toTest(testService.findTestById(testId));
-        long minutes = test.getDuration();
-        quizResult.setFinished(Instant.now().plus(Duration.ofMinutes(minutes)));
         quizResult.setTest(test);
+
+        quizResultRepository.save(quizResult);
+    }
+
+    public String beginQuiz(Long testId) {
+        QuizResult quizResult = quizResultRepository.findQuizResultByTestId(testId);
+
+        quizResult.setStart(Instant.now());
+        long minutes = quizResult.getTest().getDuration();
+        quizResult.setFinished(Instant.now().plus(Duration.ofMinutes(minutes)));
+
         return quizResultRepository.save(quizResult).getId();
+    }
+
+    public List<Test> getTestAccessibleTestsForStudent() {
+        List<Test> tests = new ArrayList<>();
+        quizResultRepository.findAll().forEach(quizResult -> tests.add(quizResult.getTest()));
+
+        return tests;
     }
 
     public void updateQuiz(String quizResultId, List<QuizResultDto> quizResultDtos) {
@@ -72,7 +90,7 @@ public class QuizResultService {
         quizResultRepository.save(quizResult);
     }
 
-    private List<ResultAnswer> getResultAnswers(QuizResult quizResult, List<QuizResultDto> quizResultDtos){
+    private List<ResultAnswer> getResultAnswers(QuizResult quizResult, List<QuizResultDto> quizResultDtos) {
         final ResultAnswer[] resultAnswers = new ResultAnswer[1];
         return quizResultDtos.stream()
                 .map(dto -> {
@@ -88,12 +106,15 @@ public class QuizResultService {
                 }).collect(Collectors.toList());
     }
 
-    public void finishQuiz(String quizResultId, List<QuizResultDto> quizResultDtos) {
+    public Double finishQuiz(String quizResultId, List<QuizResultDto> quizResultDtos) {
         QuizResult quizResult = quizResultRepository.findById(quizResultId).orElseThrow();
         quizResult.setFinished(Instant.now());
         quizResult.setResultAnswers(getResultAnswers(quizResult, quizResultDtos));
         quizResult.setIsCompleted(true);
+        double totalRating = evaluate(quizResult);
+        quizResult.setTotalRating(totalRating);
         quizResultRepository.save(quizResult);
+        return totalRating;
     }
 
     public Long getDuration(String quizResultId) {
@@ -101,18 +122,54 @@ public class QuizResultService {
         return (quizResult.getFinished().getEpochSecond() - Instant.now().getEpochSecond());
     }
 
-    public double evaluate(final Test test, Map<Long, String> answers) {
-//		List<AbstractQuestion> abstractQuestions = test.getQuestions();
-//		Map<Long, AbstractQuestion> questionById = abstractQuestions.stream().collect(Collectors.toMap(AbstractQuestion::getId, Function.identity()));
-//		Map<Long, Double> awers = new HashMap<>();
-//		answers.forEach((questionId, answer) -> {
-//			AbstractQuestion abstractQuestion = questionById.get(questionId);
-//			TestQuestionEvaluator evaluator = evaluators.stream().filter(eval -> eval.isApplicable(abstractQuestion)).findFirst()
-//					.orElseThrow(() -> new IllegalStateException("Unsupported question type"));
-//			awers.put(questionId, evaluator.evaluate(abstractQuestion, answer));
-//		});
-//		return awers.values().stream().mapToDouble(Double::doubleValue).sum();
-        return 0;
+    public double evaluate(QuizResult quizResult) {
+        final Double maxPrice = quizResult.getResultAnswers().stream()
+                .filter(answer -> QuestionType.MULTIVARIANT.equals(answer.getQuestion().getQuestionType()))
+                .map(answer -> answer.getQuestion().getPrice())
+                .reduce(Double::sum).orElse(100.0);
+        double totalPrice = 0;
+        List<ResultAnswer> resultAnswers = quizResult.getResultAnswers().stream()
+                .filter(answer -> QuestionType.MULTIVARIANT.equals(answer.getQuestion().getQuestionType()))
+                .collect(Collectors.toList());
+        for (ResultAnswer answer : resultAnswers) {
+            MultiVariantQuestion question = (MultiVariantQuestion) answer.getQuestion();
+            double price = answer.getQuestion().getPrice();
+            List<String> rightAnswers = question.getAnswers().entrySet().stream()
+                    .filter(qAnswer -> qAnswer.getValue().equals(true))
+                    .map(Map.Entry::getKey)
+                    .collect(Collectors.toList());
+            long quantity = answer.getStringAnswers().stream()
+                    .filter(rightAnswers::contains)
+                    .count();
+            if (quantity == answer.getStringAnswers().size()) {
+                if (quantity == rightAnswers.size()) {
+                    totalPrice += price;
+                } else if (rightAnswers.size() > 1 && quantity < rightAnswers.size() && quantity > 0) {
+                    totalPrice += price * quantity / rightAnswers.size();
+                }
+            }
+        }
+        return totalPrice * 100 / maxPrice;
+    }
+
+    public List<QuizResult> findByApplicant() {
+        User applicant = userService.getUserPrincipal();
+        return quizResultRepository.findAllByApplicantAndIsCompleted(applicant, true);
+    }
+
+    public double evaluateResult(final QuizResult quizResult, Map<Long, String> answers) {
+		List<Question> questions = quizResult.getTest().getQuestions();
+		Map<Long, Question> questionById = questions.stream().collect(Collectors.toMap(Question::getId, Function.identity()));
+		Map<Long, Double> resultAnswers = new HashMap<>();
+		answers.forEach((questionId, answer) -> {
+			Question question = questionById.get(questionId);
+			TestQuestionEvaluator evaluator = evaluators.stream()
+                    .filter(eval -> eval.isApplicable(question))
+                    .findFirst()
+					.orElseThrow(() -> new IllegalStateException("Unsupported question type"));
+			resultAnswers.put(questionId, evaluator.evaluate(question, answer));
+		});
+		return resultAnswers.values().stream().mapToDouble(Double::doubleValue).sum();
     }
 
     @Component

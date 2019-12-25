@@ -3,11 +3,9 @@ package com.quizter.service;
 import com.quizter.dictionary.CacheType;
 import com.quizter.dictionary.Role;
 import com.quizter.dto.PasswordDto;
-import com.quizter.dto.ProfileDto;
 import com.quizter.dto.RegistrationUserDto;
 import com.quizter.dto.UserEmailDto;
 import com.quizter.entity.Credentials;
-import com.quizter.entity.Profile;
 import com.quizter.entity.User;
 import com.quizter.exception.NoUserWithThatIDException;
 import com.quizter.exception.TokenException;
@@ -19,9 +17,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -109,24 +105,11 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void saveProfile(ProfileDto profileDto) {
-        ModelMapper modelMapper = new ModelMapper();
-        Profile profile = modelMapper.map(profileDto, Profile.class);
-        log.info("ProfileDto = " + profileDto.getFirstName());
-        User user = getUserPrincipal();
-        user.setProfile(profile);
-        profile.setUser(user);
-        profile.setId(user.getId());
-        log.info("Profile = " + profile);
-        log.info("User = " + user);
-        userRepository.save(user);
-    }
-
     public User getUserPrincipal() {
         try {
             Credentials credentials = (Credentials) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             return userRepository.findByEmail(credentials.getUsername())
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                    .orElseThrow();
         } catch (ClassCastException o_0) {
             return new User();
         }

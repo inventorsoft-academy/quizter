@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" data-layout-decorate="~{layout/home-layout}"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Result</title>
+</head>
+
+<body>
+<div class="right_col" role="main" data-layout-fragment="content">
+    <div class="">
+        <div class="x_panel">
+            <div class="page-title" id="rowId">
+                <div class="title_center">
+                    <h3 th:text="${quiz.test.name}"></h3>
+                </div>
+
+                <div class="clearfix"></div>
+
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <table class="tile_info">
+                            <tr th:each="question: ${quiz.test.questions}">
+                                <td>
+                                    <h4>Question#<span
+                                            th:text="${quiz.test.questions.indexOf(question) + 1}"></span>
+                                    </h4>
+                                    <p><b><span th:text="${question.name}"></span></b></p>
+                                    <table class="tile_info">
+                                        <tr th:if="${question.questionType == T(com.quizter.dictionary.QuestionType).MULTIVARIANT}">
+                                            <td>
+                                                <table class="tile_info">
+                                                    <tr th:each="answer: ${question.answers}">
+                                                        <td style="padding: 8px; width: 6%;">
+                                                            <div th:each="resultAnswer: ${quiz.resultAnswers}">
+                                                                <div th:if="${resultAnswer.question.id == question.id}">
+                                                                    <div th:if="${#lists.contains(resultAnswer.stringAnswers, answer.key)}">
+                                                                        <div th:if="${resultAnswer.question.answers.get(answer.key)}">
+                                                                            <div class="fa-hover col-md-3 col-sm-4  "><i
+                                                                                    class="fa fa-check"
+                                                                                    style="color: green;"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div th:unless="${resultAnswer.question.answers.get(answer.key)}">
+                                                                            <div class="fa-hover col-md-3 col-sm-4  "><i
+                                                                                    class="fa fa-close"
+                                                                                    style="color: red;"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td style="padding: 8px; width: 94%;"
+                                                            th:text="${answer.key}">
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr th:if="${question.questionType == T(com.quizter.dictionary.QuestionType).CODE}">
+                                            <td>
+                                                <table class="tile_info" border="1">
+                                                    <tr>
+                                                        <td style="padding: 8px; width: 10%;">
+                                                            <text class="resultAnswer"
+                                                                  style="width: 100%; height: 180px; white-space: pre-wrap;"
+                                                                  th:questionType="${question.questionType}"
+                                                                  th:questionId="${question.id}"
+                                                                  th:name="answersArray"
+                                                                  th:text="${question.codeTask}"></text>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

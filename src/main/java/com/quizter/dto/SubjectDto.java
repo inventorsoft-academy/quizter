@@ -3,21 +3,17 @@ package com.quizter.dto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProfileDto {
+public class SubjectDto {
 
-    String firstName;
+    Long id;
 
-    String lastName;
+    String name;
 
-    String sphere;
-
-    String phoneNumber;
-
-    MultipartFile file;
 }
