@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -24,6 +23,6 @@ public class GroupDto {
     @NotNull(message = "Select any option")
     String subjectName;
 
-    List<User> students;
+    List<StudentDto> students;
 
 }

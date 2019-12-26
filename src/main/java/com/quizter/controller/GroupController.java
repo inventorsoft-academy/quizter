@@ -41,12 +41,12 @@ public class GroupController {
         return ResponseEntity.ok(new MessageResponse("Group was created successfully"));
     }
 
-    @RequestMapping(value = "/admin/students?{subjectName}", method = RequestMethod.GET)
+    @GetMapping("/admin/students/subject/{subjectName}")
     public ResponseEntity<List<StudentDto>> getStudentsBySubject(@PathVariable("subjectName") String subjectName) {
         return ResponseEntity.ok(userService.findStudentsBySubjectName(subjectName));
     }
 
-    @RequestMapping(value = "/admin/students?{email}", method = RequestMethod.GET)
+    @GetMapping("/admin/students/{email}")
     public ResponseEntity<StudentDto> getStudentsByEmail(@PathVariable("email") String email) {
         return ResponseEntity.ok(userService.findStudentByEmail(email));
     }

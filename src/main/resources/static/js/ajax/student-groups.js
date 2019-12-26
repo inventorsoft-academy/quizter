@@ -17,6 +17,7 @@ function getAllStudentsFromGroup() {
                     "countOfMembers": group.students.length,
                     "count": count
                 };
+
                 $("#tBodyGroup").append(
                     Mustache.to_html(tBodyGroupScript, data)
                 );
@@ -53,7 +54,7 @@ function viewStudentsFromGroup(clickedElement) {
 function inviteStudentsToTest(students) {
     var testId = $("#getAllGroupsDiv").attr("dataTest_id");
 
-    if (window.confirm("Invite this group?")) {
+    if (window.confirm("Open access to pass group?")) {
         $.ajax({
             url: '/cabinet/rest-tests/invite-group',
             type: 'POST',

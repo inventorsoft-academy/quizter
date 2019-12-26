@@ -3,7 +3,6 @@ package com.quizter.service;
 import com.quizter.dto.GroupDto;
 import com.quizter.dto.StudentDto;
 import com.quizter.entity.Group;
-import com.quizter.entity.User;
 import com.quizter.exception.ResourceNotFoundException;
 import com.quizter.mapper.GroupMapper;
 import com.quizter.repository.GroupRepository;
@@ -42,7 +41,7 @@ public class GroupService {
         Group group = new Group();
         group.setName(groupDto.getName());
         group.setSubject(subjectRepository.findSubjectByName(groupDto.getSubjectName()));
-        group.setStudents(groupDto.getStudents());
+        group.setStudents(groupMapper.toUserListDto(groupDto.getStudents()));
 
         groupRepository.save(group);
     }

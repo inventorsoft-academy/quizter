@@ -20,4 +20,5 @@ public class UserMapper {
     public RegistrationUserDto toRegistrationUserDto(User user) {
         return mapper.map(user, RegistrationUserDto.class);
     }
+
 }

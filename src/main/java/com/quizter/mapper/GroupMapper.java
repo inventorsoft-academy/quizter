@@ -41,6 +41,13 @@ public class GroupMapper {
         return mapper.map(students, targetListType);
     }
 
+    public List<User> toUserListDto(List<StudentDto> students) {
+        Type targetListType = new TypeToken<List<User>>() {
+        }.getType();
+
+        return mapper.map(students, targetListType);
+    }
+
     public StudentDto toStudentDto(User user) {
         return mapper.map(user, StudentDto.class);
     }

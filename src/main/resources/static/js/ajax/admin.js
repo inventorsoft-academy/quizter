@@ -33,7 +33,7 @@ function getAllSubjectForGroupCreation() {
         subjectName = $("#inputGroupSelect option:selected").text();
 
         if (subjectName !== undefined) {
-            $.getJSON("/admin/students?" + subjectName,
+            $.getJSON("/admin/students/subject/" + subjectName,
                 function (data) {
                     viewStudentsInTable(data, count);
                 });
@@ -45,33 +45,38 @@ function getAllSubjectForGroupCreation() {
         }
     });
 
+    var index;
+
     $("#btnCreateGroup").click(function () {
         var name = $("#inputGroupName").val();
 
-        var index;
+        index= 1;
+        $('#table_records').each(function (i) {
+            index ++;
+            console.log("SSS" + index);
 
-        $('#studentsInGroupTBody').each(function (i) {
-            index = i + 1;
-            console.log("Hey");
+            // var isSelected =  ? "true" : "false";
 
-            var isSelected = $("#selectStudent_" + index).is(":checked") ? "true" : "false";
-
-            if (isSelected) {
-                console.log("Hey@@@@");
-                var v = $('#studentEmail_' + index).val();
-                console.log(v + "SS");
-                $.getJSON("/admin/students/" + v,
+            if ($("#selectStudent_" + index).is(":checked")) {
+                console.log(index);
+                var email = $('#studentEmail_' + index).text().replace(/\s/g, '');
+                console.log(email);
+                $.getJSON("/admin/students/" + email,
                     function (data) {
-                        console.log(data.email + data.profile)
                         students.push(data)
+                        console.log("S" + students.length);
                     }
                 );
             }
 
-            index++;
+            console.log(students.length);
+
         });
 
-        createGroup(name, subjectName, students);
+        if (students.length !== 0) {
+            createGroup(name, subjectName, students);
+        }
+
     });
 
 }
@@ -98,6 +103,7 @@ function viewStudentsInTable(data, count) {
 }
 
 function createGroup(name, subjectName, students) {
+    console.log(students.length + 'WWWWWWWWWWWWW');
     if (window.confirm("Do you really want to create group?")) {
         $.ajax({
             url: '/admin/group-create/',

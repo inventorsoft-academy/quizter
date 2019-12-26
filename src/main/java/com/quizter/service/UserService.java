@@ -130,7 +130,6 @@ public class UserService {
         return groupMapper.toStudentListDto(findStudentsFromUserList(userRepository.findUserByProfileSphere(subjectName)));
     }
 
-
     public List<StudentDto> findAllStudents() {
         return groupMapper.toStudentListDto(findStudentsFromUserList((List<User>) userRepository.findAll()));
     }
