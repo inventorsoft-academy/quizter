@@ -7,11 +7,12 @@ import java.util.concurrent.TimeoutException;
 
 public class ProjectRunner {
 
-	public static void run(){
+	public static String run() {
+		String result = "";
 		try {
-			System.out.println(new ProcessExecutor().
-					command("mvn","-f","/home/intern/chorney/backet/project/pom.xml","test").
-					readOutput(true).execute().outputUTF8());
+			result = new ProcessExecutor().
+					command("mvn", "-f", "/home/intern/chorney/backet/project/pom.xml", "test").
+					readOutput(true).execute().outputUTF8();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
@@ -19,5 +20,7 @@ public class ProjectRunner {
 		} catch (TimeoutException e) {
 			e.printStackTrace();
 		}
+		System.out.println(result);
+		return result;
 	}
 }

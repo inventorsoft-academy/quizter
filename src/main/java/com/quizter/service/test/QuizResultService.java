@@ -15,6 +15,7 @@ import com.quizter.mapper.test.TestMapper;
 import com.quizter.repository.QuizResultRepository;
 import com.quizter.repository.ResultAnswerRepository;
 import com.quizter.service.UserService;
+import com.quizter.util.ProjectRunner;
 import com.quizter.util.UnZipUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -133,7 +134,7 @@ public class QuizResultService {
 	}
 
 	public double evaluate(QuizResult quizResult) {
-	    isCodeAnswerCorrect(quizResult);
+		isCodeAnswerCorrect(quizResult);
 		final Double maxPrice = quizResult.getResultAnswers().stream()
 				.filter(answer -> QuestionType.MULTIVARIANT.equals(answer.getQuestion().getQuestionType())).map(answer -> answer.getQuestion().getPrice())
 				.reduce(Double::sum).orElse(100.0);
@@ -154,13 +155,22 @@ public class QuizResultService {
 				}
 			}
 		}
-
+		totalPrice += evaluateCode(quizResult);
 		return totalPrice * 100 / maxPrice;
 	}
 
 	private boolean isCodeAnswerCorrect(QuizResult quizResult) {
-		CodeQuestion codeQuestion = (CodeQuestion) quizResult.getTest().getQuestions().stream().findFirst().orElseThrow();
-		return false;
+
+		String answer = quizResult.getResultAnswers().stream().filter(resultAnswer -> resultAnswer.getQuestion().getQuestionType().equals(QuestionType.CODE))
+				.findFirst().orElseThrow().getStringAnswers().stream().findFirst().orElseThrow();
+		String unitTest = quizResult.getTest().getQuestions().stream().filter(question -> question.getQuestionType().equals(QuestionType.CODE))
+				.map(question -> (CodeQuestion) question).findFirst().orElseThrow().getUnitTest();
+		writeCodingQuestionIntoClass(answer, unitTest);
+		return !ProjectRunner.run().contains("ERROR");
+	}
+
+	private double evaluateCode(QuizResult quizResult) {
+		return isCodeAnswerCorrect(quizResult) ? quizResult.getTest().getQuestions().stream().findFirst().orElseThrow().getPrice() : 0;
 	}
 
 	private void writeCodingQuestionIntoClass(String answer, String unitTest) {
