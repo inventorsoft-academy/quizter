@@ -40,37 +40,107 @@
                                                placeholder="Set some name"
                                                required="required" type="text"/>
                                     </div>
-                                    <button id="btnSubjectCreation" class="btn btn-success" type="submit">Submit</button>
+                                    <button class="btn btn-success" id="btnSubjectCreation" type="submit">Submit
+                                    </button>
                                 </div>
                             </div>
+                            <div class="ln_solid"></div>
 
                             <div class="form-group">
                                 <p>
                                     <a aria-controls="collapseExample" aria-expanded="false" class="btn btn-primary"
                                        data-toggle="collapse"
-                                       href="#setGroup" role="button">
+                                       href="#setGroup" id="btnShowGroupCreationForm" role="button">
                                         Create Group
                                     </a>
                                 </p>
 
                                 <div class="collapse" id="setGroup">
-                                    <form class="form-inline" id="setTestDescription">
-                                        <div class="form-group">
-                                            <label class="control-label">Name*</label>
-                                            <input class="form-control" id="inputGroupName"
-                                                   placeholder="Set some name" required="required" type="text"/>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="card card-body col-md-6">
+
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12">
+                                            <div class="clearfix"></div>
+                                            <br/>
+                                            <div class="input-group card card-body col-md-7">
+                                                <label class="memberNameLabel pull-left">Name*</label>
+                                                <input class="form-control " id="inputGroupName"
+                                                       placeholder="Set some name" required="required" type="text"/>
+                                            </div>
+                                            <div class="input-group card card-body col-md-7">
+                                                <label class="memberNameLabel pull-left">Subject*</label>
                                                 <select class="custom-select form-control" id="inputGroupSelect"
                                                         required>
                                                 </select>
                                             </div>
-                                        </div>
 
-                                        <a class="btn btn-success" id="btnCreateGroup"
-                                           type="button"> Submit
-                                        </a>
+                                            <div class=" card-body  ">
+                                                <p>
+                                                    <a aria-controls="collapseExample" aria-expanded="false"
+                                                       class="btn btn-primary pull-left"
+                                                       data-toggle="collapse"
+                                                       href="#showStudents"
+                                                       id="btnShowStudents" role="button">
+                                                        Show students by selected subject
+                                                    </a>
+                                                </p>
+
+                                                <div class="collapse col-md-12" id="showStudents">
+                                                    <div class="clearfix">
+                                                        <table class="table table-striped jambo_table bulk_action">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>
+                                                                    <input class="flat" id="check-all" type="checkbox">
+                                                                </th>
+                                                                <th style="width: 1%">#</th>
+                                                                <th>Photo</th>
+                                                                <th>Full name</th>
+                                                                <th>Email</th>
+                                                                <th>Phone number</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody id="studentsInGroupTBody">
+                                                            <script id="studentsInGroupTBodyScript"
+                                                                    type="text/x-mustache-template">
+                                                                <tr class="row-select_{{count}}">
+                                                                    <td class="a-center">
+                                                                        <input id="selectStudent_{{count}}"
+                                                                               type="checkbox" class="flat"
+                                                                               name="table_records">
+                                                                    </td>
+                                                                    <td>{{count}}</td>
+                                                                    <td>
+                                                                        <a>Photo</a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a>{{student.profile.firstName}}
+                                                                            {{student.profile.lastName}}</a>
+                                                                    </td>
+                                                                    <td
+                                                                        id="studentEmail_{{count}}">
+                                                                        {{student.email}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{student.profile.phoneNumber}}
+                                                                    </td>
+                                                                </tr>
+                                                            </script>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                                <br><br><br>
+
+                                                <div class="input-group">
+                                                    <div class="ln_solid"></div>
+                                                    <a class="btn btn-success" id="btnCreateGroup"
+                                                       type="button"> Submit
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </form>

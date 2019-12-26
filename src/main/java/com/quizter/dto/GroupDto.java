@@ -1,6 +1,5 @@
 package com.quizter.dto;
 
-import com.quizter.entity.Subject;
 import com.quizter.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,7 +22,7 @@ public class GroupDto {
     String name;
 
     @NotNull(message = "Select any option")
-    Subject subject;
+    String subjectName;
 
     List<User> students;
 

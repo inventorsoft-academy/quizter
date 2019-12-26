@@ -1,14 +1,15 @@
 package com.quizter.service;
 
 import com.quizter.dictionary.CacheType;
-import com.quizter.dictionary.Role;
 import com.quizter.dto.PasswordDto;
 import com.quizter.dto.RegistrationUserDto;
+import com.quizter.dto.StudentDto;
 import com.quizter.dto.UserEmailDto;
 import com.quizter.entity.Credentials;
 import com.quizter.entity.User;
 import com.quizter.exception.NoUserWithThatIDException;
 import com.quizter.exception.TokenException;
+import com.quizter.mapper.GroupMapper;
 import com.quizter.mapper.UserMapper;
 import com.quizter.repository.UserRepository;
 import com.quizter.util.AppConstants;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -47,6 +49,8 @@ public class UserService {
     AppConstants appConstants;
 
     SecurityService securityService;
+
+    GroupMapper groupMapper;
 
     public void registerUser(RegistrationUserDto registrationUserDto) {
         validationService.registrationValidation(registrationUserDto);
@@ -115,8 +119,25 @@ public class UserService {
         }
     }
 
-    public List<User> getUsersByRole(Role role) {
-        return userRepository.findUserByRole(role);
+    public List<User> findStudentsFromUserList(List<User> users) {
+        return users
+                .stream()
+                .filter(user -> user.getRole().getAuthority().equals("STUDENT"))
+                .collect(Collectors.toList());
     }
+
+    public List<StudentDto> findStudentsBySubjectName(String subjectName) {
+        return groupMapper.toStudentListDto(findStudentsFromUserList(userRepository.findUserByProfileSphere(subjectName)));
+    }
+
+
+    public List<StudentDto> findAllStudents() {
+        return groupMapper.toStudentListDto(findStudentsFromUserList((List<User>) userRepository.findAll()));
+    }
+
+    public StudentDto findStudentByEmail(String email) {
+        return groupMapper.toStudentDto(userRepository.findUserByEmail(email).orElseThrow());
+    }
+
 
 }

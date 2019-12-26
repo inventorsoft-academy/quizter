@@ -73,7 +73,7 @@ public class QuizResultService {
     }
 
     public String beginQuiz(Long testId) {
-        QuizResult quizResult = quizResultRepository.findQuizResultByTestId(testId);
+        QuizResult quizResult = quizResultRepository.findQuizResultByTestId(testId).orElseThrow();
 
         quizResult.setStart(Instant.now());
         long minutes = quizResult.getTest().getDuration();
@@ -84,7 +84,10 @@ public class QuizResultService {
 
     public List<Test> getTestAccessibleTestsForStudent() {
         List<Test> tests = new ArrayList<>();
-        quizResultRepository.findAll().forEach(quizResult -> tests.add(quizResult.getTest()));
+        quizResultRepository.findAllByApplicantAndIsCompleted(userService.getUserPrincipal(), false)
+                .stream()
+                .filter(quizResult -> quizResult.getEndOfAccessible().isAfter(Instant.now()))
+                .forEach(quizResult -> tests.add(quizResult.getTest()));
 
         return tests;
     }
@@ -176,6 +179,11 @@ public class QuizResultService {
 			resultAnswers.put(questionId, evaluator.evaluate(question, answer));
 		});
 		return resultAnswers.values().stream().mapToDouble(Double::doubleValue).sum();
+    }
+
+    public Optional<QuizResult> findByApplicantAndTestId(Long id) {
+        return quizResultRepository.findByApplicantAndTestId(userService.getUserPrincipal(), id)
+                .filter(quizResult -> quizResult.getEndOfAccessible().isAfter(Instant.now()));
     }
 
     @Component

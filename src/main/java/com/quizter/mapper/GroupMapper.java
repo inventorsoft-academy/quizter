@@ -41,4 +41,8 @@ public class GroupMapper {
         return mapper.map(students, targetListType);
     }
 
+    public StudentDto toStudentDto(User user) {
+        return mapper.map(user, StudentDto.class);
+    }
+
 }

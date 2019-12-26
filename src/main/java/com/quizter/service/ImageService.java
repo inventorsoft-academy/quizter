@@ -9,15 +9,14 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.core.util.IOUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Base64;
 
 @Slf4j
 @Service
@@ -30,8 +29,7 @@ public class ImageService {
     PhotoRepository photoRepository;
     ValidationService validationService;
 
-    public Photo savePhoto(MultipartFile multipartFile) {
-        AvatarDto avatarDto = new AvatarDto(multipartFile);
+    public String savePhoto(AvatarDto avatarDto) {
         validationService.validateImage(avatarDto);
         MultipartFile file = avatarDto.getFile();
         User user = userService.getUserPrincipal();
@@ -43,14 +41,14 @@ public class ImageService {
 
             Photo photo = user.getProfile().getPhoto();
             log.info("photo = " + photo);
-            log.info("user = "+ user);
-            log.info("profile = "+ user.getProfile());
+            log.info("user = " + user);
+            log.info("profile = " + user.getProfile());
             photo.setProfile(user.getProfile());
             photo.setFileName(fileName);
             photo.setFileType(file.getContentType());
             photo.setData(file.getBytes());
-
-            return photoRepository.save(photo);
+            byte[] data = photoRepository.save(photo).getData();
+            return Base64.getEncoder().encodeToString(data);
         } catch (IOException ex) {
             throw new FileUploadException("Could not store file " + fileName + ". Please try again!");
         }

@@ -40,7 +40,7 @@ public class TokenService {
     }
 
     public Token getToken(String email, CacheType type) {
-        return tokenRepository.findByTypeAndUser(type, userRepository.findByEmail(email).orElseThrow());
+        return tokenRepository.findByTypeAndUser(type, userRepository.findByEmail(email).orElseThrow()).orElseThrow();
     }
 
     public void removeToken(String email, CacheType type) {

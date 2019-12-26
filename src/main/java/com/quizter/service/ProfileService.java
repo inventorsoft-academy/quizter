@@ -24,21 +24,12 @@ import java.util.Base64;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProfileService {
 
-    // todo show available and passed quizzes for Student
-    // TODO bind student with his open test + add students
-    // todo filter available tests by quizResult isCompleted
-    // todo for student show only is correct
-    // todo update quiz page with checked
-    // todo finish quiz alert without rating
-    // todo Async evaluation
-
     UserService userService;
     UserRepository userRepository;
     ProfileRepository profileRepository;
     ImageService imageService;
     PhotoRepository photoRepository;
     ValidationService validationService;
-
 
     public void saveProfile(ProfileDto profileDto) {
         log.info("profileDto = " + profileDto);
@@ -52,6 +43,7 @@ public class ProfileService {
         profile.setPhoto(photo);
         profile.setId(profile.getUser().getId());
         profileRepository.save(profile);
+
     }
 
     public Profile getCurrentUserProfile() {
@@ -82,7 +74,9 @@ public class ProfileService {
         User user = userService.getUserPrincipal();
         profileDto.setFirstName(user.getProfile().getFirstName());
         profileDto.setLastName(user.getProfile().getLastName());
-        profileDto.setPhoto(Base64.getEncoder().encodeToString(user.getProfile().getPhoto().getData()));
+        if (user.getProfile().getPhoto().getData() != null) {
+            profileDto.setPhoto(Base64.getEncoder().encodeToString(user.getProfile().getPhoto().getData()));
+        }
         return profileDto;
     }
 }

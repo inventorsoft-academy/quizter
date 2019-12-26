@@ -8,40 +8,108 @@ $(document).ready(function () {
 
 });
 
+var students = [];
+
 function getAllSubjectForGroupCreation() {
+
     $.getJSON("/admin/subjects",
         function (data) {
-            $.each(data.name, function (key, value) {
+            $('#inputGroupSelect')
+                .append($("<option></option>")
+                    .attr("value", "")
+                    .text(""));
+            $.each(data, function (key, value) {
                 $('#inputGroupSelect')
                     .append($("<option></option>")
                         .attr("value", key)
-                        .text(value));
+                        .text(value.name));
             });
         });
 
-    $("#btnCreateGroup").click(function () {
-        var name = $("#inputGroupName");
+    var subjectName;
 
-        var subject = $("#inputGroupSelect option:selected").text();
+    var count = 1;
+    $("#btnShowStudents").click(function () {
+        subjectName = $("#inputGroupSelect option:selected").text();
 
-        createGroup(name, subject);
+        if (subjectName !== undefined) {
+            $.getJSON("/admin/students?" + subjectName,
+                function (data) {
+                    viewStudentsInTable(data, count);
+                });
+        } else {
+            $.getJSON("/admin/students",
+                function (data) {
+                    viewStudentsInTable(data, count);
+                });
+        }
     });
 
+    $("#btnCreateGroup").click(function () {
+        var name = $("#inputGroupName").val();
 
-};
+        var index;
 
+        $('#studentsInGroupTBody').each(function (i) {
+            index = i + 1;
+            console.log("Hey");
 
-function createSubject(name) {
+            var isSelected = $("#selectStudent_" + index).is(":checked") ? "true" : "false";
+
+            if (isSelected) {
+                console.log("Hey@@@@");
+                var v = $('#studentEmail_' + index).val();
+                console.log(v + "SS");
+                $.getJSON("/admin/students/" + v,
+                    function (data) {
+                        console.log(data.email + data.profile)
+                        students.push(data)
+                    }
+                );
+            }
+
+            index++;
+        });
+
+        createGroup(name, subjectName, students);
+    });
+
+}
+
+function viewStudentsInTable(data, count) {
+    var studentsInGroupTBodyScript = $('#studentsInGroupTBodyScript').html();
+
+    // $("#studentsInGroupTBody").html("");
+
+    $.each(data, function (index, value) {
+        var student = {
+            "quantity": count,
+            "student": value,
+            "count": count
+        };
+
+        $("#studentsInGroupTBody").append(
+            Mustache.to_html(studentsInGroupTBodyScript, student),
+        );
+
+        count++;
+    });
+
+}
+
+function createGroup(name, subjectName, students) {
     if (window.confirm("Do you really want to create group?")) {
         $.ajax({
-            url: '/admin/subject/create',
+            url: '/admin/group-create/',
             type: 'POST',
             enctype: 'multipart/form-data',
             data: JSON.stringify({
                 name: name,
+                subjectName: subjectName,
+                students: students
             }),
             success: function () {
-                alert("Subject has been successfully created!");
+                alert("Group has been successfully created!");
                 location.reload();
             },
             error: function (xhr, status, errorThrown) {
@@ -61,19 +129,18 @@ function createSubject(name) {
 
 }
 
-function createGroup(name, subject) {
+function createSubject(name) {
     if (window.confirm("Do you really want to create group?")) {
         $.ajax({
-            url: '/admin/group-create/',
+            url: '/admin/subject/create',
             type: 'POST',
             enctype: 'multipart/form-data',
             data: JSON.stringify({
                 name: name,
-                subject: subject
             }),
             success: function () {
-                alert("Group has been successfully created!");
-                $("#inputGroupSelect").val("");
+                alert("Subject has been successfully created!");
+                location.reload();
             },
             error: function (xhr, status, errorThrown) {
                 var response = new ErrorResponse(JSON.parse(xhr.responseText));
