@@ -17,4 +17,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     List<User> findUserByRole(Role role);
 
+    List<User> findUserByProfileSphere(String name);
+
+    User findUserByEmail(String email);
+
 }

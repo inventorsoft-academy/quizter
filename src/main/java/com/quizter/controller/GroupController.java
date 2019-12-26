@@ -4,6 +4,7 @@ import com.quizter.dto.GroupDto;
 import com.quizter.dto.StudentDto;
 import com.quizter.dto.response.MessageResponse;
 import com.quizter.service.GroupService;
+import com.quizter.service.UserService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,6 +27,8 @@ public class GroupController {
 
     GroupService groupService;
 
+    UserService userService;
+
     @GetMapping("/cabinet/tests/groups")
     public ResponseEntity<List<GroupDto>> getAllGroup() {
         return ResponseEntity.ok(groupService.findAllGroup());
@@ -34,6 +39,21 @@ public class GroupController {
         groupService.createGroup(groupDto);
 
         return ResponseEntity.ok(new MessageResponse("Group was created successfully"));
+    }
+
+    @RequestMapping(value = "/admin/students?{subjectName}", method = RequestMethod.GET)
+    public ResponseEntity<List<StudentDto>> getStudentsBySubject(@PathVariable("subjectName") String subjectName) {
+        return ResponseEntity.ok(userService.findStudentsBySubjectName(subjectName));
+    }
+
+    @RequestMapping(value = "/admin/students?{email}", method = RequestMethod.GET)
+    public ResponseEntity<StudentDto> getStudentsByEmail(@PathVariable("email") String email) {
+        return ResponseEntity.ok(userService.findStudentByEmail(email));
+    }
+
+    @GetMapping("/admin/students")
+    public ResponseEntity<List<StudentDto>> getAllStudents() {
+        return ResponseEntity.ok(userService.findAllStudents());
     }
 
     @GetMapping("/cabinet/tests/groups/{id}/students-from-group")
@@ -61,7 +81,7 @@ public class GroupController {
     @GetMapping("/cabinet/tests/student-groups/{id}")
     public ModelAndView getGroupPageByTestId(@PathVariable Long id) {
         ModelAndView modelAndView = new ModelAndView("student-groups-page");
-        modelAndView.addObject("testId", id);
+        modelAndView.addObject("testIdForGroup", id);
         return modelAndView;
     }
 

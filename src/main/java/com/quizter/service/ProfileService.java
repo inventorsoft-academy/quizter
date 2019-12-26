@@ -47,7 +47,6 @@ public class ProfileService {
         profile.setId(profile.getUser().getId());
         profileRepository.save(profile);
 
-        groupService.setUserToGroup(profile.getUser());
     }
 
     public String savePhoto(MultipartFile file) {

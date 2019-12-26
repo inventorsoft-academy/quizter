@@ -30,6 +30,8 @@ public class QuizResult {
 
     Instant finished;
 
+    Instant endOfAccessible;
+
     Boolean isCompleted;
 
     @ManyToOne(cascade = CascadeType.ALL)

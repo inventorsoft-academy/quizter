@@ -70,6 +70,7 @@ function editTest(clickedElement) {
 
 function inviteStudentInTestTable(clickedElement) {
     var dataId = $(clickedElement.target).attr("data-id");
+
     $.ajax({
         contentType: "application/json; charset=utf-8",
         type: "GET",
