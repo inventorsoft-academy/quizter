@@ -5,12 +5,14 @@ $(document).ready(function () {
            type: 'GET',
            url: '/profile/bar',
            success: function (response) {
-
-
+           localStorage.setItem('avatar', response.photo);
            if (localStorage.getItem('avatar') !== null && localStorage.getItem('avatar') !== 'undefined'){
                 var avatar = localStorage.getItem('avatar');
                 document.getElementById('photoHeader').src = "data:image/jpg;base64," + avatar;
                 document.getElementById('photoSideBar').src = "data:image/jpg;base64," + avatar;
+                if(document.getElementById("userPhoto") !== null){
+                    document.getElementById("userPhoto").src = "data:image/jpg;base64," + avatar;
+                }
            }
            if (response.firstName !== null && response.lastName !== null) {
                 document.getElementById('userMailSideBar').innerHTML  = response.firstName + ' ' + response.lastName;
@@ -29,3 +31,7 @@ $(document).ready(function () {
     })
 
 });
+
+window.onbeforeunload = function(){
+   localStorage.removeItem('avatar');
+}

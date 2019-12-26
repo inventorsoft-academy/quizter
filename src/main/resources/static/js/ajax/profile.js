@@ -68,3 +68,6 @@ function fire_ajax_submit() {
 
 }
 
+window.onbeforeunload = function(){
+   localStorage.removeItem('avatar');
+}

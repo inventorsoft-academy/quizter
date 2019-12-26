@@ -24,7 +24,6 @@ import java.util.Base64;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProfileService {
 
-    // todo save photo to DB byte64
     // todo show available and passed quizzes for Student
     // TODO bind student with his open test + add students
     // todo filter available tests by quizResult isCompleted
