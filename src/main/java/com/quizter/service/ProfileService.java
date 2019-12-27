@@ -1,9 +1,10 @@
 package com.quizter.service;
 
 import com.quizter.dto.ProfileDto;
+import com.quizter.entity.Photo;
 import com.quizter.entity.Profile;
 import com.quizter.entity.User;
-import com.quizter.exception.UserIsNotAuthorizedException;
+import com.quizter.repository.PhotoRepository;
 import com.quizter.repository.ProfileRepository;
 import com.quizter.repository.UserRepository;
 import lombok.AccessLevel;
@@ -12,12 +13,9 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Base64;
 
 @Slf4j
 @Service
@@ -26,60 +24,59 @@ import java.nio.file.Paths;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProfileService {
 
-    UserRepository userRepository;
-
-    ProfileRepository profileRepository;
-
     UserService userService;
-
-    GroupService groupService;
+    UserRepository userRepository;
+    ProfileRepository profileRepository;
+    ImageService imageService;
+    PhotoRepository photoRepository;
+    ValidationService validationService;
 
     public void saveProfile(ProfileDto profileDto) {
+        log.info("profileDto = " + profileDto);
+        validationService.validateProfile(profileDto);
         Profile profile = getCurrentUserProfile();
-        String photoUrl = "none";
-        if (profile.getPhotoUrl() != null && !"none".equals(profile.getPhotoUrl())) {
-            photoUrl = "/images/user" + profile.getUser().getId() + ".jpg";
-        }
+        Photo photo = profile.getPhoto();
         profile.setFirstName(profileDto.getFirstName());
         profile.setLastName(profileDto.getLastName());
         profile.setSphere(profileDto.getSphere());
         profile.setPhoneNumber(profileDto.getPhoneNumber());
-        profile.setPhotoUrl(photoUrl);
+        profile.setPhoto(photo);
         profile.setId(profile.getUser().getId());
         profileRepository.save(profile);
 
     }
 
-    public String savePhoto(MultipartFile file) {
-        User user = userService.getUserPrincipal().orElseThrow(UserIsNotAuthorizedException::new);
-        byte[] bytes;
-        try {
-            bytes = file.getBytes();
-            Path path = Paths.get("src/main/resources/static/images/user" + user.getId() + ".jpg");
-            Files.write(path, bytes);
-            path = Paths.get("target/classes/static/images/user" + user.getId() + ".jpg");
-            Files.write(path, bytes);
-        } catch (IOException e) {
-            log.info("Image not saved, " + e);
-        }
-        Profile profile = user.getProfile();
-        profile.setPhotoUrl("/images/user" + user.getId() + ".jpg");
-        profileRepository.save(profile);
-        return profileRepository.findById(profile.getId()).orElseThrow().getPhotoUrl();
-    }
-
-
     public Profile getCurrentUserProfile() {
-        User user = userService.getUserPrincipal().orElseThrow(UserIsNotAuthorizedException::new);
+        User user = userService.getUserPrincipal();
         if (user.getProfile() == null) {
             Profile profile = new Profile();
+            Photo photo = null;
+            try {
+                photo = imageService.getDefaultPhoto(user);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            profile.setPhoto(photo);
+            photo.setProfile(profile);
             user.setProfile(profile);
             profile.setUser(user);
             profile.setId(user.getId());
             profileRepository.save(profile);
+            photoRepository.save(photo);
             userRepository.save(user);
             return profile;
         }
         return user.getProfile();
+    }
+
+    public ProfileDto getProfileDto() {
+        ProfileDto profileDto = new ProfileDto();
+        User user = userService.getUserPrincipal();
+        profileDto.setFirstName(user.getProfile().getFirstName());
+        profileDto.setLastName(user.getProfile().getLastName());
+        if (user.getProfile().getPhoto().getData() != null) {
+            profileDto.setPhoto(Base64.getEncoder().encodeToString(user.getProfile().getPhoto().getData()));
+        }
+        return profileDto;
     }
 }
