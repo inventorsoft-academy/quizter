@@ -30,7 +30,7 @@ public class ProfileDto {
 
     @NotNull(message = "Phone number is mandatory")
     @NotBlank(message = "Phone number is mandatory")
-    @Pattern(regexp="[\\d]{10}", message = "Phone number must be 10 digits")
+    @Pattern(regexp = "[\\d]{10}", message = "Phone number must be 10 digits")
     String phoneNumber;
 
     String photo;

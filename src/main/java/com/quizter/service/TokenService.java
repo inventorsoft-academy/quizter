@@ -2,6 +2,7 @@ package com.quizter.service;
 
 import com.quizter.dictionary.CacheType;
 import com.quizter.entity.Token;
+import com.quizter.exception.ResourceNotFoundException;
 import com.quizter.repository.TokenRepository;
 import com.quizter.repository.UserRepository;
 import lombok.AccessLevel;
@@ -40,7 +41,9 @@ public class TokenService {
     }
 
     public Token getToken(String email, CacheType type) {
-        return tokenRepository.findByTypeAndUser(type, userRepository.findByEmail(email).orElseThrow()).orElseThrow();
+        return tokenRepository.findByTypeAndUser(type, userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("user", "email", email)))
+                .orElseThrow(() -> new ResourceNotFoundException("user", "type", type));
     }
 
     public void removeToken(String email, CacheType type) {

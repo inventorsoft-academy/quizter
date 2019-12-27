@@ -19,5 +19,5 @@ public class ErrorResponse {
 
     Instant time;
     String message;
-    Map<String,String> fieldErrors;
+    Map<String, String> fieldErrors;
 }

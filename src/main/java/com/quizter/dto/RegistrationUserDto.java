@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @ToString
 public class RegistrationUserDto {
-                                                                                                                                                                                                                                                                                                                                                                                                                                        
+
     @NotNull(message = "Email can't be empty")
     @Email(message = "Email is incorrect")
     String email;

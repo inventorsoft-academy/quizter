@@ -56,6 +56,10 @@ public class ProfileController {
     public ResponseEntity<String> savePhoto(@ModelAttribute AvatarDto file) {
         return ResponseEntity.ok(imageService.savePhoto(file));
     }
-    //todo on login set photo to localStorage, on logout erase, on edit photo update
-    //todo teacher review results page
+
+    @GetMapping("/bar")
+    public ResponseEntity<ProfileDto> getData() {
+        return ResponseEntity.ok(profileService.getProfileDto());
+    }
+
 }

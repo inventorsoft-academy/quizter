@@ -4,6 +4,7 @@ import com.quizter.dto.AvatarDto;
 import com.quizter.entity.Photo;
 import com.quizter.entity.User;
 import com.quizter.exception.FileUploadException;
+import com.quizter.exception.ResourceNotFoundException;
 import com.quizter.repository.PhotoRepository;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -76,6 +77,7 @@ public class ImageService {
             }
             photoRepository.save(photo);
         }
-        return photoRepository.findByFileName("defaultPhoto").orElseThrow();
+        return photoRepository.findByFileName("defaultPhoto")
+                .orElseThrow(() -> new ResourceNotFoundException("phot", "defaultPhoto", "defaultPhoto"));
     }
 }

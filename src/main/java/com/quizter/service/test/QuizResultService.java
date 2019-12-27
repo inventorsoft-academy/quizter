@@ -8,6 +8,7 @@ import com.quizter.entity.test.Question;
 import com.quizter.entity.test.QuizResult;
 import com.quizter.entity.test.ResultAnswer;
 import com.quizter.entity.test.Test;
+import com.quizter.exception.ResourceNotFoundException;
 import com.quizter.mapper.test.ResultMapper;
 import com.quizter.mapper.test.TestMapper;
 import com.quizter.repository.QuizResultRepository;
@@ -73,7 +74,8 @@ public class QuizResultService {
     }
 
     public String beginQuiz(Long testId) {
-        QuizResult quizResult = quizResultRepository.findQuizResultByTestId(testId).orElseThrow();
+        QuizResult quizResult = quizResultRepository.findQuizResultByTestId(testId)
+                .orElseThrow(() -> new ResourceNotFoundException("quiz result", "testId", testId));
 
         quizResult.setStart(Instant.now());
         long minutes = quizResult.getTest().getDuration();
@@ -116,7 +118,8 @@ public class QuizResultService {
     }
 
     public Double finishQuiz(String quizResultId, List<QuizResultDto> quizResultDtos) {
-        QuizResult quizResult = quizResultRepository.findById(quizResultId).orElseThrow();
+        QuizResult quizResult = quizResultRepository.findById(quizResultId)
+                .orElseThrow(() -> new ResourceNotFoundException("quiz result", "id", quizResultId));
         quizResult.setFinished(Instant.now());
         quizResult.setResultAnswers(getResultAnswers(quizResult, quizResultDtos));
         quizResult.setIsCompleted(true);
@@ -127,7 +130,8 @@ public class QuizResultService {
     }
 
     public Long getDuration(String quizResultId) {
-        QuizResult quizResult = findById(quizResultId).orElseThrow();
+        QuizResult quizResult = findById(quizResultId)
+                .orElseThrow(() -> new ResourceNotFoundException("quiz result", "quizResultId", quizResultId));
         return (quizResult.getFinished().getEpochSecond() - Instant.now().getEpochSecond());
     }
 
