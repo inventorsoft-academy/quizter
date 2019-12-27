@@ -8,6 +8,7 @@ import com.quizter.dto.UserEmailDto;
 import com.quizter.entity.Credentials;
 import com.quizter.entity.User;
 import com.quizter.exception.NoUserWithThatIDException;
+import com.quizter.exception.ResourceNotFoundException;
 import com.quizter.exception.TokenException;
 import com.quizter.mapper.GroupMapper;
 import com.quizter.mapper.UserMapper;
@@ -103,7 +104,8 @@ public class UserService {
             throw new TokenException("Token not valid");
         }
         validationService.passwordValidation(passwordDto);
-        User user = userRepository.findById(id).orElseThrow();
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("user", "id", id));
         user.setPassword(passwordEncoder.encode(passwordDto.getPassword()));
         tokenService.removeToken(user.getEmail(), CacheType.RECOVERY);
         userRepository.save(user);
@@ -113,7 +115,7 @@ public class UserService {
         try {
             Credentials credentials = (Credentials) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             return userRepository.findByEmail(credentials.getUsername())
-                    .orElseThrow();
+                    .orElseThrow(() -> new ResourceNotFoundException("user", "email", credentials.getUsername()));
         } catch (ClassCastException o_0) {
             return new User();
         }
@@ -135,7 +137,7 @@ public class UserService {
     }
 
     public StudentDto findStudentByEmail(String email) {
-        return groupMapper.toStudentDto(userRepository.findUserByEmail(email));
+        return groupMapper.toStudentDto(userRepository.findUserByEmail(email).orElseThrow());
     }
 
 

@@ -46,7 +46,7 @@ public class Test {
     String version;
 
     @ManyToOne
-    @JoinColumn(name="author_id", nullable=false)
+    @JoinColumn(name = "author_id", nullable = false)
     User author;
 
     @Column(nullable = false)

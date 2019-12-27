@@ -58,7 +58,7 @@ function finishQuiz(){
               document.getElementById('endId').style.display = "none";
               document.getElementById('rowId').style.display = "none";
               document.getElementById('time').style.display = "none";
-              alert("Quiz finished with rating " + response.message);
+              alert("Quiz passed");
               window.location.href = "/desk/";
            },
            error: function (xhr, status, errorThrown) {

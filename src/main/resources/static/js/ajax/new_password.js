@@ -12,7 +12,6 @@ function saveNewPassword(){
           $('#messageLogin').text("Login");
        },
        error: function (xhr, status, errorThrown) {
-       console.log(xhr.responseJSON.message);
          if(xhr.responseJSON.message === "Validation error"){
             $('#mismatchMessage').text(xhr.responseJSON.fieldErrors.PasswordError);
          } else if(xhr.responseJSON.message === "Token not valid"){

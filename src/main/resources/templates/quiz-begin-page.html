@@ -10,7 +10,7 @@
 <body>
 <div class="right_col" role="main" data-layout-fragment="content">
     <div class="row" style="margin-right: 40px;">
-        <div class="" style="position: fixed;
+        <div class="" th:if="${duration != 'none'}" style="position: fixed;
                 z-index:100;
                 text-align: center;
                 margin-top: 55px;
@@ -22,6 +22,19 @@
             <h3 style="color: white;">Duration</h3>
             <h1 style="color: white;" id="time"><span th:text="${duration}"></span> min</h1>
             <button id="startId" class="btn btn-primary" th:onclick="start()">Begin</button>
+            <br>
+        </div>
+        <div class="" th:if="${duration == 'none'}" style="position: fixed;
+               z-index:100;
+                text-align: center;
+                margin-top: 100px;
+                margin-left: 20%;
+                width: 25%;
+                background-color: #2A3F54;
+                border-radius: 5px;
+                box-shadow: 10px 10px 5px grey;">
+            <h4 style="color: white;">Sorry quiz is no longer available</h4>
+            <a href="/desk"><button class="btn btn-primary">Back</button></a>
             <br>
         </div>
     </div>
