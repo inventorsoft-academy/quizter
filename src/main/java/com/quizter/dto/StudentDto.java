@@ -17,5 +17,6 @@ public class StudentDto {
 
     String email;
 
+    boolean active;
 }
 

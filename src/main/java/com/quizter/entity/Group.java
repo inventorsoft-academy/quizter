@@ -1,6 +1,5 @@
 package com.quizter.entity;
 
-import com.quizter.dto.StudentDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

@@ -6,7 +6,7 @@ $(document).ready(function () {
 
 function getAllStudentsFromGroup() {
 
-    $.getJSON("/cabinet/tests/groups",
+    $.getJSON("/admin/tests/groups",
         function (data) {
             var tBodyGroupScript = $('#tBodyGroupScript').html();
             var count = 1;
@@ -43,10 +43,10 @@ function viewStudentsFromGroup(clickedElement) {
     $.ajax({
         contentType: "application/json; charset=utf-8",
         type: "GET",
-        url: '/cabinet/tests/student-groups/students',
+        url: '/admin/tests/student-groups/students',
         data: JSON.stringify(dataId),
         success: function () {
-            location.href = "/cabinet/tests/student-groups/" + dataId + "/students"
+            location.href = "/admin/tests/student-groups/" + dataId + "/students"
         }
     })
 }
@@ -56,7 +56,7 @@ function inviteStudentsToTest(students) {
 
     if (window.confirm("Open access to pass group?")) {
         $.ajax({
-            url: '/cabinet/rest-tests/invite-group',
+            url: '/admin/tests/invite-group',
             type: 'POST',
             enctype: 'multipart/form-data',
             data: JSON.stringify({

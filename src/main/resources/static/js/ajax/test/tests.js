@@ -70,14 +70,14 @@ function editTest(clickedElement) {
 
 function inviteStudentInTestTable(clickedElement) {
     var dataId = $(clickedElement.target).attr("data-id");
-
+    console.log(dataId + " id")
     $.ajax({
         contentType: "application/json; charset=utf-8",
         type: "GET",
-        url: '/cabinet/tests/student-groups',
+        url: '/admin/tests/student-groups',
         data: JSON.stringify(dataId),
         success: function () {
-            location.href = "/cabinet/tests/student-groups/" + dataId
+            location.href = "/admin/tests/student-groups/" + dataId
         }
     })
 }

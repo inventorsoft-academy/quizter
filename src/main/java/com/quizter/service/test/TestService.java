@@ -3,6 +3,7 @@ package com.quizter.service.test;
 import com.quizter.dictionary.QuestionType;
 import com.quizter.dto.test.QuestionDto;
 import com.quizter.dto.test.TestDto;
+import com.quizter.dto.test.TestEditDto;
 import com.quizter.entity.test.CodeQuestion;
 import com.quizter.entity.test.MultiVariantQuestion;
 import com.quizter.entity.test.Question;
@@ -21,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.YearMonth;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -63,7 +64,7 @@ public class TestService<T extends Question> {
         test.setDescription(testDto.getDescription());
         test.setSubject(testDto.getSubject());
         test.setDuration(testDto.getDuration());
-        test.setVersion(YearMonth.now().getMonth().toString());
+        test.setVersion(Instant.now());
         test.setQuestions(new ArrayList<>(createQuestions(testDto.getQuestions())));
         test.setAuthor(userService.getUserPrincipal());
 
@@ -71,27 +72,24 @@ public class TestService<T extends Question> {
     }
 
     @Transactional
-    public void updateTest(Long id, TestDto testDto) {
-        validationService.testCreationFormValidation(testDto);
+    public void updateTest(Long id, TestEditDto testEditDto) {
+        validationService.testEditionFormValidation(testEditDto);
 
         Test testFromDB = testRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Test", "id", id));
 
         Test test = new Test();
-        test.setId(id);
-        test.setName(testDto.getName());
-        test.setSubject(testDto.getSubject());
-        test.setDuration(testDto.getDuration());
-        test.setDescription(testDto.getDescription());
-
-        validationService.validateVersion(testDto.getVersion(), testFromDB.getVersion());
-        test.setVersion(testDto.getVersion());
-        test.setQuestions(new ArrayList<>(createQuestions(testDto.getQuestions())));
-        test.setAuthor(testFromDB.getAuthor());
+        test.setName(testFromDB.getName());
+        test.setSubject(testFromDB.getSubject());
+        test.setDuration(testEditDto.getDuration());
+        test.setDescription(testEditDto.getDescription());
+        test.setVersion(Instant.now());
+        test.setQuestions(new ArrayList<>(createQuestions(testEditDto.getQuestions())));
+        test.setAuthor(userService.getUserPrincipal());
 
         testRepository.save(test);
     }
 
-    @Transactional
+    // TODO: 27.12.2019 only marked as deleted
     public void deleteTest(Long id) {
         testRepository.deleteById(id);
     }

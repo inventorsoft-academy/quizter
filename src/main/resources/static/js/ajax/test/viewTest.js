@@ -40,6 +40,7 @@ function getTest() {
                 if (question.questionType === "CODE") {
                     $("#getAnswers").hide();
                 } else {
+                    console.log("Whay")
                     $("#getCodeQuestion").hide();
                 }
 

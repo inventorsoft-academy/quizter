@@ -1,11 +1,11 @@
 package com.quizter.dto;
 
-import com.quizter.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+
 import javax.validation.constraints.NotNull;
 import java.util.List;
 

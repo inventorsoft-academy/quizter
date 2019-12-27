@@ -1,6 +1,5 @@
 package com.quizter.dto;
 
-import com.quizter.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +14,7 @@ public class InviteDto {
 
     Long testId;
 
-    List<User> students;
+    List<StudentDto> students;
 
 }
 

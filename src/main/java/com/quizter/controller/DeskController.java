@@ -26,7 +26,7 @@ public class DeskController {
     public ModelAndView deskPage() {
         ModelAndView modelAndView = new ModelAndView("desk-page");
 
-        List<TestDto> quizzes = testMapper.toTestListDto(quizResultService.getTestAccessibleTestsForStudent());
+        List<TestDto> quizzes = testMapper.toTestListDto(quizResultService.getAccessibleTestsForStudent());
         List<QuizResult> passedQuizzes = quizResultService.findByApplicant();
 
         modelAndView.addObject("quizzes", quizzes);
