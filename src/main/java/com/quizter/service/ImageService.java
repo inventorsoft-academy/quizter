@@ -5,6 +5,7 @@ import com.quizter.entity.Photo;
 import com.quizter.entity.User;
 import com.quizter.exception.FileUploadException;
 import com.quizter.exception.ResourceNotFoundException;
+import com.quizter.exception.UserIsNotAuthorizedException;
 import com.quizter.repository.PhotoRepository;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -33,7 +34,7 @@ public class ImageService {
     public String savePhoto(AvatarDto avatarDto) {
         validationService.validateImage(avatarDto);
         MultipartFile file = avatarDto.getFile();
-        User user = userService.getUserPrincipal();
+        User user = userService.getUserPrincipal().orElseThrow(UserIsNotAuthorizedException::new);
         String fileName = "user" + user.getId();
         try {
             if (fileName.contains("..")) {

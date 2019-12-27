@@ -72,18 +72,18 @@
                                                         required>
                                                 </select>
                                             </div>
-
+                                            <br/><br/><br/>
                                             <div class=" card-body  ">
                                                 <p>
                                                     <a aria-controls="collapseExample" aria-expanded="false"
-                                                       class="btn btn-primary pull-left"
-                                                       data-toggle="collapse"
+                                                       class="btn btn-primary pull-left enableCollapse"
+                                                       data-target="#showStudents" data-toggle="collapse"
                                                        href="#showStudents"
                                                        id="btnShowStudents" role="button">
                                                         Show students by selected subject
                                                     </a>
                                                 </p>
-
+                                                <br/><br/><br/>
                                                 <div class="collapse col-md-12" id="showStudents">
                                                     <div class="clearfix">
                                                         <table class="table table-striped jambo_table bulk_action">
@@ -93,25 +93,22 @@
                                                                     <input class="flat" id="check-all" type="checkbox">
                                                                 </th>
                                                                 <th style="width: 1%">#</th>
-                                                                <th>Photo</th>
                                                                 <th>Full name</th>
                                                                 <th>Email</th>
                                                                 <th>Phone number</th>
                                                             </tr>
                                                             </thead>
-                                                            <tbody id="studentsInGroupTBody">
+                                                            <tbody class="studentsInGroupTBodyClass"
+                                                                   id="studentsInGroupTBody">
                                                             <script id="studentsInGroupTBodyScript"
                                                                     type="text/x-mustache-template">
-                                                                <tr class="row-select_{{count}}">
+                                                                <tr class="row-select">
                                                                     <td class="a-center">
                                                                         <input id="selectStudent_{{count}}"
                                                                                type="checkbox" class="flat"
                                                                                name="table_records">
                                                                     </td>
                                                                     <td>{{count}}</td>
-                                                                    <td>
-                                                                        <a>Photo</a>
-                                                                    </td>
                                                                     <td>
                                                                         <a>{{student.profile.firstName}}
                                                                             {{student.profile.lastName}}</a>
@@ -126,21 +123,25 @@
                                                             </script>
                                                             </tbody>
                                                         </table>
+                                                        <br/>
+                                                        <a class="btn btn-success" id="loadCheckedStudents"
+                                                           type="button"> Load checked
+                                                        </a>
+                                                        <br/><br/><br/>
                                                     </div>
                                                 </div>
-
-                                                <br><br><br>
-
-                                                <div class="input-group">
-                                                    <div class="ln_solid"></div>
-                                                    <a class="btn btn-success" id="btnCreateGroup"
-                                                       type="button"> Submit
-                                                    </a>
-                                                </div>
+                                            </div>
+                                            <br/><br/><br/>
+                                            <div class="input-group">
+                                                <a class="btn btn-success" id="btnCreateGroup"
+                                                   type="button"> Submit
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="ln_solid"></div>
+
                             </div>
                         </form>
                     </div>

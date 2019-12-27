@@ -37,7 +37,7 @@ public class GroupController {
     @PostMapping("/admin/group-create")
     public ResponseEntity<MessageResponse> createGroup(@RequestBody GroupDto groupDto) {
         groupService.createGroup(groupDto);
-
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         return ResponseEntity.ok(new MessageResponse("Group was created successfully"));
     }
 

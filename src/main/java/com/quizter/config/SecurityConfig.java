@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     UserDetailsServiceImpl userDetailsService;
+    static final String LOGIN_PAGE = "/login";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -25,9 +26,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(LOGIN_PAGE, "/registration", "/newPassword", "/resetPassword","/**").permitAll()
                 .antMatchers("/", "/profile/**").hasAnyAuthority("ADMIN", "TEACHER", "STUDENT")
-                .antMatchers("desk/**","/cabinet/rest-tests/").hasAnyAuthority("ADMIN", "STUDENT")
-                .antMatchers("cabinet/**").hasAnyAuthority("ADMIN", "TEACHER")
-                .antMatchers("admin/**").hasAuthority("ADMIN")
+                .antMatchers("/desk/**","/cabinet/rest-tests/").hasAnyAuthority("ADMIN", "STUDENT")
+                .antMatchers("/cabinet/**").hasAnyAuthority("ADMIN", "TEACHER")
+                .antMatchers("/admin/**").hasAuthority("ADMIN")
 
                 .and()
                 .formLogin()

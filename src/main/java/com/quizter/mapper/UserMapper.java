@@ -1,6 +1,7 @@
 package com.quizter.mapper;
 
 import com.quizter.dto.RegistrationUserDto;
+import com.quizter.dto.StudentDto;
 import com.quizter.entity.User;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -14,6 +15,9 @@ public class UserMapper {
     ModelMapper mapper = new ModelMapper();
 
     public User toUser(RegistrationUserDto registrationUserDto) {
+        return mapper.map(registrationUserDto, User.class);
+    }
+    public User toUser(StudentDto registrationUserDto) {
         return mapper.map(registrationUserDto, User.class);
     }
 

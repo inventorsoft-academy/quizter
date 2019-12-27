@@ -15,7 +15,7 @@ public class InviteDto {
 
     Long testId;
 
-    List<User> students;
+    List<StudentDto> students;
 
 }
 
