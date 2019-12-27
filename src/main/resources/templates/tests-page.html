@@ -41,7 +41,7 @@
                                 <th style="width: 20%">Subject</th>
                                 <th>Name</th>
                                 <th>Version</th>
-                                <th>Students</th>
+                                <th sec:authorize="hasAuthority('ADMIN')">Students</th>
                                 <th style="width: 20%">#Edit</th>
                             </tr>
                             </thead>
@@ -58,10 +58,8 @@
                                     <td>
                                         <a> {{version}} </a>
                                     </td>
-                                    <td style="text-align:center">
-                                        <a type="button" class="btnInviteStudentsInTestTable btn btn-success btn-xs "
-                                           data-id={{id}}><i
-                                                class="fa fa-child"></i> Invite</a>
+                                    <td sec:authorize="hasAuthority('ADMIN')" style="text-align:center">
+                                        <a href="#"  class="btnInviteStudentsInTestTable btn btn-success btn-xs " data-id={{id}}><i class="fa fa-child"></i> Invite</a>
                                     </td>
                                     <td>
                                         <a sec:authorize="hasAuthority('TEACHER')" href="#"

@@ -1,5 +1,6 @@
 package com.quizter.exception;
 
+import com.quizter.dto.response.MessageResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
 import java.util.Collections;
+import java.util.HashMap;
 
 @RestControllerAdvice
 public class GlobalHandler {
@@ -23,11 +25,6 @@ public class GlobalHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
-    @ExceptionHandler(NoUserWithThatIDException.class)
-    public ResponseEntity noUserWithThatIDException(NoUserWithThatIDException exception) {
-        ErrorResponse errorResponse = new ErrorResponse(Instant.now(), exception.getMessage(), Collections.emptyMap());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-    }
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity validationHandler(ValidationException exception) {

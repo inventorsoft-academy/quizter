@@ -8,40 +8,114 @@ $(document).ready(function () {
 
 });
 
+var students = [];
+
 function getAllSubjectForGroupCreation() {
+
     $.getJSON("/admin/subjects",
         function (data) {
-            $.each(data.name, function (key, value) {
+            $('#inputGroupSelect')
+                .append($("<option></option>")
+                    .attr("value", "")
+                    .text(""));
+            $.each(data, function (key, value) {
                 $('#inputGroupSelect')
                     .append($("<option></option>")
                         .attr("value", key)
-                        .text(value));
+                        .text(value.name));
             });
         });
 
-    $("#btnCreateGroup").click(function () {
-        var name = $("#inputGroupName");
+    var subjectName;
 
-        var subject = $("#inputGroupSelect option:selected").text();
+    var count = 1;
+    $("#btnShowStudents").click(function () {
+        subjectName = $("#inputGroupSelect option:selected").text();
 
-        createGroup(name, subject);
+        if (subjectName !== undefined) {
+            $.getJSON("/admin/students/subject/" + subjectName,
+                function (data) {
+                    viewStudentsInTable(data, count);
+                });
+        } else {
+            $.getJSON("/admin/students",
+                function (data) {
+                    viewStudentsInTable(data, count);
+                });
+        }
     });
 
+    var index;
 
-};
+    $("#btnCreateGroup").click(function () {
+        var name = $("#inputGroupName").val();
 
+        index= 1;
+        $('#table_records').each(function (i) {
+            index ++;
+            console.log("SSS" + index);
 
-function createSubject(name) {
+            // var isSelected =  ? "true" : "false";
+
+            if ($("#selectStudent_" + index).is(":checked")) {
+                console.log(index);
+                var email = $('#studentEmail_' + index).text().replace(/\s/g, '');
+                console.log(email);
+                $.getJSON("/admin/students/" + email,
+                    function (data) {
+                        students.push(data)
+                        console.log("S" + students.length);
+                    }
+                );
+            }
+
+            console.log(students.length);
+
+        });
+
+        if (students.length !== 0) {
+            createGroup(name, subjectName, students);
+        }
+
+    });
+
+}
+
+function viewStudentsInTable(data, count) {
+    var studentsInGroupTBodyScript = $('#studentsInGroupTBodyScript').html();
+
+    // $("#studentsInGroupTBody").html("");
+
+    $.each(data, function (index, value) {
+        var student = {
+            "quantity": count,
+            "student": value,
+            "count": count
+        };
+
+        $("#studentsInGroupTBody").append(
+            Mustache.to_html(studentsInGroupTBodyScript, student),
+        );
+
+        count++;
+    });
+
+}
+
+function createGroup(name, subjectName, students) {
+    console.log(students.length + 'WWWWWWWWWWWWW');
     if (window.confirm("Do you really want to create group?")) {
         $.ajax({
-            url: '/admin/subject/create',
+            url: '/admin/group-create/',
             type: 'POST',
             enctype: 'multipart/form-data',
             data: JSON.stringify({
                 name: name,
+                subjectName: subjectName,
+                students: students
             }),
             success: function () {
-                alert("Subject has been successfully created!");
+                alert("Group has been successfully created!");
                 location.reload();
             },
             error: function (xhr, status, errorThrown) {
@@ -61,19 +135,18 @@ function createSubject(name) {
 
 }
 
-function createGroup(name, subject) {
+function createSubject(name) {
     if (window.confirm("Do you really want to create group?")) {
         $.ajax({
-            url: '/admin/group-create/',
+            url: '/admin/subject/create',
             type: 'POST',
             enctype: 'multipart/form-data',
             data: JSON.stringify({
                 name: name,
-                subject: subject
             }),
             success: function () {
-                alert("Group has been successfully created!");
-                $("#inputGroupSelect").val("");
+                alert("Subject has been successfully created!");
+                location.reload();
             },
             error: function (xhr, status, errorThrown) {
                 var response = new ErrorResponse(JSON.parse(xhr.responseText));

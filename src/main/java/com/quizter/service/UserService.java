@@ -1,16 +1,17 @@
 package com.quizter.service;
 
 import com.quizter.dictionary.CacheType;
-import com.quizter.dictionary.Role;
 import com.quizter.dto.PasswordDto;
 import com.quizter.dto.ProfileDto;
 import com.quizter.dto.RegistrationUserDto;
+import com.quizter.dto.StudentDto;
 import com.quizter.dto.UserEmailDto;
 import com.quizter.entity.Credentials;
 import com.quizter.entity.Profile;
 import com.quizter.entity.User;
-import com.quizter.exception.NoUserWithThatIDException;
+import com.quizter.exception.ResourceNotFoundException;
 import com.quizter.exception.TokenException;
+import com.quizter.mapper.GroupMapper;
 import com.quizter.exception.UserIsNotAuthorizedException;
 import com.quizter.mapper.UserMapper;
 import com.quizter.repository.UserRepository;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -52,16 +54,18 @@ public class UserService {
 
 	SecurityService securityService;
 
-	public void registerUser(RegistrationUserDto registrationUserDto) {
-		validationService.registrationValidation(registrationUserDto);
-		User user = userMapper.toUser(registrationUserDto);
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setActive(false);
-		userRepository.save(user);
-		mailWebService.mailSend(user.getEmail(), EmailConstants.REGISTRATION_SUBJECT, EmailConstants.MAIL_CONTENT_URL,
-				appConstants.getHost() + "/active-account?id=" + user.getId() + "&token=" + tokenService.generateToken(user.getEmail(), CacheType.ACTIVATION)
-						.getToken());
-	}
+    GroupMapper groupMapper;
+
+    public void registerUser(RegistrationUserDto registrationUserDto) {
+        validationService.registrationValidation(registrationUserDto);
+        User user = userMapper.toUser(registrationUserDto);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setActive(false);
+        userRepository.save(user);
+        mailWebService.mailSend(user.getEmail(), EmailConstants.REGISTRATION_SUBJECT, EmailConstants.MAIL_CONTENT_URL,
+                appConstants.getHost() + "/active-account?id=" + user.getId() + "&token="
+                        + tokenService.generateToken(user.getEmail(), CacheType.ACTIVATION).getToken());
+    }
 
 	private Optional<User> findUserByEmail(String email) {
 		return userRepository.findByEmail(email);
@@ -82,7 +86,7 @@ public class UserService {
 			user.get().setActive(true);
 			userRepository.save(user.get());
 		} else {
-			throw new NoUserWithThatIDException("user", "id", id);
+			throw new ResourceNotFoundException("user", "id", id);
 		}
 	}
 
@@ -132,8 +136,24 @@ public class UserService {
 		}
 	}
 
-    public List<User> getUsersByRole(Role role) {
-        return userRepository.findUserByRole(role);
+    public List<User> findStudentsFromUserList(List<User> users) {
+        return users
+                .stream()
+                .filter(user -> user.getRole().getAuthority().equals("STUDENT"))
+                .collect(Collectors.toList());
     }
+
+    public List<StudentDto> findStudentsBySubjectName(String subjectName) {
+        return groupMapper.toStudentListDto(findStudentsFromUserList(userRepository.findUserByProfileSphere(subjectName)));
+    }
+
+    public List<StudentDto> findAllStudents() {
+        return groupMapper.toStudentListDto(findStudentsFromUserList((List<User>) userRepository.findAll()));
+    }
+
+    public StudentDto findStudentByEmail(String email) {
+        return groupMapper.toStudentDto(userRepository.findUserByEmail(email));
+    }
+
 
 }

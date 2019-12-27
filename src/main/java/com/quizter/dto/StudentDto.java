@@ -11,6 +11,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StudentDto {
 
+    Long id;
+
     Profile profile;
 
     String email;

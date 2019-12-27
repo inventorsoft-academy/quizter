@@ -9,24 +9,29 @@ function getAllStudentsFromGroup() {
     $.getJSON("/cabinet/tests/groups",
         function (data) {
             var tBodyGroupScript = $('#tBodyGroupScript').html();
-
+            var count = 1;
             $.each(data, function (index, group) {
                 var data = {
                     "id": group.id,
                     "name": group.name,
-                    "countOfMembers": group.students.length
+                    "countOfMembers": group.students.length,
+                    "count": count
                 };
+
                 $("#tBodyGroup").append(
                     Mustache.to_html(tBodyGroupScript, data)
                 );
 
-                $("a.inviteStudents").click(function () {
+                $("#inviteStudents_" + count).click(function () {
                     var students = group.students;
 
                     inviteStudentsToTest(students);
                 });
 
+
                 $("a.viewStudents").unbind("click", viewStudentsFromGroup).bind("click", viewStudentsFromGroup);
+
+                count++
             });
 
         });
@@ -47,21 +52,20 @@ function viewStudentsFromGroup(clickedElement) {
 }
 
 function inviteStudentsToTest(students) {
-  //  var testId = $(".getAllGroupsDiv").attr("data-id");
-   // console.log(testId + "!!!!!");
+    var testId = $("#getAllGroupsDiv").attr("dataTest_id");
 
-    if (window.confirm("Invite this group?")) {
+    if (window.confirm("Open access to pass group?")) {
         $.ajax({
             url: '/cabinet/rest-tests/invite-group',
             type: 'POST',
             enctype: 'multipart/form-data',
             data: JSON.stringify({
-                testId: 1,
+                testId: testId,
                 students: students
             }),
             success: function () {
                 alert("The group has got access to the test");
-                $("a.inviteStudents").disable();
+                //  $("a.inviteStudents").disable();
             },
             processData: false,
             contentType: 'application/json; charset=utf-8;',

@@ -3,10 +3,10 @@ package com.quizter.service;
 import com.quizter.dto.GroupDto;
 import com.quizter.dto.StudentDto;
 import com.quizter.entity.Group;
-import com.quizter.entity.User;
 import com.quizter.exception.ResourceNotFoundException;
 import com.quizter.mapper.GroupMapper;
 import com.quizter.repository.GroupRepository;
+import com.quizter.repository.SubjectRepository;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,6 +23,8 @@ public class GroupService {
 
     GroupRepository groupRepository;
 
+    SubjectRepository subjectRepository;
+
     GroupMapper groupMapper;
 
     public List<GroupDto> findAllGroup() {
@@ -38,21 +40,10 @@ public class GroupService {
     public void createGroup(GroupDto groupDto) {
         Group group = new Group();
         group.setName(groupDto.getName());
+        group.setSubject(subjectRepository.findSubjectByName(groupDto.getSubjectName()));
+        group.setStudents(groupMapper.toUserListDto(groupDto.getStudents()));
 
         groupRepository.save(group);
     }
-
-    public void setUserToGroup(User user) {
-        Group group = groupRepository.findGroupByName(user.getProfile().getSphere())
-                .orElseThrow(() -> new ResourceNotFoundException("Group", "Sphere", user.getProfile().getSphere()));
-
-        List<User> studentsFromDB = group.getStudents();
-        studentsFromDB.add(user);
-
-        group.setStudents(studentsFromDB);
-
-        groupRepository.save(group);
-    }
-
 
 }

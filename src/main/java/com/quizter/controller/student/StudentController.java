@@ -2,6 +2,7 @@ package com.quizter.controller.student;
 
 import com.quizter.dto.test.TestDto;
 import com.quizter.entity.test.QuizResult;
+import com.quizter.exception.UserIsNotAuthorizedException;
 import com.quizter.mapper.test.TestMapper;
 import com.quizter.service.test.QuizResultService;
 import lombok.AccessLevel;
@@ -18,20 +19,27 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StudentController {
 
-    TestMapper testMapper;
+	TestMapper testMapper;
 
-    QuizResultService quizResultService;
+	QuizResultService quizResultService;
 
-    @GetMapping("/desk")
-    public ModelAndView deskPage() {
-        ModelAndView modelAndView = new ModelAndView("desk-page");
+	@GetMapping("/desk")
+	public ModelAndView deskPage() {
+		ModelAndView modelAndView = null;
 
-        List<TestDto> quizzes = testMapper.toTestListDto(quizResultService.getTestAccessibleTestsForStudent());
-        List<QuizResult> passedQuizzes = quizResultService.findByApplicant();
+		try {
 
-        modelAndView.addObject("quizzes", quizzes);
-        modelAndView.addObject("passedQuizzes", passedQuizzes);
+            modelAndView = new ModelAndView("desk-page");
+			List<TestDto> quizzes = testMapper.toTestListDto(quizResultService.getTestAccessibleTestsForStudent());
+			List<QuizResult> passedQuizzes = quizResultService.findByApplicant();
 
-        return modelAndView;
-    }
+			modelAndView.addObject("quizzes", quizzes);
+			modelAndView.addObject("passedQuizzes", passedQuizzes);
+
+	    	}catch (UserIsNotAuthorizedException o_0){
+		    modelAndView = new ModelAndView("login-page");
+        }
+
+		return modelAndView;
+	}
 }

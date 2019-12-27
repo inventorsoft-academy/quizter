@@ -18,7 +18,6 @@ import java.util.concurrent.TimeoutException;
 public class QuizterApplication {
 
 	public static void main(String[] args) throws InterruptedException, IOException, TimeoutException {
-		UnZipUtil.unZip();
 		SpringApplication.run(QuizterApplication.class, args);
 	}
 

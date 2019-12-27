@@ -1,13 +1,11 @@
 package com.quizter.dto;
 
-import com.quizter.entity.Subject;
 import com.quizter.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -23,8 +21,8 @@ public class GroupDto {
     String name;
 
     @NotNull(message = "Select any option")
-    Subject subject;
+    String subjectName;
 
-    List<User> students;
+    List<StudentDto> students;
 
 }

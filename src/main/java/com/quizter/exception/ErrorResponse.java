@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.time.Instant;
 import java.util.Map;
 
-@XmlRootElement(name = "error")
+//@XmlRootElement(name = "error")
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
