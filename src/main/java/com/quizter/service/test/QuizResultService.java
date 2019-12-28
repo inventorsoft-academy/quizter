@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,13 +64,14 @@ public class QuizResultService {
     }
 
 
-    public void addAccessToTest(StudentDto studentDto, Long testId) {
+    public void addAccessToTest(StudentDto studentDto, Long testId, Instant endOfAccessibleTime) {
         QuizResult quizResult = new QuizResult();
 
         quizResult.setId(createQuizResultId());
         quizResult.setIsCompleted(false);
         quizResult.setApplicant(userMapper.toUserFromStudentDto(userService.findStudentByEmail(studentDto.getEmail())));
         quizResult.setTest(testMapper.toTest(testService.findTestById(testId)));
+        quizResult.setEndOfAccessible(Instant.from(endOfAccessibleTime.atZone(ZoneId.systemDefault())));
 
         quizResultRepository.save(quizResult);
     }
@@ -89,7 +91,8 @@ public class QuizResultService {
 
         quizResultRepository.findAllByApplicantAndIsCompleted(userService.getUserPrincipal(), false)
                 .stream()
-                .filter(quizResult -> quizResult.getEndOfAccessible().isAfter(Instant.now()))
+                .filter(quizResult -> quizResult.getEndOfAccessible().isAfter(Instant.now())
+                        && quizResult.getTest().getIsDeleted().equals(false))
                 .forEach(quizResult -> tests.add(quizResult.getTest()));
 
         return tests;

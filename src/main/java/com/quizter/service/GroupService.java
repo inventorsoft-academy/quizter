@@ -6,7 +6,6 @@ import com.quizter.entity.Group;
 import com.quizter.exception.ResourceNotFoundException;
 import com.quizter.mapper.GroupMapper;
 import com.quizter.repository.GroupRepository;
-import com.quizter.repository.SubjectRepository;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,7 +22,7 @@ public class GroupService {
 
     GroupRepository groupRepository;
 
-    SubjectRepository subjectRepository;
+    SubjectService subjectService;
 
     GroupMapper groupMapper;
 
@@ -40,7 +39,7 @@ public class GroupService {
     public void createGroup(GroupDto groupDto) {
         Group group = new Group();
         group.setName(groupDto.getName());
-        group.setSubject(subjectRepository.findSubjectByName(groupDto.getSubjectName()));
+        group.setSubject(subjectService.getSubjectByName(groupDto.getSubjectName()));
         group.setStudents(groupMapper.toUserListDto(groupDto.getStudents()));
 
         groupRepository.save(group);

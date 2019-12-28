@@ -3,11 +3,10 @@ package com.quizter.controller;
 import com.quizter.dto.GroupDto;
 import com.quizter.dto.InviteDto;
 import com.quizter.dto.StudentDto;
-import com.quizter.dto.SubjectDto;
 import com.quizter.dto.response.MessageResponse;
 import com.quizter.service.GroupService;
-import com.quizter.service.SubjectService;
 import com.quizter.service.UserService;
+import com.quizter.service.ValidationService;
 import com.quizter.service.test.QuizResultService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -29,25 +28,13 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AdminController {
 
-    SubjectService subjectService;
-
     GroupService groupService;
 
     UserService userService;
 
     QuizResultService quizResultService;
 
-    @PostMapping("/subject/create")
-    public ResponseEntity<MessageResponse> createGroup(@RequestBody SubjectDto subjectDto) {
-        subjectService.createSubject(subjectDto);
-
-        return ResponseEntity.ok(new MessageResponse("Subject was created successfully"));
-    }
-
-    @GetMapping("/subjects")
-    public ResponseEntity<List<SubjectDto>> getAllSubjects() {
-        return ResponseEntity.ok(subjectService.getAllSubjects());
-    }
+    ValidationService validationService;
 
     @GetMapping("/tests/groups")
     public ResponseEntity<List<GroupDto>> getAllGroup() {
@@ -108,7 +95,7 @@ public class AdminController {
     @PostMapping("/tests/invite-group")
     public ResponseEntity<MessageResponse> inviteStudentsToTest(@RequestBody InviteDto inviteDto) {
         inviteDto.getStudents().forEach(e ->
-                quizResultService.addAccessToTest(e, inviteDto.getTestId()));
+                quizResultService.addAccessToTest(e, inviteDto.getTestId(), inviteDto.getEndOfAccessible()));
 
         return ResponseEntity.ok(new MessageResponse("Group was invited successfully"));
     }

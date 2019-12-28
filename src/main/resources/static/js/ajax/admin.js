@@ -10,7 +10,7 @@ $(document).ready(function () {
 });
 
 function getAllSubjects() {
-    $.getJSON("/admin/subjects",
+    $.getJSON("/subjects",
         function (data) {
             $('#inputGroupSelect')
                 .append($("<option></option>")
@@ -136,7 +136,7 @@ function createGroup(name, subjectName, students) {
 function createSubject(name) {
     if (window.confirm("Do you really want to create group?")) {
         $.ajax({
-            url: '/admin/subject/create',
+            url: '/subjects/create',
             type: 'POST',
             enctype: 'multipart/form-data',
             data: JSON.stringify({

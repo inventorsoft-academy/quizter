@@ -17,9 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    UserDetailsServiceImpl userDetailsService;
-
     static final String LOGIN_PAGE = "/login";
+    UserDetailsServiceImpl userDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -30,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/desk/**").hasAnyAuthority("ADMIN", "STUDENT")
                 .antMatchers("/cabinet/**").hasAnyAuthority("ADMIN", "TEACHER")
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
+                .antMatchers("/subjects/create").hasAnyAuthority("ADMIN")
 
                 .and()
                 .formLogin()

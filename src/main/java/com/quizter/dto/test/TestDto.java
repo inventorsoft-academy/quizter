@@ -1,5 +1,8 @@
 package com.quizter.dto.test;
 
+import com.quizter.dto.SubjectDto;
+import com.quizter.dto.UserEmailDto;
+import com.quizter.entity.Subject;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,8 +28,7 @@ public class TestDto {
     String name;
 
     @NotNull(message = "Subject can't be empty")
-    @Size(min = 2, message = "Subject length should have at least 2 characters")
-    String subject;
+    SubjectDto subject;
 
     @NotNull(message = "Description can't be empty")
     @Size(min = 10, message = "Description length should have at least 10 characters")
@@ -39,5 +41,7 @@ public class TestDto {
     Instant version;
 
     List<QuestionDto> questions;
+
+    UserEmailDto author;
 
 }

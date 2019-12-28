@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+
     getAllStudentsFromGroup()
 
 });
@@ -25,7 +26,12 @@ function getAllStudentsFromGroup() {
                 $("#inviteStudents_" + count).click(function () {
                     var students = group.students;
 
-                    inviteStudentsToTest(students);
+
+                    var endOfAccessible = document.querySelector('input[type="datetime-local"]').value;
+
+                    console.log(endOfAccessible)
+
+                    inviteStudentsToTest(students, endOfAccessible + ":00.Z");
                 });
 
 
@@ -51,22 +57,31 @@ function viewStudentsFromGroup(clickedElement) {
     })
 }
 
-function inviteStudentsToTest(students) {
+function inviteStudentsToTest(students, endOfAccessible) {
     var testId = $("#getAllGroupsDiv").attr("dataTest_id");
 
-    if (window.confirm("Open access to pass group?")) {
+    if (window.confirm("Open access this group to pass the test?")) {
         $.ajax({
             url: '/admin/tests/invite-group',
             type: 'POST',
             enctype: 'multipart/form-data',
             data: JSON.stringify({
                 testId: testId,
-                students: students
+                students: students,
+                endOfAccessible: endOfAccessible
             }),
             success: function () {
                 alert("The group has got access to the test");
-                //  $("a.inviteStudents").disable();
+                $(".inviteGroupClass").disable();
             },
+            error: function (xhr, status, errorThrown) {
+                var response = new ErrorResponse(JSON.parse(xhr.responseText));
+
+                if (response) {
+                    alert("Set future date");
+                }
+            },
+
             processData: false,
             contentType: 'application/json; charset=utf-8;',
             dataType: 'json',

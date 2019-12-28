@@ -13,6 +13,7 @@ import com.quizter.mapper.test.QuestionMapper;
 import com.quizter.mapper.test.TestMapper;
 import com.quizter.repository.QuestionRepository;
 import com.quizter.repository.TestRepository;
+import com.quizter.service.SubjectService;
 import com.quizter.service.UserService;
 import com.quizter.service.ValidationService;
 import lombok.AccessLevel;
@@ -45,9 +46,11 @@ public class TestService<T extends Question> {
 
     UserService userService;
 
+    SubjectService subjectService;
+
     @Transactional(readOnly = true)
     public List<TestDto> findAllTest() {
-        return testMapper.toTestListDto(testRepository.findAll());
+        return testMapper.toTestListDto(testRepository.findAllByIsDeleted(false));
     }
 
     @Transactional(readOnly = true)
@@ -62,8 +65,9 @@ public class TestService<T extends Question> {
         Test test = new Test();
         test.setName(testDto.getName());
         test.setDescription(testDto.getDescription());
-        test.setSubject(testDto.getSubject());
+        test.setSubject(subjectService.getSubjectByName(testDto.getSubject().getName()));
         test.setDuration(testDto.getDuration());
+        test.setIsDeleted(false);
         test.setVersion(Instant.now());
         test.setQuestions(new ArrayList<>(createQuestions(testDto.getQuestions())));
         test.setAuthor(userService.getUserPrincipal());
@@ -82,6 +86,7 @@ public class TestService<T extends Question> {
         test.setSubject(testFromDB.getSubject());
         test.setDuration(testEditDto.getDuration());
         test.setDescription(testEditDto.getDescription());
+        test.setIsDeleted(false);
         test.setVersion(Instant.now());
         test.setQuestions(new ArrayList<>(createQuestions(testEditDto.getQuestions())));
         test.setAuthor(userService.getUserPrincipal());
@@ -89,9 +94,11 @@ public class TestService<T extends Question> {
         testRepository.save(test);
     }
 
-    // TODO: 27.12.2019 only marked as deleted
     public void deleteTest(Long id) {
-        testRepository.deleteById(id);
+        Test testFromDB = testRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Test", "id", id));
+        testFromDB.setIsDeleted(true);
+
+        testRepository.save(testFromDB);
     }
 
     @Transactional
