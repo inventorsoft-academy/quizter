@@ -2,7 +2,6 @@ package com.quizter.dto.test;
 
 import com.quizter.dto.SubjectDto;
 import com.quizter.dto.UserEmailDto;
-import com.quizter.entity.Subject;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

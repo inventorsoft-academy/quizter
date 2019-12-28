@@ -18,22 +18,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     UserDetailsServiceImpl userDetailsService;
+    static final String LOGIN_PAGE = "/login";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/login", "/registration", "/newPassword", "/resetPassword").permitAll()
+                .antMatchers(LOGIN_PAGE, "/registration", "/newPassword", "/resetPassword","/**").permitAll()
                 .antMatchers("/", "/profile/**").hasAnyAuthority("ADMIN", "TEACHER", "STUDENT")
-                .antMatchers("/desk/**").hasAnyAuthority("ADMIN", "STUDENT")
+                .antMatchers("/desk/**","/cabinet/rest-tests/").hasAnyAuthority("ADMIN", "STUDENT")
                 .antMatchers("/cabinet/**").hasAnyAuthority("ADMIN", "TEACHER")
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .antMatchers("/subjects/create").hasAnyAuthority("ADMIN")
 
                 .and()
                 .formLogin()
-                .loginPage("/login")
-                .loginProcessingUrl("/login")
+                .loginPage(LOGIN_PAGE)
+                .loginProcessingUrl(LOGIN_PAGE)
                 .defaultSuccessUrl("/")
                 .failureUrl("/login?error=true")
 
@@ -42,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
-                .logoutSuccessUrl("/login")
+                .logoutSuccessUrl(LOGIN_PAGE)
 
                 .and()
                 .csrf().disable();

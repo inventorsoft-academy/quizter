@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.util.List;
 
@@ -23,7 +24,8 @@ import java.util.List;
 public class Group {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "hibernate_sequence", sequenceName = "id_sequence", allocationSize = 1)
     Long id;
 
     @Column(unique = true, nullable = false)

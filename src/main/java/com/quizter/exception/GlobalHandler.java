@@ -23,15 +23,21 @@ public class GlobalHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
-    @ExceptionHandler(NoUserWithThatIDException.class)
-    public ResponseEntity noUserWithThatIDException(NoUserWithThatIDException exception) {
-        ErrorResponse errorResponse = new ErrorResponse(Instant.now(), exception.getMessage(), Collections.emptyMap());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-    }
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity validationHandler(ValidationException exception) {
         ErrorResponse errorResponse = new ErrorResponse(Instant.now(), exception.getMessage(), exception.getValidationErrors());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(UserIsNotAuthorizedException.class)
+    public ResponseEntity getPrincipalHandler(UserIsNotAuthorizedException exception) {
+        ErrorResponse errorResponse = new ErrorResponse(Instant.now(), exception.getMessage(), Collections.emptyMap());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    }
+    @ExceptionHandler(FileUploadException.class)
+    public ResponseEntity fileLoadExceptionHandler(FileUploadException exception) {
+        ErrorResponse errorResponse = new ErrorResponse(Instant.now(), exception.getMessage(), Collections.emptyMap());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 }

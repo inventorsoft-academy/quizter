@@ -5,6 +5,7 @@ import com.quizter.entity.Photo;
 import com.quizter.entity.User;
 import com.quizter.exception.FileUploadException;
 import com.quizter.exception.ResourceNotFoundException;
+import com.quizter.exception.UserIsNotAuthorizedException;
 import com.quizter.repository.PhotoRepository;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
