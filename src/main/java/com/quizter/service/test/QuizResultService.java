@@ -10,6 +10,7 @@ import com.quizter.entity.test.Question;
 import com.quizter.entity.test.QuizResult;
 import com.quizter.entity.test.ResultAnswer;
 import com.quizter.entity.test.Test;
+import com.quizter.mapper.UserMapper;
 import com.quizter.exception.ResourceNotFoundException;
 import com.quizter.exception.UserIsNotAuthorizedException;
 import com.quizter.mapper.UserMapper;
@@ -35,6 +36,9 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
+
+import java.time.ZoneId;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,11 +65,11 @@ public class QuizResultService {
 	QuizResultRepository quizResultRepository;
 	ResultAnswerRepository resultAnswerRepository;
 	List<TestQuestionEvaluator> evaluators;
+    UserMapper userMapper;
 
-
-	public Optional<QuizResult> findById(String quizResultId) {
-		return quizResultRepository.findById(quizResultId);
-	}
+    public Optional<QuizResult> findById(String quizResultId) {
+        return quizResultRepository.findById(quizResultId);
+    }
 
 	private String createQuizResultId() {
 		String quizResultId = UUID.randomUUID().toString();
@@ -75,75 +79,82 @@ public class QuizResultService {
 		return quizResultId;
 	}
 
-	public void addAccessToTest(StudentDto applicant, Long testId) {
-		User user = userService.findUserByEmail(applicant.getEmail()).orElseThrow();
-		QuizResult quizResult = new QuizResult();
 
-		quizResult.setId(createQuizResultId());
-		quizResult.setIsCompleted(false);
-		quizResult.setApplicant(user);
-		Test test = testMapper.toTest(testService.findTestById(testId));
-		quizResult.setTest(test);
+    public void addAccessToTest(StudentDto studentDto, Long testId, Instant endOfAccessibleTime) {
+        QuizResult quizResult = new QuizResult();
 
-		quizResultRepository.save(quizResult);
-	}
+        quizResult.setId(createQuizResultId());
+        quizResult.setIsCompleted(false);
+        quizResult.setApplicant(userMapper.toUserFromStudentDto(userService.findStudentByEmail(studentDto.getEmail())));
+        quizResult.setTest(testMapper.toTest(testService.findTestById(testId)));
+        quizResult.setEndOfAccessible(Instant.from(endOfAccessibleTime.atZone(ZoneId.systemDefault())));
 
-	public String beginQuiz(Long testId) {
-		QuizResult quizResult = quizResultRepository.findQuizResultByTestId(testId)
-				.orElseThrow(() -> new ResourceNotFoundException("quiz result", "testId", testId));
+        quizResultRepository.save(quizResult);
+    }
 
-		quizResult.setStart(Instant.now());
-		long minutes = quizResult.getTest().getDuration();
-		quizResult.setFinished(Instant.now().plus(Duration.ofMinutes(minutes)));
+    public String beginQuiz(Long testId) {
+        QuizResult quizResult = quizResultRepository.findQuizResultByTestId(testId)
+                .orElseThrow(() -> new ResourceNotFoundException("quiz result", "testId", testId));
 
-		return quizResultRepository.save(quizResult).getId();
-	}
+        quizResult.setStart(Instant.now());
+        long minutes = quizResult.getTest().getDuration();
+        quizResult.setFinished(Instant.now().plus(Duration.ofMinutes(minutes)));
 
-	public List<Test> getTestAccessibleTestsForStudent() {
-		List<Test> tests = new ArrayList<>();
-		quizResultRepository.findAllByApplicantAndIsCompleted(userService.getUserPrincipal().orElseThrow(UserIsNotAuthorizedException::new), false).stream()
-				.filter(quizResult -> quizResult.getEndOfAccessible().isAfter(Instant.now())).forEach(quizResult -> tests.add(quizResult.getTest()));
+        return quizResultRepository.save(quizResult).getId();
+    }
 
-		return tests;
-	}
+    public List<Test> getAccessibleTestsForStudent() {
+        List<Test> tests = new ArrayList<>();
 
-	public void updateQuiz(String quizResultId, List<QuizResultDto> quizResultDtos) {
-		QuizResult quizResult = quizResultRepository.findById(quizResultId)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid QuizResult Id:" + quizResultId));
-		quizResult.setResultAnswers(getResultAnswers(quizResult, quizResultDtos));
-		quizResultRepository.save(quizResult);
-	}
+        quizResultRepository.findAllByApplicantAndIsCompleted(userService.getUserPrincipal(), false)
+                .stream()
+                .filter(quizResult -> quizResult.getEndOfAccessible().isAfter(Instant.now())
+                        && quizResult.getTest().getIsDeleted().equals(false))
+                .forEach(quizResult -> tests.add(quizResult.getTest()));
 
-	private List<ResultAnswer> getResultAnswers(QuizResult quizResult, List<QuizResultDto> quizResultDtos) {
-		final ResultAnswer[] resultAnswers = new ResultAnswer[1];
-		return quizResultDtos.stream().map(dto -> {
-			resultAnswers[0] = resultMapper.quizResultDtoToAnswer(dto);
-			resultAnswers[0].setQuizResult(quizResult);
-			if (resultAnswerRepository.findByQuizResultIdAndQuestionId(quizResult.getId(), resultAnswers[0].getQuestion().getId()).isPresent()) {
-				resultAnswers[0]
-						.setId(resultAnswerRepository.findByQuizResultIdAndQuestionId(quizResult.getId(), resultAnswers[0].getQuestion().getId()).orElseThrow()
-								.getId());
-			}
-			resultAnswerRepository.save(resultAnswers[0]);
-			return resultAnswers[0];
-		}).collect(Collectors.toList());
-	}
+        return tests;
+    }
 
-	public Double finishQuiz(String quizResultId, List<QuizResultDto> quizResultDtos) {
-		QuizResult quizResult = quizResultRepository.findById(quizResultId).orElseThrow(() -> new ResourceNotFoundException("quiz result", "id", quizResultId));
-		quizResult.setFinished(Instant.now());
-		quizResult.setResultAnswers(getResultAnswers(quizResult, quizResultDtos));
-		quizResult.setIsCompleted(true);
-		double totalRating = evaluate(quizResult);
-		quizResult.setTotalRating(totalRating);
-		quizResultRepository.save(quizResult);
-		return totalRating;
-	}
+    public void updateQuiz(String quizResultId, List<QuizResultDto> quizResultDtos) {
+        QuizResult quizResult = quizResultRepository.findById(quizResultId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid QuizResult Id:" + quizResultId));
+        quizResult.setResultAnswers(getResultAnswers(quizResult, quizResultDtos));
+        quizResultRepository.save(quizResult);
+    }
 
-	public Long getDuration(String quizResultId) {
-		QuizResult quizResult = findById(quizResultId).orElseThrow(() -> new ResourceNotFoundException("quiz result", "quizResultId", quizResultId));
-		return (quizResult.getFinished().getEpochSecond() - Instant.now().getEpochSecond());
-	}
+    private List<ResultAnswer> getResultAnswers(QuizResult quizResult, List<QuizResultDto> quizResultDtos) {
+        final ResultAnswer[] resultAnswers = new ResultAnswer[1];
+        return quizResultDtos.stream()
+                .map(dto -> {
+                    resultAnswers[0] = resultMapper.quizResultDtoToAnswer(dto);
+                    resultAnswers[0].setQuizResult(quizResult);
+                    if (resultAnswerRepository.findByQuizResultIdAndQuestionId(quizResult.getId(),
+                            resultAnswers[0].getQuestion().getId()).isPresent()) {
+                        resultAnswers[0].setId(resultAnswerRepository.findByQuizResultIdAndQuestionId(quizResult.getId(),
+                                resultAnswers[0].getQuestion().getId()).orElseThrow().getId());
+                    }
+                    resultAnswerRepository.save(resultAnswers[0]);
+                    return resultAnswers[0];
+                }).collect(Collectors.toList());
+    }
+
+    public Double finishQuiz(String quizResultId, List<QuizResultDto> quizResultDtos) {
+        QuizResult quizResult = quizResultRepository.findById(quizResultId)
+                .orElseThrow(() -> new ResourceNotFoundException("quiz result", "id", quizResultId));
+        quizResult.setFinished(Instant.now());
+        quizResult.setResultAnswers(getResultAnswers(quizResult, quizResultDtos));
+        quizResult.setIsCompleted(true);
+        double totalRating = evaluate(quizResult);
+        quizResult.setTotalRating(totalRating);
+        quizResultRepository.save(quizResult);
+        return totalRating;
+    }
+
+    public Long getDuration(String quizResultId) {
+        QuizResult quizResult = findById(quizResultId)
+                .orElseThrow(() -> new ResourceNotFoundException("quiz result", "quizResultId", quizResultId));
+        return (quizResult.getFinished().getEpochSecond() - Instant.now().getEpochSecond());
+    }
 
 	public double evaluate(QuizResult quizResult) {
 		isCodeAnswerCorrect(quizResult);
@@ -199,38 +210,40 @@ public class QuizResultService {
 	}
 
 	public List<QuizResult> findByApplicant() {
-		User applicant = userService.getUserPrincipal().orElseThrow(UserIsNotAuthorizedException::new);
+		User applicant = userService.getUserPrincipal();
 		return quizResultRepository.findAllByApplicantAndIsCompleted(applicant, true);
 	}
 
-	public double evaluateResult(final QuizResult quizResult, Map<Long, String> answers) {
-		List<Question> questions = quizResult.getTest().getQuestions();
-		Map<Long, Question> questionById = questions.stream().collect(Collectors.toMap(Question::getId, Function.identity()));
-		Map<Long, Double> resultAnswers = new HashMap<>();
-		answers.forEach((questionId, answer) -> {
-			Question question = questionById.get(questionId);
-			TestQuestionEvaluator evaluator = evaluators.stream().filter(eval -> eval.isApplicable(question)).findFirst()
-					.orElseThrow(() -> new IllegalStateException("Unsupported question type"));
-			resultAnswers.put(questionId, evaluator.evaluate(question, answer));
-		});
-		return resultAnswers.values().stream().mapToDouble(Double::doubleValue).sum();
-	}
+    public double evaluateResult(final QuizResult quizResult, Map<Long, String> answers) {
+        List<Question> questions = quizResult.getTest().getQuestions();
+        Map<Long, Question> questionById = questions.stream().collect(Collectors.toMap(Question::getId, Function.identity()));
+        Map<Long, Double> resultAnswers = new HashMap<>();
+        answers.forEach((questionId, answer) -> {
+            Question question = questionById.get(questionId);
+            TestQuestionEvaluator evaluator = evaluators.stream()
+                    .filter(eval -> eval.isApplicable(question))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("Unsupported question type"));
+            resultAnswers.put(questionId, evaluator.evaluate(question, answer));
+        });
+        return resultAnswers.values().stream().mapToDouble(Double::doubleValue).sum();
+    }
 
-	public Optional<QuizResult> findByApplicantAndTestId(Long id) {
-		return quizResultRepository.findByApplicantAndTestId(userService.getUserPrincipal().orElseThrow(UserIsNotAuthorizedException::new), id)
-				.filter(quizResult -> quizResult.getEndOfAccessible().isAfter(Instant.now()));
-	}
+    public Optional<QuizResult> findByApplicantAndTestId(Long id) {
+        return quizResultRepository.findByApplicantAndTestId(userService.getUserPrincipal(), id)
+                .filter(quizResult -> quizResult.getEndOfAccessible().isAfter(Instant.now()));
+    }
 
-	@Component
-	private static final class StandardEvaluator implements TestQuestionEvaluator {
-		@Override
-		public boolean isApplicable(Question question) {
-			return question instanceof MultiVariantQuestion;
-		}
+    @Component
+    private static final class StandardEvaluator implements TestQuestionEvaluator {
+        @Override
+        public boolean isApplicable(Question question) {
+            return question instanceof MultiVariantQuestion;
+        }
 
-		@Override
-		public double evaluate(Question question, String answer) {
-			return MultiVariantQuestion.class.cast(question).getAnswers().get(answer) ? question.getPrice() : 0.0;
-		}
-	}
+        @Override
+        public double evaluate(Question question, String answer) {
+            return MultiVariantQuestion.class.cast(question).getAnswers().get(answer) ? question.getPrice() : 0.0;
+        }
+    }
 }

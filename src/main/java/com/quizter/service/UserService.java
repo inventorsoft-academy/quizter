@@ -11,6 +11,7 @@ import com.quizter.exception.ResourceNotFoundException;
 import com.quizter.exception.TokenException;
 import com.quizter.mapper.GroupMapper;
 import com.quizter.mapper.UserMapper;
+import com.quizter.repository.GroupRepository;
 import com.quizter.repository.UserRepository;
 import com.quizter.util.AppConstants;
 import com.quizter.util.EmailConstants;
@@ -23,8 +24,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -51,6 +55,8 @@ public class UserService {
     SecurityService securityService;
 
     GroupMapper groupMapper;
+
+    GroupRepository groupRepository;
 
     public void registerUser(RegistrationUserDto registrationUserDto) {
         validationService.registrationValidation(registrationUserDto);
@@ -111,21 +117,31 @@ public class UserService {
     }
 
 
-	public Optional<User> getUserPrincipal() {
-		log.info("Fignia = " + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-		try {
-			Credentials credentials = (Credentials) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			return userRepository.findByEmail(credentials.getUsername());
-
-		} catch (ClassCastException o_0) {
-			return Optional.empty();
-		}
-	}
+    public User getUserPrincipal() {
+        try {
+            Credentials credentials = (Credentials) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return userRepository.findByEmail(credentials.getUsername())
+                    .orElseThrow(() -> new ResourceNotFoundException("user", "email", credentials.getUsername()));
+        } catch (ClassCastException o_0) {
+            return new User();
+        }
+    }
 
     public List<User> findStudentsFromUserList(List<User> users) {
-        return users
+        List<User> studentsFromGroups = new ArrayList<>();
+
+        groupRepository.findAll().forEach(group -> studentsFromGroups.addAll(group.getStudents()));
+
+        Set<User> studentsFromGroupsSet = new HashSet<>(studentsFromGroups);
+        Set<User> usersSet = new HashSet<>(users);
+
+        usersSet.removeAll(studentsFromGroupsSet);
+
+        return usersSet
                 .stream()
-                .filter(user -> user.getRole().getAuthority().equals("STUDENT"))
+                .filter(user ->
+                        user.getRole().getAuthority().equals("STUDENT")
+                                && user.getActive().equals(true))
                 .collect(Collectors.toList());
     }
 

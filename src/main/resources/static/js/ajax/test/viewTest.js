@@ -11,14 +11,15 @@ function getTest() {
         function (data) {
             var testName = Mustache.render("{{name}}", data);
             $("#testName").html(testName);
-            var testSubject = Mustache.render("{{subject}}", data);
+            var testSubject = Mustache.render("{{subject.name}}", data);
             $("#testSubject").html(testSubject);
-            var testAuthor = Mustache.render("{{author.email}}", data);
+            var testAuthor = Mustache.render("{{author.userEmail}}", data);
             $("#testAuthor").html(testAuthor);
             var testDescription = Mustache.render("{{description}}", data);
             $("#testDescription").html(testDescription);
 
             let questionIndex = 1;
+
 
             var getQuestionsScript = $('#getQuestionsScript').html();
             $.each(data.questions, function (index, question) {
@@ -37,15 +38,17 @@ function getTest() {
                     "codeTask": question.codeTask
                 };
 
-                if (question.questionType === "CODE") {
-                    $("#getAnswers").hide();
-                } else {
-                    $("#getCodeQuestion").hide();
-                }
-
                 $("#getQuestions").append(
                     Mustache.render(getQuestionsScript, questionWithAnswer)
                 );
+
+                if (question.questionType === "CODE") {
+                    $("#getCodeQuestion_" + questionIndex).show();
+                    $("#getAnswers_" + questionIndex).hide();
+                } else {
+                    $("#getAnswers_" + questionIndex).show();
+                    $("#getCodeQuestion_" + questionIndex).hide()
+                }
 
                 questionIndex++;
             })

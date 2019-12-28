@@ -1,6 +1,7 @@
 package com.quizter.repository;
 
 import com.quizter.entity.Group;
+import com.quizter.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -4,12 +4,10 @@ $(document).ready(function () {
     getAllTestsForEdit();
 });
 
-var version = '';
 var description = '';
 var duration = '';
 
 function newTestDescriptionClick() {
-    version = $("#version").val();
     description = $('#newDescription').val();
     duration = $('#editTestDuration').val();
 }
@@ -20,10 +18,6 @@ function getAllTestsForEdit() {
         function (data) {
             $("#editTestDuration").val(
                 data.duration
-            );
-
-            $("#version").val(
-                data.version
             );
 
             $("#newDescription").val(
@@ -175,23 +169,20 @@ function getAllTestsForEdit() {
 
                 questions.push(question);
 
-                editTestFunc(data.id, data.name, data.subject, duration, version, description, questions);
+                editTestFunc(data.id, duration, description, questions);
             });
         }
     );
 }
 
-function editTestFunc(id, name, subject, duration, version, description, questions) {
+function editTestFunc(id, duration, description, questions) {
     if (window.confirm("Do you really want to change test?")) {
         $.ajax({
             url: '/cabinet/rest-tests/' + id,
             type: 'PUT',
             enctype: 'multipart/form-data',
             data: JSON.stringify({
-                name: name,
-                subject: subject,
                 description: description,
-                version: version,
                 questions: questions,
                 duration: duration
             }),
@@ -202,11 +193,7 @@ function editTestFunc(id, name, subject, duration, version, description, questio
             error: function (xhr, status, errorThrown) {
                 var response = new ErrorResponse(JSON.parse(xhr.responseText));
 
-                if (response.fieldErrors.TestCreationFormError == "Please set new version") {
-                    alert(response.fieldErrors.TestCreationFormError);
-                    $("#newVersionLabel").append(" - " + response.fieldErrors.TestCreationFormError);
-                    $("#newVersionLabel").css("color", "red");
-                } else if (response.fieldErrors.descriptionError) {
+                if (response.fieldErrors.descriptionError) {
                     alert(response.fieldErrors.descriptionError);
                     $("#testDescriptionLabel").append(" - " + response.fieldErrors.descriptionError);
                     $("#testDescriptionLabel").css("color", "red");

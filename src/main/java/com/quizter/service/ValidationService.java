@@ -6,6 +6,7 @@ import com.quizter.dto.ProfileDto;
 import com.quizter.dto.RegistrationUserDto;
 import com.quizter.dto.test.QuestionDto;
 import com.quizter.dto.test.TestDto;
+import com.quizter.dto.test.TestEditDto;
 import com.quizter.exception.ValidationException;
 import com.quizter.repository.UserRepository;
 import lombok.AccessLevel;
@@ -77,17 +78,24 @@ public class ValidationService {
     public void testCreationFormValidation(TestDto testDto) {
         Map<String, String> validationResult = validate(testDto);
 
+        testFormValidation(validationResult, testDto.getQuestions());
+    }
+
+    public void testEditionFormValidation(TestEditDto testEditDto) {
+        Map<String, String> validationResult = validate(testEditDto);
+
+        testFormValidation(validationResult, testEditDto.getQuestions());
+    }
+
+    private void testFormValidation(Map<String, String> validationResult, List<QuestionDto> questionDtos) {
         if (!validationResult.isEmpty()) {
             handle(validationResult);
         } else {
-            List<QuestionDto> multivariantQuestionList = testDto.getQuestions()
+            List<QuestionDto> multivariantQuestionList = questionDtos
                     .stream()
                     .filter(questionDto -> questionDto.getQuestionType().name().equals("MULTIVARIANT")).collect(Collectors.toList());
 
-            if (testDto.getName().equals(testDto.getSubject()) || testDto.getName().equals(testDto.getDescription()) || testDto.getDescription().equals(testDto.getSubject())) {
-                validationResult.put("TestCreationFormError", "Test parameters must be different");
-                handle(validationResult);
-            } else if (multivariantQuestionList.size() < 1) {
+            if (multivariantQuestionList.size() < 1) {
                 validationResult.put("TestCreationFormError", "Question quantity should have at least 5");
                 handle(validationResult);
             } else if (multivariantQuestionList.stream().anyMatch(questionDto -> questionDto.getAnswers().keySet().contains(""))) {
@@ -115,16 +123,6 @@ public class ValidationService {
                         handle(validationResult);
                     });
         }
-    }
-
-    public void validateVersion(String versionFromDto, String versionFromDB) {
-        Map<String, String> validationResult = validate(versionFromDto);
-
-        if (versionFromDto.equals(versionFromDB)) {
-            validationResult.put("TestCreationFormError", "Please set new version");
-        }
-
-        handle(validationResult);
     }
 
     public void validateProfile(ProfileDto profileDto){

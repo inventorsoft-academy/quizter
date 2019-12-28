@@ -1,9 +1,19 @@
 var name = '';
-var subject = '';
+var subject = {};
 var description = '';
 var duration = '';
 
 $(document).ready(function () {
+    $.getJSON("/subjects",
+        function (data) {
+            $.each(data, function (key, value) {
+                $('#subject')
+                    .append($("<option></option>")
+                        .attr("value", key)
+                        .text(value.name));
+            });
+        });
+
     testDescriptionClick();
 
     var template = $("#testCreationFormScript").html(),
@@ -115,7 +125,7 @@ $(document).ready(function () {
 
 function testDescriptionClick() {
     name = $("#testName").val();
-    subject = $('#subject').val();
+    subject["name"] = ($("#subject option:selected").text());
     description = $('#description').val();
     duration = $('#testDuration').val();
 }

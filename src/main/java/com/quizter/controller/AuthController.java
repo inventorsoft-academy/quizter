@@ -22,12 +22,12 @@ public class AuthController {
 	@GetMapping("/")
 	public String defaultPage() {
 		log.info("defaultController");
-		Optional<User> user = userService.getUserPrincipal();
-		if (user.isPresent()) {
-			if (user.get().getProfile() == null) {
+		User user = userService.getUserPrincipal();
+		if (user!=null) {
+			if (user.getProfile() == null) {
 				return "redirect:/profile/edit";
 			}
-			switch (user.get().getRole()) {
+			switch (user.getRole()) {
 			case ADMIN:
 				return "redirect:/admin";
 			case TEACHER:

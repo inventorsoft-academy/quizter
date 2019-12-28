@@ -48,7 +48,7 @@ public class ProfileService {
     }
 
     public Profile getCurrentUserProfile() {
-        User user = userService.getUserPrincipal().orElseThrow(UserIsNotAuthorizedException::new);
+        User user = userService.getUserPrincipal();
         if (user.getProfile() == null) {
             Profile profile = new Profile();
             Photo photo = null;
@@ -72,7 +72,7 @@ public class ProfileService {
 
     public ProfileDto getProfileDto() {
         ProfileDto profileDto = new ProfileDto();
-        User user = userService.getUserPrincipal().orElseThrow(UserIsNotAuthorizedException::new);
+        User user = userService.getUserPrincipal();
         profileDto.setFirstName(user.getProfile().getFirstName());
         profileDto.setLastName(user.getProfile().getLastName());
         if (user.getProfile().getPhoto()!=null && user.getProfile().getPhoto().getData() != null) {

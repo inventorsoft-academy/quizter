@@ -33,11 +33,11 @@ function deleteTest(clickedElement) {
 
     if (window.confirm("Do you really want to delete this test?")) {
         $.ajax({
-            url: "/cabinet/tests/" + dataId,
+            url: "/cabinet/rest-tests/" + dataId,
             type: "DELETE",
             contentType: "application/json; charset=utf-8",
             success: function () {
-                alert("Test has been successfully deleted!");
+                alert("Test has been successfully deleted from list!");
                 location.reload(true);
             },
         })
@@ -72,14 +72,13 @@ function editTest(clickedElement) {
 
 function inviteStudentInTestTable(clickedElement) {
     var dataId = $(clickedElement.target).attr("data-id");
-
     $.ajax({
         contentType: "application/json; charset=utf-8",
         type: "GET",
-        url: '/cabinet/tests/student-groups',
+        url: '/admin/tests/student-groups',
         data: JSON.stringify(dataId),
         success: function () {
-            location.href = "/cabinet/tests/student-groups/" + dataId
+            location.href = "/admin/tests/student-groups/" + dataId
         }
     })
 }

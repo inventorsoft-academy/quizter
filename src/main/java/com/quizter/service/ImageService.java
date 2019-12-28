@@ -34,7 +34,7 @@ public class ImageService {
     public String savePhoto(AvatarDto avatarDto) {
         validationService.validateImage(avatarDto);
         MultipartFile file = avatarDto.getFile();
-        User user = userService.getUserPrincipal().orElseThrow(UserIsNotAuthorizedException::new);
+        User user = userService.getUserPrincipal();
         String fileName = "user" + user.getId();
         try {
             if (fileName.contains("..")) {

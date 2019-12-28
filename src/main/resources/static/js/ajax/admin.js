@@ -10,7 +10,7 @@ $(document).ready(function () {
 });
 
 function getAllSubjects() {
-    $.getJSON("/admin/subjects",
+    $.getJSON("/subjects",
         function (data) {
             $('#inputGroupSelect')
                 .append($("<option></option>")
@@ -56,11 +56,9 @@ function getAllSubjectForGroupCreation() {
 
     var index = 1;
 
-    $("#btnShowStudents").click(function () {
-
+    $("#loadCheckedStudents").click(function () {
 
         $(".row-select").each(function () {
-            console.log("ХУЙ");
             if ($("#selectStudent_" + index).is(":checked")) {
                 var email = $('#studentEmail_' + index).text().replace(/\s/g, '');
                 $.getJSON("/admin/students/" + email,
@@ -75,10 +73,7 @@ function getAllSubjectForGroupCreation() {
     });
 
     $("#btnCreateGroup").click(function () {
-        console.log(students);
-
         if (students.length !== 0) {
-
             var name = $("#inputGroupName").val();
 
             createGroup(name, subjectName, students);
@@ -141,7 +136,7 @@ function createGroup(name, subjectName, students) {
 function createSubject(name) {
     if (window.confirm("Do you really want to create group?")) {
         $.ajax({
-            url: '/admin/subject/create',
+            url: '/subjects/create',
             type: 'POST',
             enctype: 'multipart/form-data',
             data: JSON.stringify({
