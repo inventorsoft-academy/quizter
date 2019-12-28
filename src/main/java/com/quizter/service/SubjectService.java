@@ -30,8 +30,8 @@ public class SubjectService {
         subjectRepository.save(subject);
     }
 
-    public SubjectDto getSubjectName(String name) {
-        return null;
+    public Subject getSubjectByName(String name) {
+        return subjectRepository.findSubjectByName(name);
     }
 
     public List<SubjectDto> getAllSubjects() {
