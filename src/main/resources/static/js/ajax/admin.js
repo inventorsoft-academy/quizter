@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
     $("#btnSubjectCreation").click(function () {
         var name = $("#inputSubject").val();
         createSubject(name);
@@ -8,11 +9,8 @@ $(document).ready(function () {
 
 });
 
-var students = [];
-
-function getAllSubjectForGroupCreation() {
-
-    $.getJSON("/admin/subjects",
+function getAllSubjects() {
+    $.getJSON("/subjects",
         function (data) {
             $('#inputGroupSelect')
                 .append($("<option></option>")
@@ -25,6 +23,10 @@ function getAllSubjectForGroupCreation() {
                         .text(value.name));
             });
         });
+}
+
+function getAllSubjectForGroupCreation() {
+    getAllSubjects();
 
     var subjectName;
 
@@ -32,7 +34,7 @@ function getAllSubjectForGroupCreation() {
     $("#btnShowStudents").click(function () {
         subjectName = $("#inputGroupSelect option:selected").text();
 
-        if (subjectName !== undefined) {
+        if (subjectName !== undefined && subjectName !== "") {
             $.getJSON("/admin/students/subject/" + subjectName,
                 function (data) {
                     viewStudentsInTable(data, count);
@@ -43,48 +45,45 @@ function getAllSubjectForGroupCreation() {
                     viewStudentsInTable(data, count);
                 });
         }
+
+
+        $('#showStudents').on('hide.bs.collapse', function (e) {
+            e.preventDefault();
+        })
     });
 
-    var index;
+    var students = [];
 
-    $("#btnCreateGroup").click(function () {
-        var name = $("#inputGroupName").val();
+    var index = 1;
 
-        index= 1;
-        $('#table_records').each(function (i) {
-            index ++;
-            console.log("SSS" + index);
+    $("#loadCheckedStudents").click(function () {
 
-            // var isSelected =  ? "true" : "false";
-
+        $(".row-select").each(function () {
             if ($("#selectStudent_" + index).is(":checked")) {
-                console.log(index);
                 var email = $('#studentEmail_' + index).text().replace(/\s/g, '');
-                console.log(email);
                 $.getJSON("/admin/students/" + email,
                     function (data) {
-                        students.push(data)
-                        console.log("S" + students.length);
+                        students.push(data);
                     }
                 );
             }
 
-            console.log(students.length);
-
+            index++;
         });
+    });
 
+    $("#btnCreateGroup").click(function () {
         if (students.length !== 0) {
+            var name = $("#inputGroupName").val();
+
             createGroup(name, subjectName, students);
         }
-
     });
 
 }
 
 function viewStudentsInTable(data, count) {
     var studentsInGroupTBodyScript = $('#studentsInGroupTBodyScript').html();
-
-    // $("#studentsInGroupTBody").html("");
 
     $.each(data, function (index, value) {
         var student = {
@@ -103,7 +102,6 @@ function viewStudentsInTable(data, count) {
 }
 
 function createGroup(name, subjectName, students) {
-    console.log(students.length + 'WWWWWWWWWWWWW');
     if (window.confirm("Do you really want to create group?")) {
         $.ajax({
             url: '/admin/group-create/',
@@ -138,7 +136,7 @@ function createGroup(name, subjectName, students) {
 function createSubject(name) {
     if (window.confirm("Do you really want to create group?")) {
         $.ajax({
-            url: '/admin/subject/create',
+            url: '/subjects/create',
             type: 'POST',
             enctype: 'multipart/form-data',
             data: JSON.stringify({
@@ -146,7 +144,8 @@ function createSubject(name) {
             }),
             success: function () {
                 alert("Subject has been successfully created!");
-                location.reload();
+                getAllSubjects();
+                $("#inputSubject").val("");
             },
             error: function (xhr, status, errorThrown) {
                 var response = new ErrorResponse(JSON.parse(xhr.responseText));

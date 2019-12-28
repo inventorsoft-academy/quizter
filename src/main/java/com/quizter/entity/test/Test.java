@@ -1,5 +1,6 @@
 package com.quizter.entity.test;
 
+import com.quizter.entity.Subject;
 import com.quizter.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,6 +17,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,11 +33,11 @@ public class Test {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     String name;
 
-    @Column(nullable = false)
-    String subject;
+    @OneToOne
+    Subject subject;
 
     @Column(nullable = false)
     String description;
@@ -42,8 +45,10 @@ public class Test {
     @Column(nullable = false)
     Integer duration;
 
-    @Column(nullable = false)
-    String version;
+    @Column(unique = true, nullable = false)
+    Instant version;
+
+    Boolean isDeleted;
 
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)

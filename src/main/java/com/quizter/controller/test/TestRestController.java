@@ -1,9 +1,8 @@
 package com.quizter.controller.test;
 
-import com.quizter.dto.InviteDto;
 import com.quizter.dto.response.MessageResponse;
 import com.quizter.dto.test.TestDto;
-import com.quizter.service.test.QuizResultService;
+import com.quizter.dto.test.TestEditDto;
 import com.quizter.service.test.TestService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -28,8 +27,6 @@ public class TestRestController {
 
     TestService testService;
 
-    QuizResultService quizResultService;
-
     @GetMapping
     public ResponseEntity<List<TestDto>> getAllTest() {
         return ResponseEntity.ok(testService.findAllTest());
@@ -48,8 +45,8 @@ public class TestRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MessageResponse> updateTest(@PathVariable("id") Long id, @RequestBody TestDto testDto) {
-        testService.updateTest(id, testDto);
+    public ResponseEntity<MessageResponse> updateTest(@PathVariable("id") Long id, @RequestBody TestEditDto testEditDto) {
+        testService.updateTest(id, testEditDto);
 
         return ResponseEntity.ok(new MessageResponse("Test was updated successfully"));
     }
@@ -59,14 +56,6 @@ public class TestRestController {
         testService.deleteTest(id);
 
         return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/invite-group")
-    public ResponseEntity<MessageResponse> inviteStudentsToTest(@RequestBody InviteDto inviteDto) {
-        inviteDto.getStudents().forEach(e ->
-                quizResultService.addAccessToTest(e, inviteDto.getTestId()));
-
-        return ResponseEntity.ok(new MessageResponse("Group was invited successfully"));
     }
 
 }

@@ -22,7 +22,7 @@
                     </div>
                     <div class="x_content">
                         <button id="btnBackToGroups" class="btn btn-primary btn-lg pull-left" type="button">
-                            <i class="fa fa-step-backward"></i> Back
+                            <i class="fa fa-step-backward"></i> Back to tests
                         </button>
                         <div class="clearfix"></div>
                         <br/>
@@ -32,7 +32,6 @@
                             <thead>
                             <tr>
                                 <th style="width: 1%">#</th>
-                                <th>Photo</th>
                                 <th>Full name</th>
                                 <th>Email</th>
                                 <th>Phone number</th>
@@ -42,9 +41,7 @@
                             <script id="studentsTBodyScript" type="text/x-mustache-template">
                                 <tr>
                                     <td>{{quantity}}</td>
-                                    <td>
-                                        <a>Photo</a>
-                                    </td>
+
                                     <td>
                                         <a>{{student.profile.firstName}} {{student.profile.lastName}}</a>
                                     </td>

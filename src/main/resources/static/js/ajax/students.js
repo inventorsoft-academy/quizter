@@ -2,13 +2,13 @@ $(document).ready(function () {
     getStudentsFromGroup()
 
     $("#btnBackToGroups").click(function () {
-        location.href = "/cabinet/tests/student-groups"
+        location.href = "/cabinet/tests"
     })
 });
 
 function getStudentsFromGroup() {
     var dataId = $(".getStudentsFromGroupDiv").attr("data_id");
-    $.getJSON("/cabinet/tests/groups/" + dataId + "/students-from-group",
+    $.getJSON("/admin/tests/groups/" + dataId + "/students-from-group",
         function (data) {
             var studentsTBodyScript = $('#studentsTBodyScript').html();
             let i = 1;
