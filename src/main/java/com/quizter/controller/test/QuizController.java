@@ -51,7 +51,11 @@ public class QuizController {
     @GetMapping
     public ModelAndView quizBeginPage(@RequestParam Long id) {
         ModelAndView modelAndView = new ModelAndView("quiz-begin-page");
-        modelAndView.addObject("duration", testService.findTestById(id).getDuration());
+        if (quizResultService.findByApplicantAndTestId(id).isPresent()) {
+            modelAndView.addObject("duration", testService.findTestById(id).getDuration());
+        } else {
+            modelAndView.addObject("duration", "none");
+        }
         return modelAndView;
     }
 

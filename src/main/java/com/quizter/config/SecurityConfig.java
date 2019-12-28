@@ -17,14 +17,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    static final String LOGIN_PAGE = "/login";
     UserDetailsServiceImpl userDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers(LOGIN_PAGE, "/registration", "/newPassword", "/resetPassword").permitAll()
+                .antMatchers("/login", "/registration", "/newPassword", "/resetPassword").permitAll()
                 .antMatchers("/", "/profile/**").hasAnyAuthority("ADMIN", "TEACHER", "STUDENT")
                 .antMatchers("/desk/**").hasAnyAuthority("ADMIN", "STUDENT")
                 .antMatchers("/cabinet/**").hasAnyAuthority("ADMIN", "TEACHER")
@@ -33,8 +32,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .formLogin()
-                .loginPage(LOGIN_PAGE)
-                .loginProcessingUrl(LOGIN_PAGE)
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/")
                 .failureUrl("/login?error=true")
 
@@ -43,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
-                .logoutSuccessUrl(LOGIN_PAGE)
+                .logoutSuccessUrl("/login")
 
                 .and()
                 .csrf().disable();

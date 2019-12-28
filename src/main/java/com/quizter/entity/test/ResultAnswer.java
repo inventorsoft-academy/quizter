@@ -21,22 +21,22 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ResultAnswer {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "quiz_result_id")
-	QuizResult quizResult;
+    @ManyToOne
+    @JoinColumn(name = "quiz_result_id")
+    QuizResult quizResult;
 
-	@OneToOne
-	@JoinColumn(name = "question_id", referencedColumnName = "id")
-	Question question;
+    @OneToOne
+    @JoinColumn(name = "question_id", referencedColumnName = "id")
+    Question question;
 
-	@ElementCollection
-	@CollectionTable(name = "string_answers",
-			joinColumns = {@JoinColumn(name = "result_answer_id", referencedColumnName = "id")})
-	@Column(name = "string_answer")
-	List<String> stringAnswers;
+    @ElementCollection
+    @CollectionTable(name = "string_answers",
+            joinColumns = {@JoinColumn(name = "result_answer_id", referencedColumnName = "id")})
+    @Column(name = "string_answer")
+    List<String> stringAnswers;
 
 }

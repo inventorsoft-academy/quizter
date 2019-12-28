@@ -10,6 +10,7 @@ import com.quizter.entity.test.QuizResult;
 import com.quizter.entity.test.ResultAnswer;
 import com.quizter.entity.test.Test;
 import com.quizter.mapper.UserMapper;
+import com.quizter.exception.ResourceNotFoundException;
 import com.quizter.mapper.test.ResultMapper;
 import com.quizter.mapper.test.TestMapper;
 import com.quizter.repository.QuizResultRepository;
@@ -25,7 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.Instant;
+
 import java.time.ZoneId;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,7 +80,8 @@ public class QuizResultService {
     }
 
     public String beginQuiz(Long testId) {
-        QuizResult quizResult = quizResultRepository.findQuizResultByTestId(testId);
+        QuizResult quizResult = quizResultRepository.findQuizResultByTestId(testId)
+                .orElseThrow(() -> new ResourceNotFoundException("quiz result", "testId", testId));
 
         quizResult.setStart(Instant.now());
         long minutes = quizResult.getTest().getDuration();
@@ -99,7 +103,8 @@ public class QuizResultService {
     }
 
     public void updateQuiz(String quizResultId, List<QuizResultDto> quizResultDtos) {
-        QuizResult quizResult = quizResultRepository.findById(quizResultId).orElseThrow();
+        QuizResult quizResult = quizResultRepository.findById(quizResultId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid QuizResult Id:" + quizResultId));
         quizResult.setResultAnswers(getResultAnswers(quizResult, quizResultDtos));
         quizResultRepository.save(quizResult);
     }
@@ -121,7 +126,8 @@ public class QuizResultService {
     }
 
     public Double finishQuiz(String quizResultId, List<QuizResultDto> quizResultDtos) {
-        QuizResult quizResult = quizResultRepository.findById(quizResultId).orElseThrow();
+        QuizResult quizResult = quizResultRepository.findById(quizResultId)
+                .orElseThrow(() -> new ResourceNotFoundException("quiz result", "id", quizResultId));
         quizResult.setFinished(Instant.now());
         quizResult.setResultAnswers(getResultAnswers(quizResult, quizResultDtos));
         quizResult.setIsCompleted(true);
@@ -132,7 +138,8 @@ public class QuizResultService {
     }
 
     public Long getDuration(String quizResultId) {
-        QuizResult quizResult = findById(quizResultId).orElseThrow();
+        QuizResult quizResult = findById(quizResultId)
+                .orElseThrow(() -> new ResourceNotFoundException("quiz result", "quizResultId", quizResultId));
         return (quizResult.getFinished().getEpochSecond() - Instant.now().getEpochSecond());
     }
 
@@ -184,6 +191,11 @@ public class QuizResultService {
             resultAnswers.put(questionId, evaluator.evaluate(question, answer));
         });
         return resultAnswers.values().stream().mapToDouble(Double::doubleValue).sum();
+    }
+
+    public Optional<QuizResult> findByApplicantAndTestId(Long id) {
+        return quizResultRepository.findByApplicantAndTestId(userService.getUserPrincipal(), id)
+                .filter(quizResult -> quizResult.getEndOfAccessible().isAfter(Instant.now()));
     }
 
     @Component
