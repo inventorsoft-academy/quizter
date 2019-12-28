@@ -19,9 +19,9 @@ import javax.persistence.Entity;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CodeQuestion extends Question {
 
-	String unitTest;
+    String unitTest;
 
-	String codeTask;
+    String codeTask;
 
-	boolean reviewed;
+    boolean reviewed;
 }

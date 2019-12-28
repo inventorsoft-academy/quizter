@@ -66,4 +66,5 @@ public class Credentials implements UserDetails {
     public boolean isEnabled() {
         return isActive;
     }
+
 }

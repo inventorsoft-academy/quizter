@@ -12,7 +12,13 @@ function saveProfile(){
           window.location.replace("/profile");
        },
        error: function (xhr, status, errorThrown) {
-       console.log(xhr.responseJSON.message);
+       console.log(JSON.stringify(xhr));
+       if(xhr.responseJSON.message === "Validation error"){
+           $('#firstNameError').text(xhr.responseJSON.fieldErrors.firstNameError);
+           $('#lastNameError').text(xhr.responseJSON.fieldErrors.lastNameError);
+           $('#phoneNumberError').text(xhr.responseJSON.fieldErrors.phoneNumberError);
+           $('#sphereError').text(xhr.responseJSON.fieldErrors.sphereError);
+       }
        }
    })
 }
@@ -46,11 +52,22 @@ function fire_ajax_submit() {
         cache: false,
         timeout: 600000,
         success: function (data) {
-            window.location.reload();
+            localStorage.setItem('avatar', data);
+            var avatar = localStorage.getItem('avatar');
+            document.getElementById("userPhoto").src = "data:image/jpg;base64," + avatar;
+            document.getElementById('modal').style.display = "none";
         },
-        error: function (e) {
-            alert("photo upload error!");
+        error: function (xhr, status, errorThrown) {
+        console.log(JSON.stringify(xhr));
+            if(xhr.responseJSON.message === "Validation error") {
+                var data = xhr.responseJSON.fieldErrors;
+                $('#uploadError').text(data['file.uploadError']);
+            }
         }
     });
 
+}
+
+window.onbeforeunload = function(){
+   localStorage.removeItem('avatar');
 }
