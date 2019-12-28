@@ -19,7 +19,6 @@ public class AuthController {
 
     @GetMapping("/")
     public String defaultPage() {
-        log.info("defaultController");
         User user = userService.getUserPrincipal();
         if (user.getEmail() == null) {
             return "redirect:/login";

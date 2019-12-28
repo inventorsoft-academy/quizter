@@ -21,11 +21,11 @@
                     <div class="x_panel">
                         <table class="tile_info">
                             <tr th:each="quiz: ${quizzes}">
-                                <th th:text="${quiz.name}"></th>
-                                <th th:text="${quiz.subject}"></th>
-                                <th th:text="${quiz.description}"></th>
+                                <th th:text="${quiz.testName}"></th>
+                                <th th:text="${quiz.testSubjectName}"></th>
+                                <th th:text="${quiz.testDescription}"></th>
                                 <th>
-                                    <a th:href="@{/desk/quiz(id=${quiz.id})}">
+                                    <a th:href="@{/desk/quiz(id=${quiz.testId})}">
                                         <button class="btn btn-primary">Start quiz</button>
                                     </a>
                                 </th>
@@ -49,13 +49,15 @@
                     <div class="x_panel">
                         <table class="tile_info">
                             <tr th:each="passedQuiz: ${passedQuizzes}">
-                                <th th:text="${passedQuiz.test.name}"></th>
-                                <th th:text="${passedQuiz.test.subject}"></th>
-                                <th th:text="${passedQuiz.test.description}"></th>
-                                <th><time th:text="${passedQuiz.finished}"></time></th>
-                                <th th:text="${passedQuiz.totalRating}"></th>
+                                <th th:text="${passedQuiz.testName}"></th>
+                                <th th:text="${passedQuiz.testSubjectName}"></th>
+                                <th th:text="${passedQuiz.testDescription}"></th>
                                 <th>
-                                    <a th:href="@{/desk/quiz/result/{path}(path=${passedQuiz.id})}">
+                                    <time th:text="${passedQuiz.passed}"></time>
+                                </th>
+                                <th th:text="${passedQuiz.rating}"></th>
+                                <th>
+                                    <a th:href="@{/desk/quiz/result/{path}(path=${passedQuiz.testId})}">
                                         <button class="btn btn-primary">Review</button>
                                     </a>
                                 </th>

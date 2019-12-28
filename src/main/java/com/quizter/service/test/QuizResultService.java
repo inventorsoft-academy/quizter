@@ -2,6 +2,8 @@ package com.quizter.service.test;
 
 import com.quizter.dictionary.QuestionType;
 import com.quizter.dto.StudentDto;
+import com.quizter.dto.test.QuizResultDeskAvailableDto;
+import com.quizter.dto.test.QuizResultDeskPassedDto;
 import com.quizter.dto.test.QuizResultDto;
 import com.quizter.entity.User;
 import com.quizter.entity.test.MultiVariantQuestion;
@@ -9,10 +11,11 @@ import com.quizter.entity.test.Question;
 import com.quizter.entity.test.QuizResult;
 import com.quizter.entity.test.ResultAnswer;
 import com.quizter.entity.test.Test;
-import com.quizter.mapper.UserMapper;
 import com.quizter.exception.ResourceNotFoundException;
+import com.quizter.mapper.UserMapper;
 import com.quizter.mapper.test.ResultMapper;
 import com.quizter.mapper.test.TestMapper;
+import com.quizter.repository.QuestionRepository;
 import com.quizter.repository.QuizResultRepository;
 import com.quizter.repository.ResultAnswerRepository;
 import com.quizter.service.UserService;
@@ -20,15 +23,14 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.Instant;
-
 import java.time.ZoneId;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,12 +49,15 @@ public class QuizResultService {
 
     UserService userService;
     TestService testService;
+    QuestionRepository questionRepository;
     TestMapper testMapper;
     ResultMapper resultMapper;
     QuizResultRepository quizResultRepository;
     ResultAnswerRepository resultAnswerRepository;
     List<TestQuestionEvaluator> evaluators;
     UserMapper userMapper;
+
+    static final String QUIZ_RESULT = "quiz result";
 
     public Optional<QuizResult> findById(String quizResultId) {
         return quizResultRepository.findById(quizResultId);
@@ -81,7 +86,7 @@ public class QuizResultService {
 
     public String beginQuiz(Long testId) {
         QuizResult quizResult = quizResultRepository.findQuizResultByTestId(testId)
-                .orElseThrow(() -> new ResourceNotFoundException("quiz result", "testId", testId));
+                .orElseThrow(() -> new ResourceNotFoundException(QUIZ_RESULT, "testId", testId));
 
         quizResult.setStart(Instant.now());
         long minutes = quizResult.getTest().getDuration();
@@ -104,30 +109,14 @@ public class QuizResultService {
 
     public void updateQuiz(String quizResultId, List<QuizResultDto> quizResultDtos) {
         QuizResult quizResult = quizResultRepository.findById(quizResultId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid QuizResult Id:" + quizResultId));
+                .orElseThrow(() -> new ResourceNotFoundException(QUIZ_RESULT, "id", quizResultId));
         quizResult.setResultAnswers(getResultAnswers(quizResult, quizResultDtos));
         quizResultRepository.save(quizResult);
     }
 
-    private List<ResultAnswer> getResultAnswers(QuizResult quizResult, List<QuizResultDto> quizResultDtos) {
-        final ResultAnswer[] resultAnswers = new ResultAnswer[1];
-        return quizResultDtos.stream()
-                .map(dto -> {
-                    resultAnswers[0] = resultMapper.quizResultDtoToAnswer(dto);
-                    resultAnswers[0].setQuizResult(quizResult);
-                    if (resultAnswerRepository.findByQuizResultIdAndQuestionId(quizResult.getId(),
-                            resultAnswers[0].getQuestion().getId()).isPresent()) {
-                        resultAnswers[0].setId(resultAnswerRepository.findByQuizResultIdAndQuestionId(quizResult.getId(),
-                                resultAnswers[0].getQuestion().getId()).orElseThrow().getId());
-                    }
-                    resultAnswerRepository.save(resultAnswers[0]);
-                    return resultAnswers[0];
-                }).collect(Collectors.toList());
-    }
-
     public Double finishQuiz(String quizResultId, List<QuizResultDto> quizResultDtos) {
         QuizResult quizResult = quizResultRepository.findById(quizResultId)
-                .orElseThrow(() -> new ResourceNotFoundException("quiz result", "id", quizResultId));
+                .orElseThrow(() -> new ResourceNotFoundException(QUIZ_RESULT, "id", quizResultId));
         quizResult.setFinished(Instant.now());
         quizResult.setResultAnswers(getResultAnswers(quizResult, quizResultDtos));
         quizResult.setIsCompleted(true);
@@ -137,24 +126,62 @@ public class QuizResultService {
         return totalRating;
     }
 
+    private List<ResultAnswer> getResultAnswers(QuizResult quizResult, List<QuizResultDto> quizResultDtos) {
+        final ResultAnswer[] resultAnswers = new ResultAnswer[1];
+        return quizResultDtos.stream()
+                .map(dto -> {
+                    resultAnswers[0] = resultMapper.toResultAnswer(dto);
+                    resultAnswers[0].setQuizResult(quizResult);
+                    if (resultAnswerRepository.findByQuizResultIdAndQuestionId(quizResult.getId(),
+                            resultAnswers[0].getQuestion().getId()).isPresent()) {
+                        resultAnswers[0].setId(resultAnswerRepository.findByQuizResultIdAndQuestionId(quizResult.getId(),
+                                resultAnswers[0].getQuestion().getId()).orElseThrow().getId());
+                    }
+                    log.info("result answer = " + resultAnswers[0]);
+                    resultAnswerRepository.save(resultAnswers[0]);
+                    return resultAnswers[0];
+                }).collect(Collectors.toList());
+    }
+
     public Long getDuration(String quizResultId) {
         QuizResult quizResult = findById(quizResultId)
-                .orElseThrow(() -> new ResourceNotFoundException("quiz result", "quizResultId", quizResultId));
+                .orElseThrow(() -> new ResourceNotFoundException(QUIZ_RESULT, "quizResultId", quizResultId));
         return (quizResult.getFinished().getEpochSecond() - Instant.now().getEpochSecond());
     }
 
+    public List<QuizResultDeskPassedDto> getPassedQuizzes() {
+        return findQuizResults(true).stream()
+                .map(result -> resultMapper.toQuizResultDeskPassedDto(result))
+                .collect(Collectors.toList());
+    }
+
+    public List<QuizResultDeskAvailableDto> getAvailableQuizzes() {
+        return findQuizResults(false).stream()
+                .filter(quiz -> quiz.getEndOfAccessible().isAfter(Instant.now()))
+                .map(result -> resultMapper.toQuizResultDeskAvailableDto(result))
+                .collect(Collectors.toList());
+    }
+
+    private List<QuizResult> findQuizResults(boolean isCompleted) {
+        User applicant = userService.getUserPrincipal();
+        return quizResultRepository.findAllByApplicantAndIsCompleted(applicant, isCompleted);
+    }
+
+    @Async
     public double evaluate(QuizResult quizResult) {
         final Double maxPrice = quizResult.getResultAnswers().stream()
                 .filter(answer -> QuestionType.MULTIVARIANT.equals(answer.getQuestion().getQuestionType()))
-                .map(answer -> answer.getQuestion().getPrice())
+                .map(answer -> ((MultiVariantQuestion)questionRepository.findById(answer.getQuestion().getId())
+                        .orElseThrow()).getPrice())
                 .reduce(Double::sum).orElse(100.0);
         double totalPrice = 0;
         List<ResultAnswer> resultAnswers = quizResult.getResultAnswers().stream()
                 .filter(answer -> QuestionType.MULTIVARIANT.equals(answer.getQuestion().getQuestionType()))
                 .collect(Collectors.toList());
         for (ResultAnswer answer : resultAnswers) {
-            MultiVariantQuestion question = (MultiVariantQuestion) answer.getQuestion();
-            double price = answer.getQuestion().getPrice();
+            MultiVariantQuestion question = (MultiVariantQuestion)
+                    questionRepository.findById(answer.getQuestion().getId()).orElseThrow();
+            double price = question.getPrice();
             List<String> rightAnswers = question.getAnswers().entrySet().stream()
                     .filter(qAnswer -> qAnswer.getValue().equals(true))
                     .map(Map.Entry::getKey)
@@ -171,11 +198,6 @@ public class QuizResultService {
             }
         }
         return totalPrice * 100 / maxPrice;
-    }
-
-    public List<QuizResult> findByApplicant() {
-        User applicant = userService.getUserPrincipal();
-        return quizResultRepository.findAllByApplicantAndIsCompleted(applicant, true);
     }
 
     public double evaluateResult(final QuizResult quizResult, Map<Long, String> answers) {

@@ -1,27 +1,31 @@
 package com.quizter.mapper.test;
 
+import com.quizter.dto.test.QuizResultDeskAvailableDto;
+import com.quizter.dto.test.QuizResultDeskPassedDto;
 import com.quizter.dto.test.QuizResultDto;
-import com.quizter.entity.test.Question;
+import com.quizter.entity.test.QuizResult;
 import com.quizter.entity.test.ResultAnswer;
-import com.quizter.repository.QuestionRepository;
-import com.quizter.repository.QuizResultRepository;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ResultMapper {
 
-    QuestionRepository questionRepository;
+    ModelMapper modelMapper = new ModelMapper();
 
-    public ResultAnswer quizResultDtoToAnswer(QuizResultDto quizResultDto){
-        ResultAnswer resultAnswer = new ResultAnswer();
-        resultAnswer.setQuestion((Question) questionRepository.findById(quizResultDto.getQuestionId()).orElseThrow());
-        resultAnswer.setStringAnswers(quizResultDto.getAnswers());
-        return resultAnswer;
+    public ResultAnswer toResultAnswer(QuizResultDto quizResultDto) {
+        return modelMapper.map(quizResultDto, ResultAnswer.class);
     }
+
+    public QuizResultDeskAvailableDto toQuizResultDeskAvailableDto(QuizResult quizResult) {
+        return modelMapper.map(quizResult, QuizResultDeskAvailableDto.class);
+    }
+
+    public QuizResultDeskPassedDto toQuizResultDeskPassedDto(QuizResult quizResult) {
+        return modelMapper.map(quizResult, QuizResultDeskPassedDto.class);
+    }
+
 }

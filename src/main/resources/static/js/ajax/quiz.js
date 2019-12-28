@@ -11,7 +11,7 @@ function finishQuiz(){
     document.getElementById('modal').style.display = "none";
    var questionType;
    var questionId;
-   var answers = [];
+   var stringAnswers = [];
    var result = [];
    var previousQuestionId = 'empty';
 
@@ -23,25 +23,25 @@ function finishQuiz(){
    if (questionId !== previousQuestionId){
    previousQuestionId = questionId;
    $('input[questionId='+questionId+']:checked').each(function() {
-        answers.push($(this).val());
+        stringAnswers.push($(this).val());
     });
     var data ={};
     data.questionType = questionType;
     data.questionId = questionId;
-    data.answers = answers;
+    data.stringAnswers = stringAnswers;
     result.push(data);
-    answers = [];
+    stringAnswers = [];
     }
    }
 
    if("CODE" === questionType) {
        questionId =$(this).attr("questionId");
-       answers = [];
-       answers.push($(this).val());
+       stringAnswers = [];
+       stringAnswers.push($(this).val());
        data ={};
        data.questionType = questionType;
        data.questionId = questionId;
-       data.answers = answers;
+       data.stringAnswers = stringAnswers;
        result.push(data);
    }
 
@@ -74,7 +74,7 @@ $(document).ready(function () {
     var ckbox = $('#checkbox');
 
     $('input[name="answersArray"]').on('click',function () {
-       var answers = [];
+       var stringAnswers = [];
        var questionType;
        var questionId;
        questionId =$(this).attr("questionId");
@@ -82,27 +82,27 @@ $(document).ready(function () {
         if (this.checked) {
             $('input[questionId='+questionId+']').each(function(){
             if(this.checked) {
-                answers.push($(this).val());
+                stringAnswers.push($(this).val());
             }
             });
-            saveResult(questionId, questionType, answers);
+            saveResult(questionId, questionType, stringAnswers);
         } else {
             $('input[questionId='+questionId+']').each(function(){
                         if(this.checked) {
-                            answers.push($(this).val());
+                            stringAnswers.push($(this).val());
                         }
                         });
-            saveResult(questionId, questionType, answers);
+            saveResult(questionId, questionType, stringAnswers);
         }
     });
 });
 
-function saveResult(questionId, questionType, answers){
+function saveResult(questionId, questionType, stringAnswers){
    var result = [];
    var data = {};
    data.questionType = questionType;
    data.questionId = questionId;
-   data.answers = answers;
+   data.stringAnswers = stringAnswers;
    result.push(data);
    putToBack(result);
 
