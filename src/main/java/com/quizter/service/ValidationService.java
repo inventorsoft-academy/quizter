@@ -88,7 +88,6 @@ public class ValidationService {
     }
 
     private void testFormValidation(Map<String, String> validationResult, List<QuestionDto> questionDtos) {
-
         if (!validationResult.isEmpty()) {
             handle(validationResult);
         } else {
@@ -124,6 +123,16 @@ public class ValidationService {
                         handle(validationResult);
                     });
         }
+    }
+
+    public void validateProfile(ProfileDto profileDto){
+        Map<String, String> validationResult = validate(profileDto);
+        handle(validationResult);
+    }
+
+    public void validateImage(AvatarDto avatarDto){
+        Map<String, String> validationResult = validate(avatarDto);
+        handle(validationResult);
     }
 
 }
