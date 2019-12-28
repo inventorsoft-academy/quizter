@@ -48,12 +48,19 @@
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
                         <table class="tile_info">
+                            <tr>
+                                <th><b>Test</b></th>
+                                <th><b>Subject</b></th>
+                                <th><b>Description</b></th>
+                                <th><b>Passed</b></th>
+                                <th><b>Rating</b></th>
+                            </tr>
                             <tr th:each="passedQuiz: ${passedQuizzes}">
-                                <th th:text="${passedQuiz.test.name}"></th>
-                                <th th:text="${passedQuiz.test.subject}"></th>
-                                <th th:text="${passedQuiz.test.description}"></th>
-                                <th><time th:text="${passedQuiz.finished}"></time></th>
-                                <th th:text="${passedQuiz.totalRating}"></th>
+                                <th th:text="${passedQuiz.testName}"></th>
+                                <th th:text="${passedQuiz.subject}"></th>
+                                <th th:text="${passedQuiz.description}"></th>
+                                <th th:text="${passedQuiz.passed}"></th>
+                                <th th:text="${passedQuiz.rating}"></th>
                                 <th>
                                     <a th:href="@{/desk/quiz/result/{path}(path=${passedQuiz.id})}">
                                         <button class="btn btn-primary">Review</button>

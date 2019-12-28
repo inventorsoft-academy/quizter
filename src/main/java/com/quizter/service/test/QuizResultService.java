@@ -2,6 +2,7 @@ package com.quizter.service.test;
 
 import com.quizter.dictionary.QuestionType;
 import com.quizter.dto.test.QuizResultDto;
+import com.quizter.dto.test.QuizResultInfoDto;
 import com.quizter.entity.User;
 import com.quizter.entity.test.MultiVariantQuestion;
 import com.quizter.entity.test.Question;
@@ -171,23 +172,29 @@ public class QuizResultService {
     }
 
     public double evaluateResult(final QuizResult quizResult, Map<Long, String> answers) {
-		List<Question> questions = quizResult.getTest().getQuestions();
-		Map<Long, Question> questionById = questions.stream().collect(Collectors.toMap(Question::getId, Function.identity()));
-		Map<Long, Double> resultAnswers = new HashMap<>();
-		answers.forEach((questionId, answer) -> {
-			Question question = questionById.get(questionId);
-			TestQuestionEvaluator evaluator = evaluators.stream()
+        List<Question> questions = quizResult.getTest().getQuestions();
+        Map<Long, Question> questionById = questions.stream().collect(Collectors.toMap(Question::getId, Function.identity()));
+        Map<Long, Double> resultAnswers = new HashMap<>();
+        answers.forEach((questionId, answer) -> {
+            Question question = questionById.get(questionId);
+            TestQuestionEvaluator evaluator = evaluators.stream()
                     .filter(eval -> eval.isApplicable(question))
                     .findFirst()
-					.orElseThrow(() -> new IllegalStateException("Unsupported question type"));
-			resultAnswers.put(questionId, evaluator.evaluate(question, answer));
-		});
-		return resultAnswers.values().stream().mapToDouble(Double::doubleValue).sum();
+                    .orElseThrow(() -> new IllegalStateException("Unsupported question type"));
+            resultAnswers.put(questionId, evaluator.evaluate(question, answer));
+        });
+        return resultAnswers.values().stream().mapToDouble(Double::doubleValue).sum();
     }
 
     public Optional<QuizResult> findByApplicantAndTestId(Long id) {
         return quizResultRepository.findByApplicantAndTestId(userService.getUserPrincipal(), id)
                 .filter(quizResult -> quizResult.getEndOfAccessible().isAfter(Instant.now()));
+    }
+
+    public List<QuizResultInfoDto> getResultInfo() {
+        return findByApplicant().stream()
+                .map(result -> resultMapper.toQuizResultInfoDto(result))
+                .collect(Collectors.toList());
     }
 
     @Component

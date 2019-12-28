@@ -1,7 +1,7 @@
 package com.quizter.controller;
 
+import com.quizter.dto.test.QuizResultInfoDto;
 import com.quizter.dto.test.TestDto;
-import com.quizter.entity.test.QuizResult;
 import com.quizter.mapper.test.TestMapper;
 import com.quizter.service.test.QuizResultService;
 import lombok.AccessLevel;
@@ -27,7 +27,7 @@ public class DeskController {
         ModelAndView modelAndView = new ModelAndView("desk-page");
 
         List<TestDto> quizzes = testMapper.toTestListDto(quizResultService.getTestAccessibleTestsForStudent());
-        List<QuizResult> passedQuizzes = quizResultService.findByApplicant();
+        List<QuizResultInfoDto> passedQuizzes = quizResultService.getResultInfo();
 
         modelAndView.addObject("quizzes", quizzes);
         modelAndView.addObject("passedQuizzes", passedQuizzes);
