@@ -17,6 +17,7 @@ import com.quizter.mapper.test.ResultMapper;
 import com.quizter.mapper.test.TestMapper;
 import com.quizter.repository.QuizResultRepository;
 import com.quizter.repository.ResultAnswerRepository;
+import com.quizter.service.ProfileService;
 import com.quizter.service.UserService;
 import com.quizter.util.ProjectRunner;
 import com.quizter.util.UnZipUtil;
@@ -50,14 +51,17 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuizResultService {
 
+	final String PATH_TO_CLASS_WITH_SOLUTION = "/home/intern/chorney/backet/project/src/main/java/CodeTask.java";
+	final String PATH_TO_CALSS_WITH_TESTS = "/home/intern/chorney/backet/project/src/test/java/CodeTaskTest.java";
+
 	UserService userService;
 	TestService testService;
 	TestMapper testMapper;
-	UserMapper userMapper;
 	ResultMapper resultMapper;
 	QuizResultRepository quizResultRepository;
 	ResultAnswerRepository resultAnswerRepository;
 	List<TestQuestionEvaluator> evaluators;
+
 
 	public Optional<QuizResult> findById(String quizResultId) {
 		return quizResultRepository.findById(quizResultId);
@@ -72,11 +76,12 @@ public class QuizResultService {
 	}
 
 	public void addAccessToTest(StudentDto applicant, Long testId) {
+		User user = userService.findUserByEmail(applicant.getEmail()).orElseThrow();
 		QuizResult quizResult = new QuizResult();
 
 		quizResult.setId(createQuizResultId());
 		quizResult.setIsCompleted(false);
-		quizResult.setApplicant(userMapper.toUser(applicant));
+		quizResult.setApplicant(user);
 		Test test = testMapper.toTest(testService.findTestById(testId));
 		quizResult.setTest(test);
 
@@ -183,8 +188,8 @@ public class QuizResultService {
 	private void writeCodingQuestionIntoClass(String answer, String unitTest) {
 		try {
 
-			Files.write(Paths.get("/home/intern/chorney/backet/project/src/main/java/Foo.java"), answer.getBytes());
-			Files.write(Paths.get("/home/intern/chorney/backet/project/src/test/java/FooTest.java"), unitTest.getBytes());
+			Files.write(Paths.get(PATH_TO_CLASS_WITH_SOLUTION), answer.getBytes());
+			Files.write(Paths.get(PATH_TO_CALSS_WITH_TESTS), unitTest.getBytes());
 		} catch (NoSuchFileException noSuchFileException) {
 			UnZipUtil.unZip();
 		} catch (IOException e) {

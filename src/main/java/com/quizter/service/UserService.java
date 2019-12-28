@@ -63,7 +63,7 @@ public class UserService {
                         + tokenService.generateToken(user.getEmail(), CacheType.ACTIVATION).getToken());
     }
 
-    private Optional<User> findUserByEmail(String email) {
+    public Optional<User> findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
@@ -138,7 +138,7 @@ public class UserService {
     }
 
     public StudentDto findStudentByEmail(String email) {
-        return groupMapper.toStudentDto(userRepository.findUserByEmail(email).orElseThrow());
+        return groupMapper.toStudentDto(findUserByEmail(email).orElseThrow());
     }
 
 
