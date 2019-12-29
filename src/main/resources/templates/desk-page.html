@@ -23,7 +23,7 @@
                             <tr th:each="quiz: ${quizzes}">
                                 <th id="quiz-id" th:text="${quiz.id}" hidden="hidden"></th>
                                 <th th:text="${quiz.name}"></th>
-                                <th th:text="${quiz.subject}"></th>
+                                <th th:text="${quiz.subject.getName()}"></th>
                                 <th th:text="${quiz.description}"></th>
                                 <th>
                                     <a th:href="@{/desk/quiz(id=${quiz.id})}">
@@ -51,7 +51,7 @@
                         <table class="tile_info">
                             <tr th:each="passedQuiz: ${passedQuizzes}">
                                 <th th:text="${passedQuiz.test.name}"></th>
-                                <th th:text="${passedQuiz.test.subject}"></th>
+                                <th th:text="${passedQuiz.test.subject.getName()}"></th>
                                 <th th:text="${passedQuiz.test.description}"></th>
                                 <th><time th:text="${passedQuiz.finished}"></time></th>
                                 <th th:text="${passedQuiz.totalRating}"></th>

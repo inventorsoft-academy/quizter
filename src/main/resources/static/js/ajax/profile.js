@@ -1,33 +1,59 @@
-var myUrl = document.URL;
+$(document).ready(function () {
+   // getAllSubjects()
+});
 
-function saveProfile(){
-   var data = {"firstName":$("#firstName").val(), "lastName":$("#lastName").val(),
-   "sphere":$("#sphere").val(), "phoneNumber":$("#phoneNumber").val()}
-   $.ajax({
-       contentType:"application/json; charset=utf-8",
-       type: "POST",
-       url: myUrl,
-       data: JSON.stringify(data),
-       success: function () {
-          window.location.replace("/profile");
-       },
-       error: function (xhr, status, errorThrown) {
-       console.log(JSON.stringify(xhr));
-       if(xhr.responseJSON.message === "Validation error"){
-           $('#firstNameError').text(xhr.responseJSON.fieldErrors.firstNameError);
-           $('#lastNameError').text(xhr.responseJSON.fieldErrors.lastNameError);
-           $('#phoneNumberError').text(xhr.responseJSON.fieldErrors.phoneNumberError);
-           $('#sphereError').text(xhr.responseJSON.fieldErrors.sphereError);
-       }
-       }
-   })
+function getAllSubjects() {
+    $.getJSON("/subjects",
+        function (data) {
+            $('#subject')
+                .append($("<option></option>")
+                    .attr("value", "")
+                    .text(""));
+            $.each(data, function (key, value) {
+                $('#subject')
+                    .append($("<option></option>")
+                        .attr("value", key)
+                        .text(value.name));
+            });
+        });
 }
 
-function addPhoto(){
+var myUrl = document.URL;
+
+
+function saveProfile() {
+    var data = {
+        "firstName": $("#firstName").val(),
+        "lastName": $("#lastName").val(),
+        "subjectName": $("#subject option:selected").text(),
+        "phoneNumber": $("#phoneNumber").val()
+    }
+
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        type: "POST",
+        url: myUrl,
+        data: JSON.stringify(data),
+        success: function () {
+            window.location.replace("/profile");
+        },
+        error: function (xhr, status, errorThrown) {
+            console.log(JSON.stringify(xhr));
+            if (xhr.responseJSON.message === "Validation error") {
+                $('#firstNameError').text(xhr.responseJSON.fieldErrors.firstNameError);
+                $('#lastNameError').text(xhr.responseJSON.fieldErrors.lastNameError);
+                $('#phoneNumberError').text(xhr.responseJSON.fieldErrors.phoneNumberError);
+                $('#sphereError').text(xhr.responseJSON.fieldErrors.sphereError);
+            }
+        }
+    })
+}
+
+function addPhoto() {
     document.getElementById('modal').style.display = "block";
 }
 
-function cancelPhoto(){
+function cancelPhoto() {
     document.getElementById('modal').style.display = "none";
 }
 
@@ -58,8 +84,8 @@ function fire_ajax_submit() {
             document.getElementById('modal').style.display = "none";
         },
         error: function (xhr, status, errorThrown) {
-        console.log(JSON.stringify(xhr));
-            if(xhr.responseJSON.message === "Validation error") {
+            console.log(JSON.stringify(xhr));
+            if (xhr.responseJSON.message === "Validation error") {
                 var data = xhr.responseJSON.fieldErrors;
                 $('#uploadError').text(data['file.uploadError']);
             }
@@ -68,6 +94,6 @@ function fire_ajax_submit() {
 
 }
 
-window.onbeforeunload = function(){
-   localStorage.removeItem('avatar');
+window.onbeforeunload = function () {
+    localStorage.removeItem('avatar');
 }

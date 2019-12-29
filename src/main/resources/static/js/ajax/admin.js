@@ -11,12 +11,12 @@ $(document).ready(function () {
 });
 
 function getAllSubjects() {
+    $('#inputGroupSelect')
+        .append($("<option></option>")
+            .attr("value", "")
+            .text(""));
     $.getJSON("/subjects",
         function (data) {
-            $('#inputGroupSelect')
-                .append($("<option></option>")
-                    .attr("value", "")
-                    .text(""));
             $.each(data, function (key, value) {
                 $('#inputGroupSelect')
                     .append($("<option></option>")

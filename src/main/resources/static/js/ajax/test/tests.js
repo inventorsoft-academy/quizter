@@ -13,8 +13,6 @@ function getAllTests() {
         function (data) {
             var tBodyScript = $('#tBodyScript').html();
             $.each(data, function (index, test) {
-                console.log(data);
-                console.log(test);
                 $("#tBody").append(
                     Mustache.to_html(tBodyScript, test)
                 );

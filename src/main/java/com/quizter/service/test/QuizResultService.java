@@ -10,15 +10,12 @@ import com.quizter.entity.test.Question;
 import com.quizter.entity.test.QuizResult;
 import com.quizter.entity.test.ResultAnswer;
 import com.quizter.entity.test.Test;
-import com.quizter.mapper.UserMapper;
 import com.quizter.exception.ResourceNotFoundException;
-import com.quizter.exception.UserIsNotAuthorizedException;
 import com.quizter.mapper.UserMapper;
 import com.quizter.mapper.test.ResultMapper;
 import com.quizter.mapper.test.TestMapper;
 import com.quizter.repository.QuizResultRepository;
 import com.quizter.repository.ResultAnswerRepository;
-import com.quizter.service.ProfileService;
 import com.quizter.service.UserService;
 import com.quizter.util.ProjectRunner;
 import com.quizter.util.UnZipUtil;
@@ -36,9 +33,8 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
-
-import java.time.ZoneId;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,45 +51,49 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuizResultService {
 
-	final String PATH_TO_CLASS_WITH_SOLUTION = "/home/intern/chorney/backet/project/src/main/java/CodeTask.java";
-	final String PATH_TO_CALSS_WITH_TESTS = "/home/intern/chorney/backet/project/src/test/java/CodeTaskTest.java";
+    final String PATH_TO_CLASS_WITH_SOLUTION = "/home/intern/chorney/backet/project/src/main/java/CodeTask.java";
+    final String PATH_TO_CALSS_WITH_TESTS = "/home/intern/chorney/backet/project/src/test/java/CodeTaskTest.java";
 
-	UserService userService;
-	TestService testService;
-	TestMapper testMapper;
-	ResultMapper resultMapper;
-	QuizResultRepository quizResultRepository;
-	ResultAnswerRepository resultAnswerRepository;
-	List<TestQuestionEvaluator> evaluators;
+    UserService userService;
+    TestService testService;
+    TestMapper testMapper;
+    ResultMapper resultMapper;
+    QuizResultRepository quizResultRepository;
+    ResultAnswerRepository resultAnswerRepository;
+    List<TestQuestionEvaluator> evaluators;
     UserMapper userMapper;
 
     public Optional<QuizResult> findById(String quizResultId) {
         return quizResultRepository.findById(quizResultId);
     }
 
-	private String createQuizResultId() {
-		String quizResultId = UUID.randomUUID().toString();
-		if (quizResultRepository.findById(quizResultId).isPresent()) {
-			createQuizResultId();
-		}
-		return quizResultId;
-	}
+    private String createQuizResultId() {
+        String quizResultId = UUID.randomUUID().toString();
+        if (quizResultRepository.findById(quizResultId).isPresent()) {
+            createQuizResultId();
+        }
+        return quizResultId;
+    }
 
 
-    public void addAccessToTest(StudentDto studentDto, Long testId, Instant endOfAccessibleTime) {
+    public void addAccessToTest(StudentDto studentDto, Long testId, String endOfAccessibleTime) {
         QuizResult quizResult = new QuizResult();
 
         quizResult.setId(createQuizResultId());
         quizResult.setIsCompleted(false);
         quizResult.setApplicant(userMapper.toUserFromStudentDto(userService.findStudentByEmail(studentDto.getEmail())));
         quizResult.setTest(testMapper.toTest(testService.findTestById(testId)));
-        quizResult.setEndOfAccessible(Instant.from(endOfAccessibleTime.atZone(ZoneId.systemDefault())));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime dateTime = LocalDateTime.parse(endOfAccessibleTime, formatter);
+
+        quizResult.setEndOfAccessible(dateTime);
 
         quizResultRepository.save(quizResult);
     }
 
     public String beginQuiz(Long testId) {
-        QuizResult quizResult = quizResultRepository.findQuizResultByTestId(testId)
+        QuizResult quizResult = quizResultRepository.findByApplicantAndTestId(userService.getUserPrincipal(),   testId)
                 .orElseThrow(() -> new ResourceNotFoundException("quiz result", "testId", testId));
 
         quizResult.setStart(Instant.now());
@@ -108,7 +108,7 @@ public class QuizResultService {
 
         quizResultRepository.findAllByApplicantAndIsCompleted(userService.getUserPrincipal(), false)
                 .stream()
-                .filter(quizResult -> quizResult.getEndOfAccessible().isAfter(Instant.now())
+                .filter(quizResult -> quizResult.getEndOfAccessible().isAfter(LocalDateTime.now())
                         && quizResult.getTest().getIsDeleted().equals(false))
                 .forEach(quizResult -> tests.add(quizResult.getTest()));
 
@@ -156,63 +156,63 @@ public class QuizResultService {
         return (quizResult.getFinished().getEpochSecond() - Instant.now().getEpochSecond());
     }
 
-	public double evaluate(QuizResult quizResult) {
-		isCodeAnswerCorrect(quizResult);
-		final Double maxPrice = quizResult.getResultAnswers().stream()
-				.filter(answer -> QuestionType.MULTIVARIANT.equals(answer.getQuestion().getQuestionType())).map(answer -> answer.getQuestion().getPrice())
-				.reduce(Double::sum).orElse(100.0);
-		double totalPrice = 0;
-		List<ResultAnswer> resultAnswers = quizResult.getResultAnswers().stream()
-				.filter(answer -> QuestionType.MULTIVARIANT.equals(answer.getQuestion().getQuestionType())).collect(Collectors.toList());
-		for (ResultAnswer answer : resultAnswers) {
-			MultiVariantQuestion question = (MultiVariantQuestion) answer.getQuestion();
-			double price = answer.getQuestion().getPrice();
-			List<String> rightAnswers = question.getAnswers().entrySet().stream().filter(qAnswer -> qAnswer.getValue().equals(true)).map(Map.Entry::getKey)
-					.collect(Collectors.toList());
-			long quantity = answer.getStringAnswers().stream().filter(rightAnswers::contains).count();
-			if (quantity == answer.getStringAnswers().size()) {
-				if (quantity == rightAnswers.size()) {
-					totalPrice += price;
-				} else if (rightAnswers.size() > 1 && quantity < rightAnswers.size() && quantity > 0) {
-					totalPrice += price * quantity / rightAnswers.size();
-				}
-			}
-		}
-		totalPrice += evaluateCode(quizResult);
-		return totalPrice * 100 / maxPrice;
-	}
+    public double evaluate(QuizResult quizResult) {
+        isCodeAnswerCorrect(quizResult);
+        final Double maxPrice = quizResult.getResultAnswers().stream()
+                .filter(answer -> QuestionType.MULTIVARIANT.equals(answer.getQuestion().getQuestionType())).map(answer -> answer.getQuestion().getPrice())
+                .reduce(Double::sum).orElse(100.0);
+        double totalPrice = 0;
+        List<ResultAnswer> resultAnswers = quizResult.getResultAnswers().stream()
+                .filter(answer -> QuestionType.MULTIVARIANT.equals(answer.getQuestion().getQuestionType())).collect(Collectors.toList());
+        for (ResultAnswer answer : resultAnswers) {
+            MultiVariantQuestion question = (MultiVariantQuestion) answer.getQuestion();
+            double price = answer.getQuestion().getPrice();
+            List<String> rightAnswers = question.getAnswers().entrySet().stream().filter(qAnswer -> qAnswer.getValue().equals(true)).map(Map.Entry::getKey)
+                    .collect(Collectors.toList());
+            long quantity = answer.getStringAnswers().stream().filter(rightAnswers::contains).count();
+            if (quantity == answer.getStringAnswers().size()) {
+                if (quantity == rightAnswers.size()) {
+                    totalPrice += price;
+                } else if (rightAnswers.size() > 1 && quantity < rightAnswers.size() && quantity > 0) {
+                    totalPrice += price * quantity / rightAnswers.size();
+                }
+            }
+        }
+        totalPrice += evaluateCode(quizResult);
+        return totalPrice * 100 / maxPrice;
+    }
 
-	private boolean isCodeAnswerCorrect(QuizResult quizResult) {
+    private boolean isCodeAnswerCorrect(QuizResult quizResult) {
 
-		String answer = quizResult.getResultAnswers().stream().filter(resultAnswer -> resultAnswer.getQuestion().getQuestionType().equals(QuestionType.CODE))
-				.findFirst().orElseThrow().getStringAnswers().stream().findFirst().orElseThrow();
-		String unitTest = quizResult.getTest().getQuestions().stream().filter(question -> question.getQuestionType().equals(QuestionType.CODE))
-				.map(question -> (CodeQuestion) question).findFirst().orElseThrow().getUnitTest();
-		writeCodingQuestionIntoClass(answer, unitTest);
-		return !ProjectRunner.run().contains("ERROR");
-	}
+        String answer = quizResult.getResultAnswers().stream().filter(resultAnswer -> resultAnswer.getQuestion().getQuestionType().equals(QuestionType.CODE))
+                .findFirst().orElseThrow().getStringAnswers().stream().findFirst().orElseThrow();
+        String unitTest = quizResult.getTest().getQuestions().stream().filter(question -> question.getQuestionType().equals(QuestionType.CODE))
+                .map(question -> (CodeQuestion) question).findFirst().orElseThrow().getUnitTest();
+        writeCodingQuestionIntoClass(answer, unitTest);
+        return !ProjectRunner.run().contains("ERROR");
+    }
 
-	private double evaluateCode(QuizResult quizResult) {
-		return isCodeAnswerCorrect(quizResult) ? quizResult.getTest().getQuestions().stream().findFirst().orElseThrow().getPrice() : 0;
-	}
+    private double evaluateCode(QuizResult quizResult) {
+        return isCodeAnswerCorrect(quizResult) ? quizResult.getTest().getQuestions().stream().findFirst().orElseThrow().getPrice() : 0;
+    }
 
-	private void writeCodingQuestionIntoClass(String answer, String unitTest) {
-		try {
+    private void writeCodingQuestionIntoClass(String answer, String unitTest) {
+        try {
 
-			Files.write(Paths.get(PATH_TO_CLASS_WITH_SOLUTION), answer.getBytes());
-			Files.write(Paths.get(PATH_TO_CALSS_WITH_TESTS), unitTest.getBytes());
-		} catch (NoSuchFileException noSuchFileException) {
-			UnZipUtil.unZip();
-		} catch (IOException e) {
-			log.debug(e.getMessage());
-		}
+            Files.write(Paths.get(PATH_TO_CLASS_WITH_SOLUTION), answer.getBytes());
+            Files.write(Paths.get(PATH_TO_CALSS_WITH_TESTS), unitTest.getBytes());
+        } catch (NoSuchFileException noSuchFileException) {
+            UnZipUtil.unZip();
+        } catch (IOException e) {
+            log.debug(e.getMessage());
+        }
 
-	}
+    }
 
-	public List<QuizResult> findByApplicant() {
-		User applicant = userService.getUserPrincipal();
-		return quizResultRepository.findAllByApplicantAndIsCompleted(applicant, true);
-	}
+    public List<QuizResult> findByApplicant() {
+        User applicant = userService.getUserPrincipal();
+        return quizResultRepository.findAllByApplicantAndIsCompleted(applicant, true);
+    }
 
     public double evaluateResult(final QuizResult quizResult, Map<Long, String> answers) {
         List<Question> questions = quizResult.getTest().getQuestions();
@@ -231,7 +231,7 @@ public class QuizResultService {
 
     public Optional<QuizResult> findByApplicantAndTestId(Long id) {
         return quizResultRepository.findByApplicantAndTestId(userService.getUserPrincipal(), id)
-                .filter(quizResult -> quizResult.getEndOfAccessible().isAfter(Instant.now()));
+                .filter(quizResult -> quizResult.getEndOfAccessible().isAfter(LocalDateTime.now()));
     }
 
     @Component

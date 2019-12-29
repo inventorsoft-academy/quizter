@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -30,7 +31,7 @@ public class QuizResult {
 
     Instant finished;
 
-    Instant endOfAccessible;
+    LocalDateTime endOfAccessible;
 
     Boolean isCompleted;
 

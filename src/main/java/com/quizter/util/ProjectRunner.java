@@ -1,8 +1,5 @@
 package com.quizter.util;
 
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.zeroturnaround.exec.ProcessExecutor;
 
 import java.util.concurrent.Callable;

@@ -7,7 +7,6 @@ import com.quizter.dto.StudentDto;
 import com.quizter.dto.response.MessageResponse;
 import com.quizter.service.GroupService;
 import com.quizter.service.UserService;
-import com.quizter.service.ValidationService;
 import com.quizter.service.test.QuizResultService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -34,8 +33,6 @@ public class AdminController {
     UserService userService;
 
     QuizResultService quizResultService;
-
-    ValidationService validationService;
 
     @GetMapping("/tests/groups")
     public ResponseEntity<List<GroupDto>> getAllGroup() {

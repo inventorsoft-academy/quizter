@@ -36,7 +36,8 @@ public class Profile {
     @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL)
     Photo photo;
 
-    String sphere;
+    @OneToOne
+    Subject subject;
 
     String phoneNumber;
 }

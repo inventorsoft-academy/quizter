@@ -1,8 +1,8 @@
 $(document).ready(function () {
 
+    $('#datetimepicker').datetimepicker();
 
     getAllStudentsFromGroup()
-
 });
 
 function getAllStudentsFromGroup() {
@@ -26,9 +26,9 @@ function getAllStudentsFromGroup() {
                 $("#inviteStudents_" + count).click(function () {
                     var students = group.students;
 
-                    var endOfAccessible = document.querySelector('input[type="datetime-local"]').value;
+                    var endOfAccessible = $('#endAccessibleTime').val();
 
-                    inviteStudentsToTest(students, endOfAccessible + ":00.Z");
+                    inviteStudentsToTest(students, endOfAccessible);
                 });
 
 
@@ -68,8 +68,8 @@ function inviteStudentsToTest(students, endOfAccessible) {
                 endOfAccessible: endOfAccessible
             }),
             success: function () {
-                alert("The group has got access to the test");
-                $(".inviteGroupClass").disable();
+                alert("The group has got access to the test succesully");
+                location.reload();
             },
             error: function (xhr, status, errorThrown) {
                 var response = new ErrorResponse(JSON.parse(xhr.responseText));

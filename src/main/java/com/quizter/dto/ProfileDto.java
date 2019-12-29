@@ -26,7 +26,7 @@ public class ProfileDto {
 
     @NotNull(message = "This field is mandatory")
     @NotBlank(message = "This field is mandatory")
-    String sphere;
+    String subjectName;
 
     @NotNull(message = "Phone number is mandatory")
     @NotBlank(message = "Phone number is mandatory")

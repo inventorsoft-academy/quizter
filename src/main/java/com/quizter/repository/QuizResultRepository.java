@@ -13,8 +13,6 @@ public interface QuizResultRepository extends CrudRepository<QuizResult, String>
 
     List<QuizResult> findAllByApplicantAndIsCompleted(User applicant, Boolean completed);
 
-    Optional<QuizResult> findQuizResultByTestId(Long id);
-
     Optional<QuizResult> findByApplicantAndTestId(User userPrincipal, Long id);
 
 }

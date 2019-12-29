@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-layout-decorate="~{layout/home-layout}"
+<html data-layout-decorate="~{layout/home-layout}" lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -10,7 +10,7 @@
 </head>
 <body>
 
-<div class="right_col" role="main" data-layout-fragment="content">
+<div class="right_col" data-layout-fragment="content" role="main">
     <div class="">
         <div class="page-title">
             <div class="title_left">
@@ -30,14 +30,14 @@
                 background-color: #2A3F54;
                 border-radius: 5px;
                 box-shadow: 10px 10px 5px grey;">
-        <form method="POST" enctype="multipart/form-data" id="fileUploadForm">
+        <form enctype="multipart/form-data" id="fileUploadForm" method="POST">
             <label><H2>Choose the photo</H2></label>
             <p id="uploadError" style="color: red"></p>
             <div style="margin: 6px;">
-                <input id="file" type="file" name="file"/>
+                <input id="file" name="file" type="file"/>
             </div>
             <div style="margin: 6px;">
-                <input class="btn btn-primary" type="submit" value="Submit" id="btnSubmit"/>
+                <input class="btn btn-primary" id="btnSubmit" type="submit" value="Submit"/>
             </div>
         </form>
         <div style="margin: 6px;">
@@ -52,24 +52,26 @@
             <div class="col-md-5 col-sm-5">
                 <div class="input-group">
                     <p id="firstNameError" style="color: red"></p>
-                    <input type="text" th:value="${profile.firstName}"
-                           id="firstName" class="form-control" placeholder="first name">
+                    <input class="form-control" id="firstName"
+                           placeholder="first name" th:value="${profile.firstName}" type="text">
                 </div>
                 <div class="input-group">
                     <p id="lastNameError" style="color: red"></p>
-                    <input type="text" th:value="${profile.lastName}"
-                           id="lastName" class="form-control" placeholder="last name">
+                    <input class="form-control" id="lastName"
+                           placeholder="last name" th:value="${profile.lastName}" type="text">
                 </div>
                 <div class="input-group">
                     <p id="sphereError" style="color: red"></p>
-                    <input type="text" th:value="${profile.sphere}"
-                           id="sphere" class="form-control" placeholder="Subject">
+                    <label class="control-label">Choose subject</label>
+                    <select class="custom-select form-control" id="subject"
+                            required>
+                    </select>
                 </div>
                 <div class="input-group">
                     <div class="input-group">
                         <p id="phoneNumberError" style="color: red"></p>
-                        <input type="text" th:value="${profile.phoneNumber}"
-                               id="phoneNumber" class="form-control" placeholder="phone number">
+                        <input class="form-control" id="phoneNumber"
+                               placeholder="phone number" th:value="${profile.phoneNumber}" type="text">
                     </div>
                     <div class="input-group">
                         <button class="btn btn-primary" onclick="saveProfile()">Save <i class="fa fa-save"></i></button>
@@ -78,9 +80,9 @@
             </div>
             <div class="col-md-5 col-sm-5">
                 <div class="input-group">
-                    <img src='/images/img.jpg'
-                         alt="o_O"
-                         class="img-circle profile_img" onclick="addPhoto()" id="userPhoto"/>
+                    <img alt="o_O"
+                         class="img-circle profile_img"
+                         id="userPhoto" onclick="addPhoto()" src='/images/img.jpg'/>
                 </div>
             </div>
         </div>

@@ -148,7 +148,9 @@ public class UserService {
     }
 
     public List<StudentDto> findStudentsBySubjectName(String subjectName) {
-        return groupMapper.toStudentListDto(findStudentsFromUserList(userRepository.findUserByProfileSphere(subjectName)));
+        return groupMapper.toStudentListDto(findStudentsFromUserList(userRepository.
+                findUserByProfileSubject(subjectName)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "subjectName", subjectName))));
     }
 
     public List<StudentDto> findAllStudents() {

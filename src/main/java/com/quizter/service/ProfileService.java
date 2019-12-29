@@ -4,7 +4,6 @@ import com.quizter.dto.ProfileDto;
 import com.quizter.entity.Photo;
 import com.quizter.entity.Profile;
 import com.quizter.entity.User;
-import com.quizter.exception.UserIsNotAuthorizedException;
 import com.quizter.repository.PhotoRepository;
 import com.quizter.repository.ProfileRepository;
 import com.quizter.repository.UserRepository;
@@ -31,6 +30,7 @@ public class ProfileService {
     ImageService imageService;
     PhotoRepository photoRepository;
     ValidationService validationService;
+    SubjectService subjectService;
 
     public void saveProfile(ProfileDto profileDto) {
         log.info("profileDto = " + profileDto);
@@ -39,7 +39,7 @@ public class ProfileService {
         Photo photo = profile.getPhoto();
         profile.setFirstName(profileDto.getFirstName());
         profile.setLastName(profileDto.getLastName());
-        profile.setSphere(profileDto.getSphere());
+        profile.setSubject(subjectService.getSubjectByName(profileDto.getSubjectName()));
         profile.setPhoneNumber(profileDto.getPhoneNumber());
         profile.setPhoto(photo);
         profile.setId(profile.getUser().getId());
@@ -75,7 +75,7 @@ public class ProfileService {
         User user = userService.getUserPrincipal();
         profileDto.setFirstName(user.getProfile().getFirstName());
         profileDto.setLastName(user.getProfile().getLastName());
-        if (user.getProfile().getPhoto()!=null && user.getProfile().getPhoto().getData() != null) {
+        if (user.getProfile().getPhoto() != null && user.getProfile().getPhoto().getData() != null) {
             profileDto.setPhoto(Base64.getEncoder().encodeToString(user.getProfile().getPhoto().getData()));
         }
         return profileDto;

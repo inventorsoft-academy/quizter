@@ -6,7 +6,6 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotNull;
-import java.time.Instant;
 import java.util.List;
 
 @Getter
@@ -19,7 +18,7 @@ public class InviteDto {
     List<StudentDto> students;
 
     @NotNull(message = "Set any time")
-    Instant endOfAccessible;
+    String endOfAccessible;
 
 }
 

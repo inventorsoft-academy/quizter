@@ -177,6 +177,22 @@
 			<version>1.0.2</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.webjars/momentjs -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>momentjs</artifactId>
+			<version>2.24.0</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.webjars/bootstrap-datetimepicker -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>bootstrap-datetimepicker</artifactId>
+			<version>2.4.2</version>
+		</dependency>
+
+
+
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>mustachejs</artifactId>

@@ -15,7 +15,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -125,12 +124,12 @@ public class ValidationService {
         }
     }
 
-    public void validateProfile(ProfileDto profileDto){
+    public void validateProfile(ProfileDto profileDto) {
         Map<String, String> validationResult = validate(profileDto);
         handle(validationResult);
     }
 
-    public void validateImage(AvatarDto avatarDto){
+    public void validateImage(AvatarDto avatarDto) {
         Map<String, String> validationResult = validate(avatarDto);
         handle(validationResult);
     }
