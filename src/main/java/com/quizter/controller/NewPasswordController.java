@@ -17,7 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 @AllArgsConstructor
 @RestController
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class NewPasswordController {
+public class    NewPasswordController {
 
     UserService userService;
 

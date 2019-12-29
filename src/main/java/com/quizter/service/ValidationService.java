@@ -48,7 +48,7 @@ public class ValidationService {
         Set<ConstraintViolation<T>> constraintViolation = validator.validate(t);
 
         if (constraintViolation != null && !constraintViolation.isEmpty()) {
-            constraintViolation.forEach(x -> errors.put(x.getPropertyPath().toString() + "Error", x.getMessage()));
+            constraintViolation.forEach(error -> errors.put(error.getPropertyPath().toString() + "Error", error.getMessage()));
         }
 
         return errors;

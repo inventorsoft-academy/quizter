@@ -13,4 +13,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class AppConstants {
 
     String host;
+
 }

@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class QuizterApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(QuizterApplication.class, args);
 	}
 

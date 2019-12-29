@@ -66,7 +66,7 @@ public class QuizController {
 
     @PutMapping("{quizResultId}")
     public ResponseEntity<MessageResponse> saveChecked(@PathVariable String quizResultId,
-                                                       @RequestBody List<QuizResultDto> quizResultDtos) {
+            @RequestBody List<QuizResultDto> quizResultDtos) {
         log.info("Put Request = " + quizResultDtos);
         quizResultService.updateQuiz(quizResultId, quizResultDtos);
         return ResponseEntity.ok(new MessageResponse(String.valueOf(quizResultService.getDuration(quizResultId))));
@@ -74,7 +74,7 @@ public class QuizController {
 
     @PostMapping("{quizResultId}")
     public ResponseEntity<MessageResponse> finishQuiz(@PathVariable String quizResultId,
-                                                      @RequestBody List<QuizResultDto> quizResultDtos) {
+            @RequestBody List<QuizResultDto> quizResultDtos) {
         return ResponseEntity.ok(
                 new MessageResponse(String.valueOf(quizResultService.finishQuiz(quizResultId, quizResultDtos))));
     }
