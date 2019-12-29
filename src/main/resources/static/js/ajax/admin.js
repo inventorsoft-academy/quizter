@@ -7,6 +7,7 @@ $(document).ready(function () {
 
     getAllSubjectForGroupCreation();
 
+    setTeacherFunc();
 });
 
 function getAllSubjects() {
@@ -87,7 +88,6 @@ function viewStudentsInTable(data, count) {
 
     $.each(data, function (index, value) {
         var student = {
-            "quantity": count,
             "student": value,
             "count": count
         };
@@ -102,7 +102,7 @@ function viewStudentsInTable(data, count) {
 }
 
 function createGroup(name, subjectName, students) {
-    if (window.confirm("Do you really want to create group?")) {
+    if (window.confirm("Do you really want to create a group?")) {
         $.ajax({
             url: '/admin/group-create/',
             type: 'POST',
@@ -134,7 +134,7 @@ function createGroup(name, subjectName, students) {
 }
 
 function createSubject(name) {
-    if (window.confirm("Do you really want to create group?")) {
+    if (window.confirm("Do you really want to create a subject?")) {
         $.ajax({
             url: '/subjects/create',
             type: 'POST',
@@ -146,6 +146,64 @@ function createSubject(name) {
                 alert("Subject has been successfully created!");
                 getAllSubjects();
                 $("#inputSubject").val("");
+            },
+            error: function (xhr, status, errorThrown) {
+                var response = new ErrorResponse(JSON.parse(xhr.responseText));
+
+                if (response.fieldErrors.nameError) {
+                    alert(response.fieldErrors.nameError);
+                }
+            },
+            processData: false,
+            contentType: 'application/json; charset=utf-8;',
+            dataType: 'json',
+            cache: false,
+            timeout: 1000000,
+        });
+    }
+
+}
+
+function setTeacherFunc() {
+    var secondCount = 1;
+
+    $("#btnShowTeacherCreateForm").click(function () {
+        var candidatesTBodyScript = $('#candidatesTBodyScript').html();
+
+        $.getJSON("/admin/students",
+            function (data) {
+                $.each(data, function (index, value) {
+                    var student = {
+                        "student": value,
+                        "secondCount": secondCount
+                    };
+
+                    $("#candidatesTBody").append(
+                        Mustache.to_html(candidatesTBodyScript, student),
+                    );
+
+                    $("a.btnSetTeacher").unbind("click", setTeacher).bind("click", setTeacher);
+
+                    secondCount++;
+                });
+            });
+    });
+}
+
+function setTeacher(clickedElement) {
+    var email = $(clickedElement.target).attr("data-id");
+
+    if (window.confirm("Are you sure that you want to set Teacher rights to this user?")) {
+        $.ajax({
+            url: '/admin/teacher-create',
+            type: 'POST',
+            enctype: 'multipart/form-data',
+            data: JSON.stringify({
+                email: email,
+            }),
+            success: function () {
+                alert("Success!");
+                location.reload();
             },
             error: function (xhr, status, errorThrown) {
                 var response = new ErrorResponse(JSON.parse(xhr.responseText));

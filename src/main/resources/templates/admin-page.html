@@ -72,7 +72,7 @@
                                                         required>
                                                 </select>
                                             </div>
-                                            <br/><br/><br/>
+
                                             <div class=" card-body  ">
                                                 <p>
                                                     <a aria-controls="collapseExample" aria-expanded="false"
@@ -140,9 +140,66 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="ln_solid"></div>
 
+                                <div class="form-group">
+                                    <p>
+                                        <a aria-controls="collapseExample" aria-expanded="false" class="btn btn-primary"
+                                           data-toggle="collapse"
+                                           href="#setTeacher" id="btnShowTeacherCreateForm" role="button">
+                                            Set Teacher
+                                        </a>
+                                    </p>
+                                    <div class="collapse" id="setTeacher">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12">
+                                                <div class="clearfix"></div>
+                                                <br/>
+                                                <table class="table table-striped table-bordered">
+                                                    <thead>
+                                                    <tr>
+
+                                                        <th style="width: 1%">#</th>
+                                                        <th>Full name</th>
+                                                        <th>Email</th>
+                                                        <th>Phone number</th>
+                                                        <th style="width: 12%;">#Set teacher role</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody class="candidatesTBodyTBodyClass"
+                                                           id="candidatesTBody">
+                                                    <script id="candidatesTBodyScript"
+                                                            type="text/x-mustache-template">
+                                                        <tr class="row-selectTeacher">
+                                                            <td>{{secondCount}}</td>
+                                                            <td>
+                                                                <a>{{student.profile.firstName}}
+                                                                    {{student.profile.lastName}}</a>
+                                                            </td>
+                                                            <td id="candidateEmail_{{secondCount}}">
+                                                                {{student.email}}
+                                                            </td>
+                                                            <td>
+                                                                {{student.profile.phoneNumber}}
+                                                            </td>
+                                                            <td style="text-align:center">
+                                                                <a href="#" data-id="{{student.email}}"
+                                                                   class="btnSetTeacher btn btn-success btn-xs ">Set</a>
+                                                            </td>
+                                                        </tr>
+                                                    </script>
+                                                    </tbody>
+                                                </table>
+                                                <br/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br/><br/><br/>
+
+                                </div>
                             </div>
+
                         </form>
                     </div>
                 </div>

@@ -1,8 +1,10 @@
 package com.quizter.service;
 
 import com.quizter.dictionary.CacheType;
+import com.quizter.dictionary.Role;
 import com.quizter.dto.PasswordDto;
 import com.quizter.dto.RegistrationUserDto;
+import com.quizter.dto.SetTeacherRoleDto;
 import com.quizter.dto.StudentDto;
 import com.quizter.dto.UserEmailDto;
 import com.quizter.entity.Credentials;
@@ -157,5 +159,13 @@ public class UserService {
         return groupMapper.toStudentDto(findUserByEmail(email).orElseThrow());
     }
 
+    public void setTeacherRights(SetTeacherRoleDto setTeacherRoleDto) {
+        User user = userRepository.findUserByEmail(setTeacherRoleDto.getEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", setTeacherRoleDto.getEmail()));
+
+        user.setRole(Role.TEACHER);
+
+        userRepository.save(user);
+    }
 
 }

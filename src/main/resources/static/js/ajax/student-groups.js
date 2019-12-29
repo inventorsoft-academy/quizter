@@ -26,10 +26,7 @@ function getAllStudentsFromGroup() {
                 $("#inviteStudents_" + count).click(function () {
                     var students = group.students;
 
-
                     var endOfAccessible = document.querySelector('input[type="datetime-local"]').value;
-
-                    console.log(endOfAccessible)
 
                     inviteStudentsToTest(students, endOfAccessible + ":00.Z");
                 });

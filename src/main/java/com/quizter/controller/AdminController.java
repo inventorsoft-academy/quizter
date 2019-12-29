@@ -2,6 +2,7 @@ package com.quizter.controller;
 
 import com.quizter.dto.GroupDto;
 import com.quizter.dto.InviteDto;
+import com.quizter.dto.SetTeacherRoleDto;
 import com.quizter.dto.StudentDto;
 import com.quizter.dto.response.MessageResponse;
 import com.quizter.service.GroupService;
@@ -97,7 +98,14 @@ public class AdminController {
         inviteDto.getStudents().forEach(e ->
                 quizResultService.addAccessToTest(e, inviteDto.getTestId(), inviteDto.getEndOfAccessible()));
 
-        return ResponseEntity.ok(new MessageResponse("Group was invited successfully"));
+        return ResponseEntity.ok(new MessageResponse("The group got access to pass the test"));
+    }
+
+    @PostMapping("/teacher-create")
+    public ResponseEntity<MessageResponse> setTeacherRights(@RequestBody SetTeacherRoleDto setTeacherRoleDto) {
+        userService.setTeacherRights(setTeacherRoleDto);
+
+        return ResponseEntity.ok(new MessageResponse("Teacher rights was set successfully"));
     }
 
 }
