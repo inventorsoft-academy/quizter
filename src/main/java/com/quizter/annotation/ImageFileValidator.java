@@ -20,7 +20,7 @@ public class ImageFileValidator implements ConstraintValidator<ValidImage, Multi
             return false;
         }
 
-        if (file.getSize() > 50000) {
+        if (file.getSize() > 100000) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("The file size is too large")
                     .addPropertyNode("upload").addConstraintViolation();
