@@ -6,7 +6,6 @@ import com.quizter.dto.test.QuizResultDto;
 import com.quizter.entity.User;
 import com.quizter.entity.test.CodeQuestion;
 import com.quizter.entity.test.MultiVariantQuestion;
-import com.quizter.entity.test.Question;
 import com.quizter.entity.test.QuizResult;
 import com.quizter.entity.test.ResultAnswer;
 import com.quizter.entity.test.Test;
@@ -23,7 +22,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,12 +34,10 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -60,7 +56,6 @@ public class QuizResultService {
     ResultMapper resultMapper;
     QuizResultRepository quizResultRepository;
     ResultAnswerRepository resultAnswerRepository;
-    List<TestQuestionEvaluator> evaluators;
     UserMapper userMapper;
 
     public Optional<QuizResult> findById(String quizResultId) {
@@ -214,36 +209,9 @@ public class QuizResultService {
         return quizResultRepository.findAllByApplicantAndIsCompleted(applicant, true);
     }
 
-    public double evaluateResult(final QuizResult quizResult, Map<Long, String> answers) {
-        List<Question> questions = quizResult.getTest().getQuestions();
-        Map<Long, Question> questionById = questions.stream().collect(Collectors.toMap(Question::getId, Function.identity()));
-        Map<Long, Double> resultAnswers = new HashMap<>();
-        answers.forEach((questionId, answer) -> {
-            Question question = questionById.get(questionId);
-            TestQuestionEvaluator evaluator = evaluators.stream()
-                    .filter(eval -> eval.isApplicable(question))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalStateException("Unsupported question type"));
-            resultAnswers.put(questionId, evaluator.evaluate(question, answer));
-        });
-        return resultAnswers.values().stream().mapToDouble(Double::doubleValue).sum();
-    }
-
     public Optional<QuizResult> findByApplicantAndTestId(Long id) {
         return quizResultRepository.findByApplicantAndTestId(userService.getUserPrincipal(), id)
                 .filter(quizResult -> quizResult.getEndOfAccessible().isAfter(LocalDateTime.now()));
     }
 
-    @Component
-    private static final class StandardEvaluator implements TestQuestionEvaluator {
-        @Override
-        public boolean isApplicable(Question question) {
-            return question instanceof MultiVariantQuestion;
-        }
-
-        @Override
-        public double evaluate(Question question, String answer) {
-            return MultiVariantQuestion.class.cast(question).getAnswers().get(answer) ? question.getPrice() : 0.0;
-        }
-    }
 }

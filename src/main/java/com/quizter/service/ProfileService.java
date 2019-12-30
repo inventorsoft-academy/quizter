@@ -55,7 +55,7 @@ public class ProfileService {
             try {
                 photo = imageService.getDefaultPhoto(user);
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("IOException " + e);
             }
             profile.setPhoto(photo);
             photo.setProfile(profile);

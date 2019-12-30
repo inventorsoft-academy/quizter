@@ -1,5 +1,6 @@
 package com.quizter.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.zeroturnaround.exec.ProcessExecutor;
 
 import java.util.concurrent.Callable;
@@ -10,6 +11,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+@Slf4j
 public class ProjectRunner {
 
 	private static final String PATH_TO_TEST_PROJECT = "/home/intern/chorney/backet/project/pom.xml";
@@ -28,7 +30,7 @@ public class ProjectRunner {
 			result = "ERROR";
 			executor.shutdownNow();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			log.error("IOException " + e);
 		}
 		executor.shutdownNow();
 		return result;

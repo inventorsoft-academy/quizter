@@ -72,7 +72,7 @@ public class ImageService {
                 fileInputStream = new FileInputStream(file);
                 photo.setData(fileInputStream.readAllBytes());
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("IOException " + e);
             } finally {
                 fileInputStream.close();
             }
